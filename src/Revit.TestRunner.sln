@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.TestRunner", "Revit.TestRunner\Revit.TestRunner.csproj", "{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.TestRunner.SampleTestProject", "Revit.TestRunner.SampleTestProject\Revit.TestRunner.SampleTestProject.csproj", "{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug2018|x64 = Debug2018|x64
+		Debug2019|x64 = Debug2019|x64
+		Debug2020|x64 = Debug2020|x64
+		Release2018|x64 = Release2018|x64
+		Release2019|x64 = Release2019|x64
+		Release2020|x64 = Release2020|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2018|x64.ActiveCfg = Debug2018|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2018|x64.Build.0 = Debug2018|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2019|x64.ActiveCfg = Debug2019|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2019|x64.Build.0 = Debug2019|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2020|x64.ActiveCfg = Debug2020|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Debug2020|x64.Build.0 = Debug2020|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2018|x64.ActiveCfg = Release2018|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2018|x64.Build.0 = Release2018|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2019|x64.ActiveCfg = Release2019|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2019|x64.Build.0 = Release2019|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2020|x64.ActiveCfg = Release2020|x64
+		{57F89DD4-FB6A-44C2-BB8E-EEE35896F70A}.Release2020|x64.Build.0 = Release2020|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2018|x64.ActiveCfg = Debug2018|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2018|x64.Build.0 = Debug2018|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2019|x64.ActiveCfg = Debug2019|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2019|x64.Build.0 = Debug2019|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2020|x64.ActiveCfg = Debug2020|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Debug2020|x64.Build.0 = Debug2020|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2018|x64.ActiveCfg = Release2018|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2018|x64.Build.0 = Release2018|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2019|x64.ActiveCfg = Release2019|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2019|x64.Build.0 = Release2019|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2020|x64.ActiveCfg = Release2020|x64
+		{02702B89-16EA-4CC1-85F4-6CD7E2790DEC}.Release2020|x64.Build.0 = Release2020|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DE0B983-F592-49B4-BBC0-47E2CA772E0B}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://geberit.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Revit.TestRunner\\Revit.TestRunner.csproj
+		SccProjectName1 = Revit.TestRunner
+		SccLocalPath1 = Revit.TestRunner
+		SccProjectUniqueName2 = Revit.TestRunner.SampleTestProject\\Revit.TestRunner.SampleTestProject.csproj
+		SccProjectName2 = Revit.TestRunner.SampleTestProject
+		SccLocalPath2 = Revit.TestRunner.SampleTestProject
+	EndGlobalSection
+EndGlobal

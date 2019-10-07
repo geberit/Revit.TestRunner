@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/Revit.TestRunner.SampleTestProject/obj/x64
+/src/Revit.TestRunner/obj/x64
+/.vs
+/src/.vs
