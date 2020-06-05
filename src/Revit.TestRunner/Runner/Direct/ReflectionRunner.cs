@@ -45,8 +45,15 @@ namespace Revit.TestRunner.Runner.Direct
                         testMethod = type.GetMethod( methodName );
                         tearDown = GetMethodByAttribute( type, typeof( TearDownAttribute ) );
 
+                        var customAttributes = testMethod.CustomAttributes;
+                        var extendedParams = possibleParams.ToList();
+
+                        foreach( CustomAttributeData customAttribute in customAttributes ) {
+                            extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
+                        }
+
                         Invoke( obj, setUp, possibleParams );
-                        Invoke( obj, testMethod, possibleParams );
+                        Invoke( obj, testMethod, extendedParams.ToArray() );
 
                         test.State = TestState.Passed;
                     }
@@ -90,9 +97,11 @@ namespace Revit.TestRunner.Runner.Direct
         {
             var result = new List<object>();
             var parameters = methodInfo.GetParameters();
+            var possibleParamsList = possibleParams.ToList();
 
             foreach( ParameterInfo parameter in parameters ) {
-                object o = possibleParams.FirstOrDefault( i => i.GetType() == parameter.ParameterType );
+                object o = possibleParamsList.FirstOrDefault( i => i.GetType() == parameter.ParameterType );
+                possibleParamsList.Remove( o );
                 result.Add( o );
             }
 

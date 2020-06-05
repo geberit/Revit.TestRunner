@@ -89,6 +89,29 @@ namespace Revit.TestRunner.Runner.NUnit
             }
         }
 
+        /// <summary>
+        /// Run Tests with NUnit
+        /// https://github.com/nunit/docs/wiki/Test-Filters
+        /// </summary>
+        internal void Run( string test )
+        {
+            TestFilter filter = !string.IsNullOrEmpty( test )
+                ? new TestFilter( $"<filter><test>{test}</test></filter>" )
+                : TestFilter.Empty;
+
+            try {
+                ITestRunner testRunner = CreateTestRunner();
+                XmlNode runResult = testRunner.Run( this, filter );
+                ExploreRun = new NUnitTestRun( runResult );
+
+                testRunner.Unload();
+            }
+            catch( Exception e ) {
+                Log.Debug( e );
+                MessageBox.Show( $"{e}", "Exception in NUnit" );
+            }
+        }
+
         public void OnTestEvent( string report )
         {
             Log.Debug( report );

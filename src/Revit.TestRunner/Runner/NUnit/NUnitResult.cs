@@ -102,6 +102,7 @@ namespace Revit.TestRunner.Runner.NUnit
                 if( type == "Assembly" ) result = TestType.Assembly;
             }
 
+            if( Node.Name == "test-suite" ) result = TestType.Suite;
             if( Node.Name == "test-run" ) result = TestType.Run;
             if( Node.Name == "test-case" ) result = TestType.Case;
 
