@@ -48,7 +48,7 @@ All the code of the add-in lives in the Revit.TestRunner assembly. The ```Main``
 Containing some sample Tests, showing how they could be implemented.
 
 ### Build the Solution
-The solution contains a 'Debug' and 'Release' build configuration for all the supported Revit versions (2018, 2019, 2020). A post-build event calls a power shell script, which will create an add-in file in the %ProgramData%\Autodesk\Revit\Addins\20xx pointing to the fresh compiled Revit.TestRunner.dll. See section Power Shell.
+The solution contains a 'Debug' and 'Release' build configuration for all the supported Revit versions (2018, 2019, 2020, 2021). A post-build event calls a power shell script, which will create an add-in file in the %ProgramData%\Autodesk\Revit\Addins\20xx pointing to the fresh compiled Revit.TestRunner.dll. See section Power Shell.
 
 
 ## Precompiled binaries

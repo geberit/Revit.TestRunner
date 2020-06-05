@@ -1,4 +1,11 @@
 # Release Notes
+* v0.10 [20Q02]
+
+    * Revit 2021 Support
+    * .NET 4.8
+    * Support of NUnit Attributes 'TestCase'
+
+
 * v0.9 [19Q04]
 
     * Using NUnit3

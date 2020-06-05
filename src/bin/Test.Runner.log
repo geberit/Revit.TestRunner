@@ -9268,3 +9268,40 @@ Run 'TearDown' in SampleTest
   But was:  False
 
 2020-06-05 07:47:45,736 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.SampleTest.PassTest - Passed - 
+2020-06-05 08:00:14,436 [1] INFO  Revit.TestRunner.Log - Revit.TestRunner started '05.06.2020 08:00:14'
+2020-06-05 08:00:14,448 [1] INFO  Revit.TestRunner.Log - Microsoft Windows NT 10.0.18363.0, NetFX 4.0.30319.42000
+2020-06-05 08:00:14,452 [1] DEBUG Revit.TestRunner.Log - Log Directory 'C:\Code\GitHub\geberit\Revit.TestRunner\src\bin'
+2020-06-05 08:00:14,452 [1] DEBUG Revit.TestRunner.Log - CurrentAppDomain.ApplicationBase 'C:\Program Files\Autodesk\Revit 2021\'
+2020-06-05 08:00:41,119 [1] ERROR Revit.TestRunner.Log - Autodesk.Revit.Exceptions.OperationCanceledException: Opening was canceled.
+   bei Autodesk.Revit.ApplicationServices.Application.OpenDocumentFile(ModelPath modelPath, OpenOptions openOptions)
+   bei Geberit.Revit.PlugIn.Tests.Native._Harness.TestHelper.OpenFile(String filePath, UIApplication uiApplication) in C:\Code\TFS\RVT2\Trunk\Geberit.Revit.PlugIn.Tests.Native\_Harness\TestHelper.cs:Zeile 53.
+   bei Geberit.Revit.PlugIn.Tests.Native._Harness.TestHelper.CreateTestController(String fileName, UIApplication uiApplication) in C:\Code\TFS\RVT2\Trunk\Geberit.Revit.PlugIn.Tests.Native\_Harness\TestHelper.cs:Zeile 29.
+   bei Geberit.Revit.PlugIn.Tests.Native._Harness.AbstractSingleFileTest.SetUp(UIApplication uiApplication) in C:\Code\TFS\RVT2\Trunk\Geberit.Revit.PlugIn.Tests.Native\_Harness\AbstractSingleFileTest.cs:Zeile 42.
+2020-06-05 08:00:43,813 [1] ERROR Revit.TestRunner.Log - System.NullReferenceException: Der Objektverweis wurde nicht auf eine Objektinstanz festgelegt.
+   bei Geberit.Revit.PlugIn.Tests.Native._Harness.AbstractSingleFileTest.TearDown(UIApplication uiApplication) in C:\Code\TFS\RVT2\Trunk\Geberit.Revit.PlugIn.Tests.Native\_Harness\AbstractSingleFileTest.cs:Zeile 49.
+2020-06-05 08:00:43,838 [1] INFO  Revit.TestRunner.Log -  >> Geberit.Revit.PlugIn.Tests.Native._Tools.FamilyMappingTool.GenerateRanges - Failed - Der Objektverweis wurde nicht auf eine Objektinstanz festgelegt.
+2020-06-05 08:01:19,025 [1] INFO  Revit.TestRunner.Log - Revit.TestRunner started '05.06.2020 08:01:18'
+2020-06-05 08:01:19,036 [1] INFO  Revit.TestRunner.Log - Microsoft Windows NT 10.0.18363.0, NetFX 4.0.30319.42000
+2020-06-05 08:01:19,040 [1] DEBUG Revit.TestRunner.Log - Log Directory 'C:\Code\GitHub\geberit\Revit.TestRunner\src\bin'
+2020-06-05 08:01:19,040 [1] DEBUG Revit.TestRunner.Log - CurrentAppDomain.ApplicationBase 'C:\Program Files\Autodesk\Revit 2021\'
+2020-06-05 08:02:30,433 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.SumTest(12,3) - Passed - 
+2020-06-05 08:02:30,435 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.SumTest(13,7) - Passed - 
+2020-06-05 08:02:30,437 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.SumTest(15,4) - Passed - 
+2020-06-05 08:02:30,439 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.ApplicationTest - Passed - 
+2020-06-05 08:02:30,441 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.MultiParameterTest1 - Passed - 
+2020-06-05 08:02:30,442 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.MultiParameterTest2 - Passed - 
+2020-06-05 08:02:30,461 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.ParameterTest.UiApplicationTest - Passed - 
+2020-06-05 08:02:30,490 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.RevitTest.XyzMultiplyTest - Passed - 
+2020-06-05 08:02:30,502 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.RevitTest.XyzTest - Passed - 
+2020-06-05 08:02:35,256 [1] ERROR Revit.TestRunner.Log - NUnit.Framework.AssertionException:   This Test should fail!
+  Expected: True
+  But was:  False
+
+   bei NUnit.Framework.Assert.ReportFailure(String message) in D:\a\1\s\src\NUnitFramework\framework\Assert.cs:Zeile 394.
+   bei NUnit.Framework.Assert.That[TActual](TActual actual, IResolveConstraint expression, String message, Object[] args) in D:\a\1\s\src\NUnitFramework\framework\Assert.That.cs:Zeile 241.
+   bei Revit.TestRunner.SampleTestProject.SampleTest.FailTest() in C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject\SampleTest.cs:Zeile 29.
+2020-06-05 08:02:35,281 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.SampleTest.FailTest - Failed -   This Test should fail!
+  Expected: True
+  But was:  False
+
+2020-06-05 08:02:35,290 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.SampleTest.PassTest - Passed - 
