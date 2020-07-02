@@ -27,7 +27,7 @@ namespace Revit.TestRunner.View
         /// Wenn im View eine Breite via MinWidth-Feld angegeben wurde, wird das re-sizing 
         /// eingeschaltet.
         /// </remarks>
-        public static bool? Show<TView>( DialogViewModel viewModel )
+        public static void Show<TView>( DialogViewModel viewModel )
             where TView : FrameworkElement, new()
         {
             if( viewModel == null ) throw new ArgumentNullException( nameof(viewModel) );
@@ -74,12 +74,14 @@ namespace Revit.TestRunner.View
 
             try {
                 // set Handler to close dialog after OK
-                viewModel.SetDialogResultAction = result => window.DialogResult = result;
-                return window.ShowDialog();
+                viewModel.SetDialogResultAction = result => window.Close();
+                window.Closed += ( o, args ) => {
+                    window.DataContext = null;
+                    viewModel.SetDialogResultAction = null;
+                };
+                window.Show();
             }
             finally {
-                viewModel.SetDialogResultAction = null;
-                window.DataContext = null;
             }
         }
 

@@ -10,7 +10,9 @@ namespace Revit.TestRunner.Commands
     {
         public Result Execute( ExternalCommandData commandData, ref string message, ElementSet elements )
         {
-            NUnitRunnerViewModel viewModel = new NUnitRunnerViewModel( commandData.Application );
+            RevitTask revitTask = new RevitTask();
+
+            NUnitRunnerViewModel viewModel = new NUnitRunnerViewModel( revitTask );
             DialogWindow.Show<NUnitRunnerView>( viewModel );
 
             return Result.Succeeded;

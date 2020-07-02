@@ -9305,3 +9305,19 @@ Run 'TearDown' in SampleTest
   But was:  False
 
 2020-06-05 08:02:35,290 [1] INFO  Revit.TestRunner.Log -  >> Revit.TestRunner.SampleTestProject.SampleTest.PassTest - Passed - 
+2020-07-02 14:07:32,466 [1] INFO  Revit.TestRunner.Log - Revit.TestRunner started '02.07.2020 14:07:32'
+2020-07-02 14:07:32,466 [1] INFO  Revit.TestRunner.Log - Microsoft Windows NT 10.0.18363.0, NetFX 4.0.30319.42000
+2020-07-02 14:07:32,467 [1] DEBUG Revit.TestRunner.Log - Log Directory 'C:\Code\GitHub\geberit\Revit.TestRunner\src\bin'
+2020-07-02 14:07:32,467 [1] DEBUG Revit.TestRunner.Log - CurrentAppDomain.ApplicationBase 'C:\Program Files\Autodesk\Revit 2020\'
+2020-07-02 14:08:16,170 [1] INFO  Revit.TestRunner.Log -  >> Geberit.Revit.PlugIn.Tests.Native.Tests.Pluvia.Calculation.CalculationFlowTest.FlowTest - Passed - 
+2020-07-02 14:13:51,091 [1] INFO  Revit.TestRunner.Log - Revit.TestRunner started '02.07.2020 14:13:51'
+2020-07-02 14:13:51,091 [1] INFO  Revit.TestRunner.Log - Microsoft Windows NT 10.0.18363.0, NetFX 4.0.30319.42000
+2020-07-02 14:13:51,091 [1] DEBUG Revit.TestRunner.Log - Log Directory 'C:\Code\GitHub\geberit\Revit.TestRunner\src\bin'
+2020-07-02 14:13:51,091 [1] DEBUG Revit.TestRunner.Log - CurrentAppDomain.ApplicationBase 'C:\Program Files\Autodesk\Revit 2020\'
+2020-07-02 14:14:35,032 [1] INFO  Revit.TestRunner.Log -  >> Geberit.Revit.PlugIn.Tests.Native.Tests.Pluvia.Calculation.CalculationFlowTest.FlowTest - Passed - 
+2020-07-02 14:15:20,156 [1] INFO  Revit.TestRunner.Log -  >> Geberit.Revit.PlugIn.Tests.Native.Tests.Pluvia.Calculation.CalculationFlowTest.FlowTest - Passed - 
+2020-07-02 14:15:49,139 [1] INFO  Revit.TestRunner.Log -  >> Geberit.Revit.PlugIn.Tests.Native.Tests.Pluvia.Calculation.CalculationFlowTest.FlowTest - Passed - 
+2020-07-02 14:17:09,139 [1] INFO  Revit.TestRunner.Log - Revit.TestRunner started '02.07.2020 14:17:09'
+2020-07-02 14:17:09,139 [1] INFO  Revit.TestRunner.Log - Microsoft Windows NT 10.0.18363.0, NetFX 4.0.30319.42000
+2020-07-02 14:17:09,139 [1] DEBUG Revit.TestRunner.Log - Log Directory 'C:\Code\GitHub\geberit\Revit.TestRunner\src\bin'
+2020-07-02 14:17:09,139 [1] DEBUG Revit.TestRunner.Log - CurrentAppDomain.ApplicationBase 'C:\Program Files\Autodesk\Revit 2020\'

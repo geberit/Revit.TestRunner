@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using Autodesk.Revit.UI;
 using Microsoft.Win32;
 using Revit.TestRunner.Runner.Direct;
 using Revit.TestRunner.Runner.NUnit;
@@ -18,17 +17,17 @@ namespace Revit.TestRunner.View
     {
         #region Members, Constructor
 
-        private readonly UIApplication mUiApplication;
+        private readonly RevitTask mRevitTask;
         private string mAssemblyPath;
         private string mProgramState;
 
-        public NUnitRunnerViewModel( UIApplication uiApplication )
+        public NUnitRunnerViewModel( RevitTask revitTask )
         {
             InitialHeight = 500;
             InitialWidth = 800;
             DisplayName = "Test Runner";
 
-            mUiApplication = uiApplication;
+            mRevitTask = revitTask;
 
             Tree = new TreeViewModel();
             Tree.PropertyChanged += ( o, args ) => OnPropertyChangedAll();
@@ -147,10 +146,12 @@ namespace Revit.TestRunner.View
 
             ReflectionRunner runner = new ReflectionRunner( AssemblyPath );
 
-            for( int i = 0; i < toRun.Count; i++ ) {
-                ProgramState = $"Run Test {i + 1} of {toRun.Count}";
-                runner.RunTest( toRun[ i ], mUiApplication );
-            }
+            mRevitTask.Run( application => {
+                for( int i = 0; i < toRun.Count; i++ ) {
+                    ProgramState = $"Run Test {i + 1} of {toRun.Count}";
+                    runner.RunTest( toRun[i], application );
+                }
+            } ).Wait();
 
             PresentResults( toRun, start );
         }

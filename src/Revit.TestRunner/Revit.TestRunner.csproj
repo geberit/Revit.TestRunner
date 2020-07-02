@@ -223,6 +223,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RevitTask.cs" />
     <Compile Include="Runner\Direct\ReflectionRunner.cs" />
     <Compile Include="Runner\NUnit\NUnitResult.cs" />
     <Compile Include="Runner\NUnit\NUnitTestCase.cs" />
