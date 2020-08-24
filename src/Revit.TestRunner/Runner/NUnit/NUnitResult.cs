@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Runner.NUnit
 {
@@ -118,13 +119,7 @@ namespace Revit.TestRunner.Runner.NUnit
 
     }
 
-    public enum TestState
-    {
-        Unknown,
-        Passed,
-        Failed,
-        Explicit
-    }
+    
 
     public enum TestType
     {

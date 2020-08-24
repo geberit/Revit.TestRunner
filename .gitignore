@@ -8,3 +8,5 @@
 /src/.vs
 /src/Revit.TestRunner/Revit.TestRunner.csproj.user
 /src/bin
+/src/Revit.TestRunner.Shared/obj/Debug
+/src/Revit.TestRunner.Shared/bin/Debug

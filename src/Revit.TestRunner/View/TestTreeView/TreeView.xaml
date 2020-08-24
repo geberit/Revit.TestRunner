@@ -6,6 +6,7 @@
              xmlns:view="clr-namespace:Revit.TestRunner.View"
              xmlns:propertyTreeView="clr-namespace:Revit.TestRunner.View.TestTreeView"
              xmlns:testRunner="clr-namespace:Revit.TestRunner.Runner.NUnit"
+             xmlns:dto="clr-namespace:Revit.TestRunner.Shared.Dto;assembly=Revit.TestRunner.Shared"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance propertyTreeView:TreeViewModel, IsDesignTimeCreatable=True}"
@@ -25,10 +26,10 @@
 
         <Style x:Key="TextStateStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextStyle}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding State}" Value="{x:Static testRunner:TestState.Passed}">
+                <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Passed}">
                     <Setter Property="Foreground" Value="Green"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding State}" Value="{x:Static testRunner:TestState.Failed}">
+                <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Failed}">
                     <Setter Property="Foreground" Value="Red"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static testRunner:TestType.Case}">

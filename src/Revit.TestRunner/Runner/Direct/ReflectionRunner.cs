@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using NUnit.Framework;
-using Revit.TestRunner.Runner.NUnit;
-using Revit.TestRunner.View.TestTreeView;
+using Revit.TestRunner.Shared.Dto;
+// ReSharper disable TooWideLocalVariableScope
 
 namespace Revit.TestRunner.Runner.Direct
 {
@@ -15,64 +15,75 @@ namespace Revit.TestRunner.Runner.Direct
     /// </summary>
     public class ReflectionRunner
     {
-        public ReflectionRunner( string aAssemblyPath )
+        /// <summary>
+        /// Execute Test described in <paramref name="test"/>.
+        /// Returns a new <see cref="TestCase"/> object with the test result.
+        /// </summary>
+        internal async Task<TestCase> RunTest( TestCase test, UIApplication uiApplication )
         {
-            AssemblyPath = aAssemblyPath;
-        }
+            TestCase result = new TestCase {
+                Id = test.Id,
+                AssemblyPath = test.AssemblyPath,
+                TestClass = test.MethodName,
+                MethodName = test.MethodName,
+                State = TestState.Unknown
+            };
 
-        private string AssemblyPath { get; }
+            if( string.IsNullOrEmpty( test.Id ) ) result.Message = "Missing ID";
+            if( string.IsNullOrEmpty( test.AssemblyPath ) ) result.Message = "Missing AssemblyPath";
+            if( string.IsNullOrEmpty( test.TestClass ) ) result.Message = "Missing ClassName";
+            if( string.IsNullOrEmpty( test.MethodName ) ) result.Message = "Missing MethodName";
+            if( test.State != TestState.Unknown ) result.Message = $"Wrong not in State '{TestState.Unknown}'";
 
-        internal async Task RunTest( NodeViewModel test, UIApplication uiApplication )
-        {
-            string methodName = test.MethodName;
+            if( !string.IsNullOrEmpty( test.Message ) ) {
+                test.State = TestState.Failed;
+                return result;
+            }
 
-            if( test.Parent is NodeViewModel parent ) {
-                string className = parent.ClassName;
 
-                if( !string.IsNullOrEmpty( className ) && !string.IsNullOrEmpty( methodName ) ) {
-                    var possibleParams = new object[] { uiApplication, uiApplication.Application };
+            var possibleParams = new object[] { uiApplication, uiApplication.Application };
 
-                    object obj = null;
-                    MethodInfo setUp = null;
-                    MethodInfo tearDown = null;
-                    MethodInfo testMethod = null;
+            object obj = null;
+            MethodInfo setUp = null;
+            MethodInfo tearDown = null;
+            MethodInfo testMethod = null;
 
-                    try {
-                        Assembly assembly = Assembly.LoadFile( AssemblyPath );
-                        Type type = assembly.GetType( className );
-                        obj = Activator.CreateInstance( type );
+            try {
+                Assembly assembly = Assembly.LoadFile( test.AssemblyPath );
+                Type type = assembly.GetType( test.TestClass );
+                obj = Activator.CreateInstance( type );
 
-                        setUp = GetMethodByAttribute( type, typeof( SetUpAttribute ) );
-                        testMethod = type.GetMethod( methodName );
-                        tearDown = GetMethodByAttribute( type, typeof( TearDownAttribute ) );
+                setUp = GetMethodByAttribute( type, typeof( SetUpAttribute ) );
+                testMethod = type.GetMethod( test.MethodName );
+                tearDown = GetMethodByAttribute( type, typeof( TearDownAttribute ) );
 
-                        var customAttributes = testMethod.CustomAttributes;
-                        var extendedParams = possibleParams.ToList();
+                var customAttributes = testMethod.CustomAttributes;
+                var extendedParams = possibleParams.ToList();
 
-                        foreach( CustomAttributeData customAttribute in customAttributes ) {
-                            extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
-                        }
+                foreach( CustomAttributeData customAttribute in customAttributes ) {
+                    extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
+                }
 
-                        await Invoke( obj, setUp, possibleParams );
-                        await Invoke( obj, testMethod, extendedParams.ToArray() );
+                await Invoke( obj, setUp, possibleParams );
+                await Invoke( obj, testMethod, extendedParams.ToArray() );
 
-                        test.State = TestState.Passed;
-                    }
-                    catch( Exception e ) {
-                        ReportException( test, e );
-                    }
-                    finally {
-                        try {
-                            await Invoke( obj, tearDown, possibleParams );
-                        }
-                        catch( Exception e ) {
-                            ReportException( test, e );
-                        }
-                    }
-
-                    Log.Info( $" >> {test.FullName} - {test.State} - {test.Message}" );
+                result.State = TestState.Passed;
+            }
+            catch( Exception e ) {
+                ReportException( result, e );
+            }
+            finally {
+                try {
+                    await Invoke( obj, tearDown, possibleParams );
+                }
+                catch( Exception e ) {
+                    ReportException( result, e );
                 }
             }
+
+            Log.Info( $" >> {result.TestClass}.{result.MethodName} - {result.State} - {result.Message}" );
+
+            return result;
         }
 
         private async Task Invoke( object obj, MethodInfo method, object[] possibleParams )
@@ -90,15 +101,15 @@ namespace Revit.TestRunner.Runner.Direct
             }
         }
 
-        private void ReportException( NodeViewModel node, Exception e )
+        private void ReportException( TestCase @case, Exception e )
         {
-            node.State = TestState.Failed;
+            @case.State = TestState.Failed;
 
             Exception toLogEx = e.InnerException ?? e;
 
             Log.Error( toLogEx );
-            node.Message = toLogEx.Message;
-            node.StackTrace = toLogEx.StackTrace;
+            @case.Message = toLogEx.Message;
+            @case.StackTrace = toLogEx.StackTrace;
         }
 
         private object[] OrderParameters( MethodInfo methodInfo, object[] possibleParams )
