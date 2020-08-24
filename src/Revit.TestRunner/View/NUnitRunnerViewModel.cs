@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Revit.TestRunner.Runner.Direct;
@@ -106,7 +106,7 @@ namespace Revit.TestRunner.View
 
         #region Start Test Commands
 
-        public ICommand DebugCommand => new DelegateWpfCommand( ExecuteWithReflection, () => Tree.SelectedNode != null );
+        public ICommand DebugCommand => new AsyncCommand( ExecuteWithReflection, () => Tree.SelectedNode != null );
         #endregion
 
         #region Methods
@@ -134,7 +134,7 @@ namespace Revit.TestRunner.View
             }
         }
 
-        private void ExecuteWithReflection()
+        private async Task ExecuteWithReflection()
         {
             DateTime start = DateTime.Now;
             ProgramState = "Test Run started...";
@@ -146,12 +146,12 @@ namespace Revit.TestRunner.View
 
             ReflectionRunner runner = new ReflectionRunner( AssemblyPath );
 
-            mRevitTask.Run( application => {
+            await mRevitTask.Run( async application => {
                 for( int i = 0; i < toRun.Count; i++ ) {
                     ProgramState = $"Run Test {i + 1} of {toRun.Count}";
-                    runner.RunTest( toRun[i], application );
+                    await runner.RunTest( toRun[i], application );
                 }
-            } ).Wait();
+            } );
 
             PresentResults( toRun, start );
         }
@@ -210,11 +210,12 @@ namespace Revit.TestRunner.View
                              $"Passed Tests {passed} of {cases.Count()}\n" +
                              $"Run Duration {end - start}";
 
+            Log.Info( message );
 
-            MessageBox.Show( message,
-                "TestRunner",
-                MessageBoxButton.OK,
-                success ? MessageBoxImage.Information : MessageBoxImage.Error );
+            //MessageBox.Show( message,
+            //    "TestRunner",
+            //    MessageBoxButton.OK,
+            //    success ? MessageBoxImage.Information : MessageBoxImage.Error );
         }
         #endregion
     }

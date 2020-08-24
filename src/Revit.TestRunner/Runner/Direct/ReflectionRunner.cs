@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using NUnit.Framework;
 using Revit.TestRunner.Runner.NUnit;
@@ -21,7 +22,7 @@ namespace Revit.TestRunner.Runner.Direct
 
         private string AssemblyPath { get; }
 
-        internal void RunTest( NodeViewModel test, UIApplication uiApplication )
+        internal async Task RunTest( NodeViewModel test, UIApplication uiApplication )
         {
             string methodName = test.MethodName;
 
@@ -52,8 +53,8 @@ namespace Revit.TestRunner.Runner.Direct
                             extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
                         }
 
-                        Invoke( obj, setUp, possibleParams );
-                        Invoke( obj, testMethod, extendedParams.ToArray() );
+                        await Invoke( obj, setUp, possibleParams );
+                        await Invoke( obj, testMethod, extendedParams.ToArray() );
 
                         test.State = TestState.Passed;
                     }
@@ -62,7 +63,7 @@ namespace Revit.TestRunner.Runner.Direct
                     }
                     finally {
                         try {
-                            Invoke( obj, tearDown, possibleParams );
+                            await Invoke( obj, tearDown, possibleParams );
                         }
                         catch( Exception e ) {
                             ReportException( test, e );
@@ -74,11 +75,18 @@ namespace Revit.TestRunner.Runner.Direct
             }
         }
 
-        private void Invoke( object obj, MethodInfo method, object[] possibleParams )
+        private async Task Invoke( object obj, MethodInfo method, object[] possibleParams )
         {
             if( method != null ) {
                 var methodParams = OrderParameters( method, possibleParams );
-                method.Invoke( obj, methodParams );
+
+                if( method.ReturnType == typeof( Task ) ) {
+                    Task task = (Task)method.Invoke( obj, methodParams );
+                    await task;
+                }
+                else {
+                    method.Invoke( obj, methodParams );
+                }
             }
         }
 
