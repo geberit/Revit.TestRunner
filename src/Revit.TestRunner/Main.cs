@@ -1,15 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autodesk.Revit.UI;
 using Revit.TestRunner.Commands;
+using Revit.TestRunner.Server;
 
 namespace Revit.TestRunner
 {
     public class Main : IExternalApplication
     {
+        private Service mService;
+
         public Result OnStartup( UIControlledApplication application )
         {
             Log.Info( $"Revit.TestRunner started '{DateTime.Now}'" );
@@ -30,11 +34,16 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
+            string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "Revit.TestRunner" );
+            mService = new Service( path );
+            mService.Start( application );
+
             return Result.Succeeded;
         }
 
         public Result OnShutdown( UIControlledApplication application )
         {
+            mService.Stop();
             return Result.Succeeded;
         }
 

@@ -230,6 +230,7 @@
     <Compile Include="Runner\NUnit\NUnitTestRun.cs" />
     <Compile Include="Runner\NUnit\NUnitTestSuite.cs" />
     <Compile Include="Runner\NUnit\NUnitRunner.cs" />
+    <Compile Include="Server\Service.cs" />
     <Compile Include="View\AbstractViewModel.cs" />
     <Compile Include="View\BoolToHiddenConverter.cs" />
     <Compile Include="View\DelegateWpfCommand.cs" />
@@ -283,6 +284,7 @@
       <Name>Revit.TestRunner.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

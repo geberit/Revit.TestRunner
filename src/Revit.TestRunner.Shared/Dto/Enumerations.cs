@@ -3,8 +3,8 @@
     public enum TestState
     {
         Unknown,
+        Running,
         Passed,
         Failed,
-        Explicit
     }
 }
