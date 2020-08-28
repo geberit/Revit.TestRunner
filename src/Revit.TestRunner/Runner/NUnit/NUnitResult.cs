@@ -1,5 +1,5 @@
 ﻿using System.Xml;
-using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Runner.NUnit
 {

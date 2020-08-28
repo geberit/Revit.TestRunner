@@ -5,7 +5,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using NUnit.Framework;
-using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.Communication;
+
 // ReSharper disable TooWideLocalVariableScope
 
 namespace Revit.TestRunner.Runner.Direct
@@ -137,7 +138,7 @@ namespace Revit.TestRunner.Runner.Direct
                 }
             }
 
-            if( listOfMethods.Count > 1 ) throw new InvalidOperationException( $"More than method marked with '{attributeType.Name}' attribute found!" );
+            if( listOfMethods.Count > 1 ) throw new InvalidOperationException( $"More than one method marked with '{attributeType.Name}' attribute found!" );
 
             return listOfMethods.SingleOrDefault();
         }

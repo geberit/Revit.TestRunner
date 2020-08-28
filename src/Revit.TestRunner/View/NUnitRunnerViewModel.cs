@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
-using Revit.TestRunner.Runner.Direct;
 using Revit.TestRunner.Runner.NUnit;
-using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.Client;
+using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.View.TestTreeView;
 
 namespace Revit.TestRunner.View
@@ -135,42 +134,70 @@ namespace Revit.TestRunner.View
 
         private async Task ExecuteWithReflection()
         {
-            DateTime start = DateTime.Now;
-            ProgramState = "Test Run started...";
-
             Tree.SelectedNode.Descendents.ToList().ForEach( n => n.Reset() );
             Tree.SelectedNode.Reset();
 
-            var toRun = CasesToRun( Tree.SelectedNode ).ToList();
 
-            ReflectionRunner runner = new ReflectionRunner();
-            var testResults = new List<TestCase>();
+            var caseViewModels = Tree.SelectedNode.Descendents.Where( vm => vm.Type == TestType.Case ).Distinct();
+            var testCases = caseViewModels.Select( ToTestCase ).ToList();
 
-            await mRevitTask.Run( async application => {
-                for( int i = 0; i < toRun.Count; i++ ) {
-                    ProgramState = $"Run Test {i + 1} of {toRun.Count}";
-                    var testResult = await runner.RunTest( toRun[i], application );
-                    testResults.Add( testResult );
+            RunRequest request = new RunRequest {
+                Id = "someId",
+                ClientName = "InRevitRunner",
+                ClientVersion = "1.0.0.0",
+                Cases = testCases.ToArray()
+            };
 
-                    var test = Tree.ObjectTree.Single( t => t.Id == testResult.Id );
-                    test.State = testResult.State;
-                    test.Message = testResult.Message;
-                    test.StackTrace = testResult.StackTrace;
+            string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "Revit.TestRunner" );
+            var client = new Client( path );
+
+            await client.RunAsync( request, result => {
+                foreach( TestCase resultCase in result.Result.Cases ) {
+                    var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
+
+                    if( caseViewModel != null ) {
+                        caseViewModel.State = resultCase.State;
+                        caseViewModel.Message = resultCase.Message;
+                        caseViewModel.StackTrace = resultCase.StackTrace;
+                    }
                 }
 
-                PresentResults( testResults, start );
+                if( result.Result.State == TestState.Unknown ) {
+                    ProgramState = "Not started";
+                }
+                else {
+                    TimeSpan duration = result.Result.Timestamp - result.Result.StartTime;
+                    var passedCases = result.Result.Cases.Where( c => c.State == TestState.Passed );
+                    var failedCases = result.Result.Cases.Where( c => c.State == TestState.Failed );
+                    int finishedCount = passedCases.Count() + failedCases.Count();
+
+
+                    if( result.Result.State == TestState.Running ) {
+                        ProgramState = $"Running {duration:MMss} - Tests {finishedCount}/{result.Result.Cases.Length}, Failed {failedCases.Count()}";
+                    }
+                    else {
+                        ProgramState = $"Finished {duration:MMss} - Tests {finishedCount}, Failed {failedCases.Count()}";
+                        string message = string.Empty;
+
+                        if( result.Result.State == TestState.Passed ) {
+                            message = $"Run finished with no errors! TestCount={result.Result.Cases.Length}";
+                        }
+                        else if( result.Result.State == TestState.Failed ) {
+                            message = $"Run finished with errors! TestCount={result.Result.Cases.Length} Failed={result.Result.Cases.Count( c => c.State == TestState.Failed )}";
+                        }
+
+                        if( !string.IsNullOrEmpty( message ) ) {
+                            Log.Info( message );
+
+                            MessageBox.Show( message,
+                                "TestRunner",
+                                MessageBoxButton.OK,
+                                result.Result.State == TestState.Passed ? MessageBoxImage.Information : MessageBoxImage.Error );
+                        }
+                    }
+                }
+
             } );
-        }
-
-        private IEnumerable<TestCase> CasesToRun( NodeViewModel root )
-        {
-            var list = new List<NodeViewModel>( root.Descendents ) { root };
-            var cases = list.Where( n => n.Type == TestType.Case ).ToList();
-
-            if( root.Type == TestType.Case ) cases.Add( root );
-
-            var result = cases.Distinct().Select( ToTestCase );
-            return result;
         }
 
         private TestCase ToTestCase( NodeViewModel node )
@@ -212,33 +239,6 @@ namespace Revit.TestRunner.View
             foreach( var test in testSuite.TestCases ) {
                 ToNode( node, test );
             }
-        }
-
-
-        private void PresentResults( IEnumerable<TestCase> results, DateTime start )
-        {
-            DateTime end = DateTime.Now;
-
-
-
-            bool success = results.All( n => n.State == TestState.Passed );
-
-            int passed = results.Count( t => t.State == TestState.Passed );
-            int failed = results.Count( t => t.State == TestState.Failed );
-            int unknown = results.Count( t => t.State == TestState.Unknown );
-
-            ProgramState = $"Test Run finished at {end:T}. Passed {passed} of {results.Count()}";
-
-            string message = $"Run finished at {end:T}\n\n" +
-                             $"Passed Tests {passed} of {results.Count()}\n" +
-                             $"Run Duration {end - start}";
-
-            Log.Info( message );
-
-            MessageBox.Show( message,
-                "TestRunner",
-                MessageBoxButton.OK,
-                success ? MessageBoxImage.Information : MessageBoxImage.Error );
         }
         #endregion
     }

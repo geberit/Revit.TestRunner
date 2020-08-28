@@ -1,4 +1,4 @@
-﻿namespace Revit.TestRunner.Shared.Dto
+﻿namespace Revit.TestRunner.Shared.Communication
 {
     public enum TestState
     {

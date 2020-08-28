@@ -4,7 +4,7 @@ using System.Linq;
 using Autodesk.Revit.UI;
 using Revit.TestRunner.Runner.Direct;
 using Revit.TestRunner.Shared;
-using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Server
 {
@@ -81,16 +81,18 @@ namespace Revit.TestRunner.Server
                 if( request != null ) {
                     DateTime startTime = DateTime.Now;
 
+                    string directoryName = $"{startTime:yyyyddMM_hhmmss}-{request.Id}";
+                    mCurrentRunDirectory = FileHelper.GetDirectory( Path.Combine( mWatchDirectory.FullName, directoryName ) );
+
+                    string summaryPath = Path.Combine( mCurrentRunDirectory.FullName, "summary.txt" );
+                    LogInfo( summaryPath, $"Test Request '{request.Id}' - {request.ClientName} ({request.ClientVersion})" );
+
                     RunResult runResult = new RunResult();
                     runResult.Id = request.Id;
                     runResult.StartTime = startTime;
                     runResult.State = TestState.Running;
                     runResult.Cases = request.Cases.ToArray();
-
-                    string directoryName = $"{startTime:yyyyddMM_hhmmss}-{request.Id}";
-                    mCurrentRunDirectory = FileHelper.GetDirectory( Path.Combine( mWatchDirectory.FullName, directoryName ) );
-
-                    Log.Info( $"Test Request '{request.Id}' - {request.ClientName} ({request.ClientVersion})" );
+                    runResult.SummaryFile = summaryPath;
 
                     RevitTask runnerTask = new RevitTask();
                     ReflectionRunner runner = new ReflectionRunner();
@@ -103,7 +105,6 @@ namespace Revit.TestRunner.Server
 
                             foreach( TestCase test in request.Cases ) {
                                 var runTestResult = runResult.Cases.Single( t => t.Id == test.Id );
-                                runTestResult.State = TestState.Running;
 
                                 WriteTestStateFile( mCurrentRunDirectory, runResult, false );
 
@@ -112,18 +113,32 @@ namespace Revit.TestRunner.Server
                                 runTestResult.State = testResult.State;
                                 runTestResult.Message = testResult.Message;
                                 runTestResult.StackTrace = testResult.StackTrace;
+
+                                LogInfo( summaryPath, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
+
+                                if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryPath, $"\t{test.Message}" );
+                                if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryPath, $"\t{test.StackTrace}" );
                             }
 
                         }
                         catch( Exception e ) {
                             runResult.Output = e.ToString();
+                            LogInfo( summaryPath, e );
                         }
 
                         WriteTestStateFile( mCurrentRunDirectory, runResult, true );
 
+                        LogInfo( summaryPath, $"Test run end - duration {runResult.Timestamp - runResult.StartTime}" );
+
                     } );
                 }
             }
+        }
+
+        private void LogInfo( string summarypath, object message )
+        {
+            Log.Info( message );
+            File.AppendAllText( summarypath, message + "\n" );
         }
 
 

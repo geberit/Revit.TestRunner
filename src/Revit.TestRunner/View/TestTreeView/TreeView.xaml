@@ -6,7 +6,7 @@
              xmlns:view="clr-namespace:Revit.TestRunner.View"
              xmlns:propertyTreeView="clr-namespace:Revit.TestRunner.View.TestTreeView"
              xmlns:testRunner="clr-namespace:Revit.TestRunner.Runner.NUnit"
-             xmlns:dto="clr-namespace:Revit.TestRunner.Shared.Dto;assembly=Revit.TestRunner.Shared"
+             xmlns:dto="clr-namespace:Revit.TestRunner.Shared.Communication;assembly=Revit.TestRunner.Shared"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance propertyTreeView:TreeViewModel, IsDesignTimeCreatable=True}"

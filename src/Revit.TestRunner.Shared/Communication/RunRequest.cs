@@ -1,4 +1,4 @@
-﻿namespace Revit.TestRunner.Shared.Dto
+﻿namespace Revit.TestRunner.Shared.Communication
 {
     /// <summary>
     /// Represents a test run, containing a set of <see cref="TestCase"/>s.

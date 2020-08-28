@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using Revit.TestRunner.Runner.NUnit;
-using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.View.TestTreeView
 {
