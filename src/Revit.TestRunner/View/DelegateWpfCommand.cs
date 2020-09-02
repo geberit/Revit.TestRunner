@@ -18,46 +18,49 @@ namespace Revit.TestRunner.View
 
     public class AsyncCommand : IAsyncCommand
     {
-        public event EventHandler CanExecuteChanged;
+        private bool mIsExecuting;
+        private readonly Func<Task> mExecute;
+        private readonly Func<bool> mCanExecute;
+        private readonly IErrorHandler mErrorHandler;
 
-        private bool _isExecuting;
-        private readonly Func<Task> _execute;
-        private readonly Func<bool> _canExecute;
-        private readonly IErrorHandler _errorHandler;
-
-        public AsyncCommand(
-            Func<Task> execute,
-            Func<bool> canExecute = null,
-            IErrorHandler errorHandler = null )
+        public AsyncCommand( Func<Task> execute, Func<bool> canExecute = null, IErrorHandler errorHandler = null )
         {
-            _execute = execute;
-            _canExecute = canExecute;
-            _errorHandler = errorHandler;
+            mExecute = execute;
+            mCanExecute = canExecute;
+            mErrorHandler = errorHandler;
         }
 
         public bool CanExecute()
         {
-            return !_isExecuting && (_canExecute?.Invoke() ?? true);
+            return !mIsExecuting && (mCanExecute?.Invoke() ?? true);
         }
 
         public async Task ExecuteAsync()
         {
             if( CanExecute() ) {
                 try {
-                    _isExecuting = true;
-                    await _execute();
+                    mIsExecuting = true;
+                    await mExecute();
                 }
                 finally {
-                    _isExecuting = false;
+                    mIsExecuting = false;
+                }
+            }
+        }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add {
+                if( mCanExecute != null ) {
+                    CommandManager.RequerySuggested += value;
                 }
             }
 
-            RaiseCanExecuteChanged();
-        }
-
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke( this, EventArgs.Empty );
+            remove {
+                if( mCanExecute != null ) {
+                    CommandManager.RequerySuggested -= value;
+                }
+            }
         }
 
         #region Explicit implementations
@@ -68,7 +71,7 @@ namespace Revit.TestRunner.View
 
         void ICommand.Execute( object parameter )
         {
-            ExecuteAsync().FireAndForgetSafeAsync( _errorHandler );
+            ExecuteAsync().FireAndForgetSafeAsync( mErrorHandler );
         }
         #endregion
 
@@ -118,15 +121,13 @@ namespace Revit.TestRunner.View
 
         public event EventHandler CanExecuteChanged
         {
-            add
-            {
+            add {
                 if( mCanExecute != null ) {
                     CommandManager.RequerySuggested += value;
                 }
             }
 
-            remove
-            {
+            remove {
                 if( mCanExecute != null ) {
                     CommandManager.RequerySuggested -= value;
                 }

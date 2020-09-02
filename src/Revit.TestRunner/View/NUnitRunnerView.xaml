@@ -43,6 +43,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button  Content="Run" Width="100" Command="{Binding DebugCommand}" ToolTip="Run Selected"/>
+                <Button  Content="Create request" Width="100" Command="{Binding CreateRequestCommand}" ToolTip="Run Selected"/>
             </StackPanel>
         </DockPanel>
 

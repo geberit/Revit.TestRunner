@@ -46,7 +46,7 @@ namespace Revit.TestRunner.View.TestTreeView
             {
                 if( Equals( value, mSelectedNode ) ) return;
                 mSelectedNode = value;
-                OnPropertyChanged( () => SelectedNode );
+                OnPropertyChanged();
             }
         }
 

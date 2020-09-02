@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Autodesk.Revit.UI;
 using NUnit.Framework;
 
 namespace Revit.TestRunner.SampleTestProject
@@ -7,13 +8,13 @@ namespace Revit.TestRunner.SampleTestProject
     public class MoreTests
     {
         [SetUp]
-        public void SetUp( object uiApplication )
+        public void SetUp( UIApplication uiApplication )
         {
             Assert.NotNull( uiApplication );
         }
 
         [TearDown]
-        public void TearDown( object application )
+        public void TearDown( UIApplication application )
         {
             Assert.NotNull( application );
         }

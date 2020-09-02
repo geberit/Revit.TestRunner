@@ -18,6 +18,7 @@ namespace Revit.TestRunner.View.TestTreeView
         private TestState mState;
         private string mMessage;
         private string mStackTrace;
+        private bool? mIsChecked;
 
         internal NodeViewModel( NUnitResult nUnitResult )
         {
@@ -25,6 +26,7 @@ namespace Revit.TestRunner.View.TestTreeView
             Children = new List<NodeViewModel>();
             IsExpanded = true;
             IsShow = true;
+            mIsChecked = false;
 
             // Test Stuff
             mNUnitResult = nUnitResult ?? throw new System.ArgumentNullException( nameof( nUnitResult ) );
@@ -41,8 +43,7 @@ namespace Revit.TestRunner.View.TestTreeView
 
         public string Text
         {
-            get
-            {
+            get {
                 string result = string.Empty;
 
                 if( Type == TestType.Run ) result = "Test Run";
@@ -62,8 +63,7 @@ namespace Revit.TestRunner.View.TestTreeView
 
         public TestState State
         {
-            get
-            {
+            get {
                 TestState result = TestState.Unknown;
 
                 if( Children.Count == 0 ) result = mState;
@@ -74,13 +74,38 @@ namespace Revit.TestRunner.View.TestTreeView
 
                 return result;
             }
-            set
-            {
+            set {
                 if( Children.Count == 0 ) {
                     if( value == mState ) return;
                     mState = value;
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        public bool? IsChecked
+        {
+            get {
+                if( mNUnitResult == null || Type == TestType.Case ) {
+                    return mIsChecked;
+                }
+                else {
+                    var cases = DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToList();
+                    if( cases.All( c => c.IsChecked == true ) ) return true;
+                    if( cases.All( c => c.IsChecked == false ) ) return false;
+                    return null;
+                }
+            }
+            set {
+                if( mNUnitResult == null || Type == TestType.Case ) {
+                    mIsChecked = value == true;
+                }
+                else {
+                    var cases = DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToList();
+                    cases.ForEach( n => n.IsChecked = value );
+                }
+
+                OnPropertyChanged();
             }
         }
 
@@ -98,12 +123,11 @@ namespace Revit.TestRunner.View.TestTreeView
                     : State == TestState.Failed
                         ? "One ore more child tests had errors."
                         : string.Empty;
-            set
-            {
+            set {
                 if( Children.Count == 0 ) {
                     if( value == mMessage ) return;
                     mMessage = value;
-                    OnPropertyChanged( () => Message );
+                    OnPropertyChanged();
                 }
             }
         }
@@ -111,11 +135,10 @@ namespace Revit.TestRunner.View.TestTreeView
         public string StackTrace
         {
             get => mStackTrace;
-            set
-            {
+            set {
                 if( value == mStackTrace ) return;
                 mStackTrace = value;
-                OnPropertyChanged( () => StackTrace );
+                OnPropertyChanged();
             }
         }
 
@@ -131,8 +154,7 @@ namespace Revit.TestRunner.View.TestTreeView
 
         private IEnumerable<NodeViewModel> Ancestors
         {
-            get
-            {
+            get {
                 var result = new List<NodeViewModel>();
 
                 if( Parent != null ) {
@@ -144,10 +166,11 @@ namespace Revit.TestRunner.View.TestTreeView
             }
         }
 
+        internal IEnumerable<NodeViewModel> DescendantsAndMe => Descendents.ToList().Append( this );
+
         internal IEnumerable<NodeViewModel> Descendents
         {
-            get
-            {
+            get {
                 var result = new List<NodeViewModel>();
 
                 foreach( NodeViewModel child in Children ) {
@@ -162,8 +185,7 @@ namespace Revit.TestRunner.View.TestTreeView
         public bool IsExpanded
         {
             get => mIsExpanded;
-            set
-            {
+            set {
                 if( value != mIsExpanded ) {
                     mIsExpanded = value;
 

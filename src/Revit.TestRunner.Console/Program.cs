@@ -13,8 +13,6 @@ namespace Revit.TestRunner.Console
     public class Program
     {
         private const string ArgRequestFile = "request";
-        private const string SampleFile = @"C:\Users\floto\AppData\Roaming\Revit.TestRunner\_samples\sampleFake.json";
-        private const string SamplePlugin1 = @"C:\Users\floto\AppData\Roaming\Revit.TestRunner\_samples\PluginTests1.json";
 
         private readonly string mWatchDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "Revit.TestRunner" );
 
@@ -37,8 +35,7 @@ namespace Revit.TestRunner.Console
                 }
             }
             else {
-                //var request = GetSampleRequest();
-                var request = GetRequestFromFile( SamplePlugin1 );
+                var request = GetSampleRequest();
                 await RunTests( request );
             }
         }
@@ -50,6 +47,7 @@ namespace Revit.TestRunner.Console
             request.ClientVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             TimeSpan duration = TimeSpan.Zero;
+            System.Console.WriteLine( $"App dir {mWatchDirectory}" );
             System.Console.WriteLine( $"Start test run {DateTime.Now}" );
 
             var complete = new List<TestCase>();

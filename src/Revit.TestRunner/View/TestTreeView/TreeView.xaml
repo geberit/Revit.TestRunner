@@ -14,7 +14,7 @@
              >
 
     <UserControl.Resources>
-        <view:BoolToHiddenConverter x:Key="BoolToVisConverter"/> 
+        <view:BoolToHiddenConverter x:Key="BoolToVisConverter"/>
 
         <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}" >
             <Setter Property="FontFamily" Value="Segoe UI" />
@@ -107,6 +107,8 @@
                                     </ToggleButton.Template>
                                 </ToggleButton>
 
+                                <CheckBox IsChecked="{Binding IsChecked}"
+                                          VerticalAlignment="Center"/>
 
                                 <TextBlock Text="{Binding Text}" ToolTip="{Binding ToolTip}"
                                            Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource TextStateStyle}" >
@@ -127,13 +129,13 @@
                 </GridViewColumn>
 
                 <GridViewColumn Header="Type" Width="60" >
-                <GridViewColumn.CellTemplate>
-                    <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                        <TextBlock Style="{StaticResource TextStateStyle}"
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                            <TextBlock Style="{StaticResource TextStateStyle}"
                                        Text="{Binding Type}" ToolTip="{Binding Type}"/>
-                    </DataTemplate>
-                </GridViewColumn.CellTemplate>
-            </GridViewColumn>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
             </GridView>
         </ListView.View>
     </ListView>

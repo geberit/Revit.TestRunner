@@ -81,7 +81,7 @@ namespace Revit.TestRunner.Server
                 if( request != null ) {
                     DateTime startTime = DateTime.Now;
 
-                    string directoryName = $"{startTime:yyyyddMM_hhmmss}-{request.Id}";
+                    string directoryName = $"{startTime:yyyyMMdd_HHmmss}-{request.Id}";
                     mCurrentRunDirectory = FileHelper.GetDirectory( Path.Combine( mWatchDirectory.FullName, directoryName ) );
 
                     string summaryPath = Path.Combine( mCurrentRunDirectory.FullName, "summary.txt" );
