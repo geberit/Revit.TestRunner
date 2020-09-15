@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Client;
@@ -12,9 +13,8 @@ namespace Revit.TestRunner.Console
 {
     public class Program
     {
-        private const string ArgRequestFile = "request";
-
-        private readonly string mWatchDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "Revit.TestRunner" );
+        private string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        private const string ProgramName = "ConsoleRunner";
 
         public static void Main( string[] args )
         {
@@ -27,10 +27,8 @@ namespace Revit.TestRunner.Console
         private async Task MainAsync( string[] args )
         {
             if( args.Any() ) {
-                if( args[0] == ArgRequestFile ) {
-                    if( args.Length != 2 ) System.Console.WriteLine( $"Argument '{ArgRequestFile}' need request json file" );
-
-                    var request = GetRequestFromFile( args[1] );
+                if( args.Length == 1 ) {
+                    var request = GetRequestFromFile( args[0] );
                     await RunTests( request );
                 }
             }
@@ -42,18 +40,17 @@ namespace Revit.TestRunner.Console
 
         private async Task RunTests( RunRequest request )
         {
-            request.Id = Client.GenerateId();
             request.ClientName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
             request.ClientVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             TimeSpan duration = TimeSpan.Zero;
-            System.Console.WriteLine( $"App dir {mWatchDirectory}" );
+            System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
             System.Console.WriteLine( $"Start test run {DateTime.Now}" );
 
             var complete = new List<TestCase>();
-            Client client = new Client( mWatchDirectory );
+            Client client = new Client( ProgramName, ProgramVersion );
 
-            await client.RunAsync( request, result => {
+            await client.StartTestRunAsync( request, result => {
                 try {
                     foreach( var test in result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
                         if( complete.All( t => t.Id != test.Id ) ) {
@@ -73,7 +70,7 @@ namespace Revit.TestRunner.Console
                     System.Console.WriteLine( $"Callback Exception: {e}" );
 
                 }
-            } );
+            }, CancellationToken.None );
 
             int passedCount = complete.Count( t => t.State == TestState.Passed );
 
@@ -92,7 +89,7 @@ namespace Revit.TestRunner.Console
 
                     System.Console.WriteLine( $"Request loaded from '{path}'" );
                 }
-                catch( Exception e) {
+                catch( Exception e ) {
                     System.Console.WriteLine( $"Can not create Request from '{path}' - {e}" );
                 }
             }
@@ -109,7 +106,6 @@ namespace Revit.TestRunner.Console
             string pathToSampleRequest = Path.Combine( dir, "sampleMoreTests.json" );
 
             RunRequest request = GetRequestFromFile( pathToSampleRequest );
-            request.Id = "SampleRun";
 
             foreach( TestCase testCase in request.Cases ) {
                 testCase.AssemblyPath = Path.Combine( dir, "Revit.TestRunner.SampleTestProject.dll" );

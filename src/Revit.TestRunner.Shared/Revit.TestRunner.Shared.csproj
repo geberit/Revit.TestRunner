@@ -114,14 +114,23 @@
       <Link>Properties\AssemblyInfo.Version.cs</Link>
     </Compile>
     <Compile Include="Client\Client.cs" />
-    <Compile Include="Client\ProcessResult.cs" />
+    <Compile Include="Communication\FileNames.cs" />
+    <Compile Include="Communication\ProcessResult.cs" />
+    <Compile Include="Communication\BaseRequest.cs" />
     <Compile Include="Communication\Enumerations.cs" />
+    <Compile Include="Communication\ExploreRequest.cs" />
+    <Compile Include="Communication\ExploreResponse.cs" />
+    <Compile Include="Communication\Response.cs" />
     <Compile Include="Communication\RunnerStatus.cs" />
     <Compile Include="Communication\TestCase.cs" />
     <Compile Include="Communication\RunRequest.cs" />
     <Compile Include="Communication\RunResult.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="NUnit\NUnitResult.cs" />
+    <Compile Include="NUnit\NUnitTestCase.cs" />
+    <Compile Include="NUnit\NUnitTestRun.cs" />
+    <Compile Include="NUnit\NUnitTestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

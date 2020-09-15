@@ -1,7 +1,10 @@
-﻿using Autodesk.Revit.Attributes;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Windows;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Revit.TestRunner.View;
 
 namespace Revit.TestRunner.Commands
 {
@@ -10,10 +13,15 @@ namespace Revit.TestRunner.Commands
     {
         public Result Execute( ExternalCommandData commandData, ref string message, ElementSet elements )
         {
-            RevitTask revitTask = new RevitTask();
+            FileInfo file = new FileInfo( Assembly.GetExecutingAssembly().Location );
+            var exe = Path.Combine( file.Directory.FullName, "Revit.TestRunner.App.exe" );
 
-            NUnitRunnerViewModel viewModel = new NUnitRunnerViewModel( revitTask );
-            DialogWindow.Show<NUnitRunnerView>( viewModel );
+            if( File.Exists( exe ) ) {
+                Process.Start( exe );
+            }
+            else {
+                MessageBox.Show( "Please use Revit.TestRunner Standalone App.", "Revit.TestRunner", MessageBoxButton.OK, MessageBoxImage.Information );
+            }
 
             return Result.Succeeded;
         }

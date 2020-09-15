@@ -1,17 +1,13 @@
-﻿namespace Revit.TestRunner.Shared.Communication
+﻿using Newtonsoft.Json;
+
+namespace Revit.TestRunner.Shared.Communication
 {
     /// <summary>
     /// Represents a test run, containing a set of <see cref="TestCase"/>s.
     /// </summary>
-    public class RunRequest
+    public class RunRequest : BaseRequest
     {
-        public string Id { get; set; }
-
-        public string ClientName { get; set; }
-
-        public string ClientVersion { get; set; }
-
+        [JsonProperty( Order = 11 )]
         public TestCase[] Cases { get; set; }
-
     }
 }

@@ -225,28 +225,8 @@
     </Compile>
     <Compile Include="RevitTask.cs" />
     <Compile Include="Runner\Direct\ReflectionRunner.cs" />
-    <Compile Include="Runner\NUnit\NUnitResult.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestCase.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestRun.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestSuite.cs" />
     <Compile Include="Runner\NUnit\NUnitRunner.cs" />
     <Compile Include="Server\Service.cs" />
-    <Compile Include="View\AbstractViewModel.cs" />
-    <Compile Include="View\BoolToHiddenConverter.cs" />
-    <Compile Include="View\DelegateWpfCommand.cs" />
-    <Compile Include="View\DialogViewModel.cs" />
-    <Compile Include="View\DialogWindow.xaml.cs">
-      <DependentUpon>DialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerView.xaml.cs">
-      <DependentUpon>NUnitRunnerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerViewModel.cs" />
-    <Compile Include="View\TestTreeView\NodeViewModel.cs" />
-    <Compile Include="View\TestTreeView\TreeView.xaml.cs">
-      <DependentUpon>TreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\TestTreeView\TreeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -264,18 +244,6 @@
     <Page Include="GlobalResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\DialogWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\NUnitRunnerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\TestTreeView\TreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

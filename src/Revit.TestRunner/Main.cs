@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -34,8 +33,7 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
-            string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "Revit.TestRunner" );
-            mService = new Service( path );
+            mService = new Service();
             mService.Start( application );
 
             return Result.Succeeded;
