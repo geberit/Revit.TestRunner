@@ -128,6 +128,8 @@ namespace Revit.TestRunner.App.View
                         caseViewModel.StackTrace = resultCase.StackTrace;
                     }
                 }
+
+                if( !string.IsNullOrEmpty( result.Message ) ) ProgramState = result.Message;
             }, CancellationToken.None );
 
             int total = caseViewModels.Count();

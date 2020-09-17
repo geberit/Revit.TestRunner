@@ -26,16 +26,16 @@ namespace Revit.TestRunner.Console
 
         private async Task MainAsync( string[] args )
         {
-            if( args.Any() ) {
-                if( args.Length == 1 ) {
-                    var request = GetRequestFromFile( args[0] );
-                    await RunTests( request );
-                }
+            RunRequest request = null;
+
+            if( args.Length == 1 ) {
+                request = GetRequestFromFile( args[0] );
             }
             else {
-                var request = GetSampleRequest();
-                await RunTests( request );
+                request = GetSampleRequest();
             }
+
+            await RunTests( request );
         }
 
         private async Task RunTests( RunRequest request )
@@ -52,17 +52,19 @@ namespace Revit.TestRunner.Console
 
             await client.StartTestRunAsync( request, result => {
                 try {
-                    foreach( var test in result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
-                        if( complete.All( t => t.Id != test.Id ) ) {
-                            complete.Add( test );
+                    if( result.Result != null ) {
+                        foreach( var test in result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
+                            if( complete.All( t => t.Id != test.Id ) ) {
+                                complete.Add( test );
 
-                            string testString = $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}";
+                                string testString = $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}";
 
-                            System.Console.WriteLine( testString );
-                            if( !string.IsNullOrEmpty( test.Message ) ) System.Console.WriteLine( $"\t{test.Message}" );
-                            if( !string.IsNullOrEmpty( test.StackTrace ) ) System.Console.WriteLine( $"\t{test.StackTrace}" );
+                                System.Console.WriteLine( testString );
+                                if( !string.IsNullOrEmpty( test.Message ) ) System.Console.WriteLine( $"\t{test.Message}" );
+                                if( !string.IsNullOrEmpty( test.StackTrace ) ) System.Console.WriteLine( $"\t{test.StackTrace}" );
 
-                            duration = result.Duration;
+                                duration = result.Duration;
+                            }
                         }
                     }
                 }
@@ -70,6 +72,8 @@ namespace Revit.TestRunner.Console
                     System.Console.WriteLine( $"Callback Exception: {e}" );
 
                 }
+
+                if( !string.IsNullOrEmpty( result.Message ) ) System.Console.WriteLine( result.Message );
             }, CancellationToken.None );
 
             int passedCount = complete.Count( t => t.State == TestState.Passed );

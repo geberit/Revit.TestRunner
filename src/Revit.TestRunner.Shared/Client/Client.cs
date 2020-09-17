@@ -73,7 +73,7 @@ namespace Revit.TestRunner.Shared.Client
 
             var responseDirectoryPath = await GetResponseDirectory( aRequest.Id );
 
-            if( !string.IsNullOrEmpty( responseDirectoryPath ) ) {
+            if( Directory.Exists( responseDirectoryPath ) ) {
                 bool run = true;
 
                 while( run && !aCancellationToken.IsCancellationRequested ) {
@@ -92,7 +92,8 @@ namespace Revit.TestRunner.Shared.Client
                 }
             }
             else {
-                aCallback( new ProcessResult( null, true ) { Message = "No run directory!" } );
+                FileHelper.DeleteWithLock( requestFilePath );
+                aCallback( new ProcessResult( null, true ) { Message = "Tests not executed! Service may not be running." } );
             }
         }
 

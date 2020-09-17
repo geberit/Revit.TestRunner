@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Autodesk.Revit.UI;
-using Revit.TestRunner.Runner.Direct;
-using Revit.TestRunner.Runner.NUnit;
+using Revit.TestRunner.Runner;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
 
@@ -18,6 +18,8 @@ namespace Revit.TestRunner.Server
         {
             mApplication = application;
             mApplication.Idling += OnIdle;
+
+            Initialize();
 
             Log.Info( $"Service started '{DateTime.Now}'" );
         }
@@ -42,15 +44,31 @@ namespace Revit.TestRunner.Server
                 UIApplication uiApplication = sender as UIApplication;
                 Run( runRequestFile, uiApplication );
             }
+            else {
+                Thread.Sleep( 250 );
+            }
 
             SetStatus();
+        }
+
+
+        private void Initialize()
+        {
+            if( !Directory.Exists( FileNames.WatchDirectory ) ) {
+                Directory.CreateDirectory( FileNames.WatchDirectory );
+            }
+
+            if( File.Exists( FileNames.RunnerStatusFilePath ) ) {
+                FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
+            }
         }
 
         private void SetStatus()
         {
             RunnerStatus status = new RunnerStatus {
                 Timestamp = DateTime.Now,
-                LogFilePath = Log.LogFilePath
+                LogFilePath = Log.LogFilePath,
+                RevitVersion = mApplication?.ControlledApplication?.VersionName
             };
 
             JsonHelper.ToFile( FileNames.RunnerStatusFilePath, status );

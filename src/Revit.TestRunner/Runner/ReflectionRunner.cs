@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using Revit.TestRunner.Shared.Communication;
 
 // ReSharper disable TooWideLocalVariableScope
 
-namespace Revit.TestRunner.Runner.Direct
+namespace Revit.TestRunner.Runner
 {
     /// <summary>
     /// This Runner runs the corresponding Test using Reflection.
@@ -50,6 +51,8 @@ namespace Revit.TestRunner.Runner.Direct
             MethodInfo testMethod = null;
 
             try {
+                if( !File.Exists( test.AssemblyPath ) ) throw new FileNotFoundException( $"Assembly not found! {test.AssemblyPath}" );
+
                 Assembly assembly = Assembly.LoadFile( test.AssemblyPath );
                 Type type = assembly.GetType( test.TestClass );
                 obj = Activator.CreateInstance( type );

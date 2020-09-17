@@ -1,6 +1,6 @@
-C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Revit.TestRunner.App.exe.config
-C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Revit.TestRunner.App.exe
-C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Revit.TestRunner.App.pdb
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Client\Revit.TestRunner.App.exe.config
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Client\Revit.TestRunner.App.exe
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Client\Revit.TestRunner.App.pdb
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.App\obj\x64\Release\Revit.TestRunner.App.csprojAssemblyReference.cache
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.App\obj\x64\Release\GlobalResources.baml
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.App\obj\x64\Release\MainWindow.g.cs

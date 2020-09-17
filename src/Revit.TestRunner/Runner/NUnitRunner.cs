@@ -7,7 +7,7 @@ using NUnit.Engine;
 using NUnit.Engine.Services;
 using Revit.TestRunner.Shared.Communication;
 
-namespace Revit.TestRunner.Runner.NUnit
+namespace Revit.TestRunner.Runner
 {
     /// <summary>
     /// This Runner runs the corresponding Test using NUnit.
