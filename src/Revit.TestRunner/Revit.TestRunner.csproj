@@ -238,7 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Revit.TestRunner.addin" />
-    <Resource Include="View\Pic\Testing.png" />
+    <Resource Include="Commands\Pic\Testing.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GlobalResources.xaml">

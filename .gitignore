@@ -3,7 +3,8 @@
 ################################################################################
 
 /src/Revit.TestRunner.SampleTestProject/obj
-/src/Revit.TestRunner/obj/x64
+/src/Revit.TestRunner/obj
+/src/Revit.TestRunner.App/obj
 /src/Revit.TestRunner.Console/obj
 /src/Revit.TestRunner.Shared/obj
 /.vs

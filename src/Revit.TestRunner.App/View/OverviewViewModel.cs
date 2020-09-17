@@ -22,24 +22,35 @@ namespace Revit.TestRunner.App.View
     {
         #region Members, Constructor
 
+        private const string ProgramName = "AppRunner";
+
+        private readonly Client mClient;
+        private RunnerStatus mRunnerStatus;
         private string mAssemblyPath;
         private string mProgramState;
 
         public OverviewViewModel()
         {
+            mClient = GetClient();
+
             Tree = new TreeViewModel();
             Tree.PropertyChanged += ( o, args ) => OnPropertyChangedAll();
 
             if( !string.IsNullOrEmpty( Properties.Settings.Default.AssemblyPath ) ) {
                 LoadAssembly( Properties.Settings.Default.AssemblyPath );
             }
+
+            InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
+            
+            Task.Run( () => mClient.StartRunnerStatusWatcher( CheckStatus ) );
         }
         #endregion
 
         #region Properties
 
+        public IEnumerable<string> InstalledRevitVersions { get; }
+
         public string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        private const string ProgramName = "AppRunner";
 
         public TreeViewModel Tree { get; set; }
 
@@ -47,9 +58,10 @@ namespace Revit.TestRunner.App.View
         {
             get => mAssemblyPath;
             set {
-                if( value == mAssemblyPath ) return;
-                mAssemblyPath = value;
-                OnPropertyChanged( () => AssemblyPath );
+                if( mAssemblyPath != value ) {
+                    mAssemblyPath = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -70,12 +82,18 @@ namespace Revit.TestRunner.App.View
         {
             get => mProgramState;
             set {
-                if( value == mProgramState ) return;
-                mProgramState = value;
-                OnPropertyChanged();
+                if( mProgramState != value ) {
+                    mProgramState = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
+        public string RevitVersion => IsServerRunning ? mRunnerStatus.RevitVersion : "No Runner available!";
+
+        public string LogFilePath => mRunnerStatus?.LogFilePath;
+
+        public bool IsServerRunning => mRunnerStatus != null;
         #endregion
 
         #region Commands
@@ -107,11 +125,10 @@ namespace Revit.TestRunner.App.View
             var caseViewModels = GetSelectedCases().ToList();
             var testCases = caseViewModels.Select( ToTestCase );
 
-            var client = GetClient();
             int callbackCount = 0;
             TimeSpan duration = TimeSpan.Zero;
 
-            await client.StartTestRunAsync( testCases, result => {
+            await mClient.StartTestRunAsync( testCases, "2020", result => {
                 callbackCount++;
                 string points = string.Concat( Enumerable.Repeat( ".", callbackCount % 5 ) );
                 ProgramState = "Test Run in progress" + points;
@@ -166,12 +183,32 @@ namespace Revit.TestRunner.App.View
             Process.Start( FileNames.WatchDirectory );
         }
 
+        public ICommand OpenLogCommand => new DelegateWpfCommand( ExecuteOpenLogCommand );
+        private void ExecuteOpenLogCommand()
+        {
+            Process.Start( LogFilePath );
+        }
+
         #endregion
 
         #region Methods
 
+        private void CheckStatus( RunnerStatus status )
+        {
+            mRunnerStatus = status;
+            OnPropertyChangedAll();
+        }
+
         private Client GetClient()
         {
+            if( !Directory.Exists( FileNames.WatchDirectory ) ) {
+                Directory.CreateDirectory( FileNames.WatchDirectory );
+            }
+
+            if( File.Exists( FileNames.RunnerStatusFilePath ) ) {
+                FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
+            }
+
             var client = new Client( ProgramName, ProgramVersion );
             return client;
         }
@@ -196,8 +233,7 @@ namespace Revit.TestRunner.App.View
 
                 Tree.Clear();
 
-                var client = GetClient();
-                ExploreResponse response = await client.ExploreAssemblyAsync( path, CancellationToken.None );
+                ExploreResponse response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
 
                 if( response != null ) {
                     LoadExploreFile( response.ExploreFile );

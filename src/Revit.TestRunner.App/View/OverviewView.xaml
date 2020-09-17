@@ -13,21 +13,26 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Revit.TestRunner.App;component/GlobalResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <DockPanel Margin="5">
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock  Text="Revit Test Runner" FontSize="16" FontWeight="Bold" />
+            <TextBlock  Text="Revit.TestRunner App" FontSize="16" FontWeight="Bold" />
             <TextBlock  Text="{Binding ProgramVersion}" FontSize="12" VerticalAlignment="Bottom" Margin="10,0,0,0"  />
-            <!--<TextBlock  DockPanel.Dock="Right" FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="10,0,0,0">
-                <Hyperlink Command="{Binding OpenLogCommand}">
-                    <TextBlock Text="Open Log" />
-                </Hyperlink>
-            </TextBlock>-->
-            <TextBlock  DockPanel.Dock="Right" FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock  Text="{Binding RevitVersion}" FontSize="12" VerticalAlignment="Bottom" Margin="20,0,0,0"  />
+
+            <TextBlock DockPanel.Dock="Right" FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,0,0">
                 <Hyperlink Command="{Binding OpenWorkDirCommand}">
                     <TextBlock Text="Open Work Directory" />
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock DockPanel.Dock="Right" FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,0,0"
+                       Visibility="{Binding IsServerRunning, Converter={StaticResource BooleanToVisibilityConverter }}">
+                <Hyperlink Command="{Binding OpenLogCommand}">
+                    <TextBlock Text="Open Log" />
                 </Hyperlink>
             </TextBlock>
         </DockPanel>
@@ -47,8 +52,9 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ComboBox Width="80" />
                 <Button  Content="Run" Width="100" Command="{Binding RunCommand}" ToolTip="Run Selected"/>
-                <Button  Content="Create request" Width="100" Command="{Binding CreateRequestCommand}" ToolTip="Run Selected"/>
+                <Button  Content="Create request" Width="100" Command="{Binding CreateRequestCommand}" ToolTip="Run Selected" Margin="20,0,0,0"/>
             </StackPanel>
         </DockPanel>
 

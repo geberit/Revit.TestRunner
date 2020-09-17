@@ -132,6 +132,7 @@
     <Compile Include="NUnit\NUnitTestRun.cs" />
     <Compile Include="NUnit\NUnitTestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevitHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

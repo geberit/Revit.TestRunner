@@ -10,6 +10,8 @@ namespace Revit.TestRunner.Shared.Client
 {
     public class Client
     {
+        #region Members, Constructor
+
         private readonly string mClientName;
         private readonly string mClientVersion;
 
@@ -17,9 +19,64 @@ namespace Revit.TestRunner.Shared.Client
         {
             mClientName = aClientName;
             mClientVersion = aClientVersion;
+
+            ClearRunnerStatus();
+        }
+        #endregion
+
+        #region Methods
+
+
+        public void StartRunnerStatusWatcher( Action<RunnerStatus> aCallback )
+        {
+            while( true ) {
+                RunnerStatus status = CheckStatus();
+
+                Task.Delay( 1000 );
+
+                aCallback( status );
+            }
         }
 
-        public async Task<ExploreResponse> ExploreAssemblyAsync( string aAssemblyPath, CancellationToken aCancellationToken )
+        private async Task<bool> IsRunnerAvailable( CancellationToken aCancellationToken )
+        {
+            bool result = false;
+
+            ClearRunnerStatus();
+
+            for( int i = 0; i < 30; i++ ) {
+                try {
+                    var status = CheckStatus();
+                    result = status != null;
+
+                    if( result ) break;
+                    if( aCancellationToken.IsCancellationRequested ) break;
+
+                    await Task.Delay( 1000, aCancellationToken );
+                }
+                catch {
+                    // do nothing
+                }
+            }
+
+            return result;
+        }
+
+        private RunnerStatus CheckStatus()
+        {
+            RunnerStatus status = null;
+
+            try {
+                status = JsonHelper.FromFile<RunnerStatus>( FileNames.RunnerStatusFilePath );
+            }
+            catch {
+                // do nothing
+            }
+
+            return status;
+        }
+
+        public async Task<ExploreResponse> ExploreAssemblyAsync( string aAssemblyPath, string aRevitVersion, CancellationToken aCancellationToken )
         {
             ExploreResponse response = null;
             ExploreRequest request = new ExploreRequest {
@@ -30,70 +87,85 @@ namespace Revit.TestRunner.Shared.Client
                 AssemblyPath = aAssemblyPath
             };
 
-            string requestFilePath = FileNames.ExploreRequestFilePath( request.Id );
-            JsonHelper.ToFile( requestFilePath, request );
+            RevitHelper.StartRevit( aRevitVersion );
+            bool isRunnerAvailable = await IsRunnerAvailable( aCancellationToken );
 
-            var responseDirectoryPath = await GetResponseDirectory( request.Id );
+            if( isRunnerAvailable ) {
+                string requestFilePath = FileNames.ExploreRequestFilePath( request.Id );
+                JsonHelper.ToFile( requestFilePath, request );
 
-            if( Directory.Exists( responseDirectoryPath ) ) {
-                while( response == null && !aCancellationToken.IsCancellationRequested ) {
-                    string responseFile = Path.Combine(responseDirectoryPath, FileNames.ExploreResponseFileName);
-                    response = JsonHelper.FromFile<ExploreResponse>( responseFile );
+                var responseDirectoryPath = await GetResponseDirectory( request.Id );
 
-                    if( response == null ) {
-                        await Task.Delay( 500, aCancellationToken );
+                if( Directory.Exists( responseDirectoryPath ) ) {
+                    while( response == null && !aCancellationToken.IsCancellationRequested ) {
+                        string responseFile = Path.Combine( responseDirectoryPath, FileNames.ExploreResponseFileName );
+                        response = JsonHelper.FromFile<ExploreResponse>( responseFile );
+
+                        if( response == null ) {
+                            await Task.Delay( 500, aCancellationToken );
+                        }
                     }
                 }
-            }
-            else {
-                FileHelper.DeleteWithLock( requestFilePath );
+                else {
+                    FileHelper.DeleteWithLock( requestFilePath );
+                }
             }
 
             return response;
         }
 
-        public async Task StartTestRunAsync( IEnumerable<TestCase> aTestCases, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
+        public async Task StartTestRunAsync( IEnumerable<TestCase> aTestCases, string aRevitVersion, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
         {
             RunRequest request = new RunRequest {
                 Cases = aTestCases.ToArray()
             };
 
-            await StartTestRunAsync( request, aCallback, aCancellationToken );
+            await StartTestRunAsync( request, aRevitVersion, aCallback, aCancellationToken );
         }
 
-        public async Task StartTestRunAsync( RunRequest aRequest, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
+        public async Task StartTestRunAsync( RunRequest aRequest, string aRevitVersion, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
         {
             aRequest.Timestamp = DateTime.Now;
             aRequest.Id = GenerateId();
             aRequest.ClientName = mClientName;
             aRequest.ClientVersion = mClientVersion;
 
-            string requestFilePath = FileNames.RunRequestFilePath( aRequest.Id );
-            JsonHelper.ToFile( requestFilePath, aRequest );
+            var revit = RevitHelper.StartRevit( aRevitVersion );
+            bool isRunnerAvailable = await IsRunnerAvailable( aCancellationToken );
 
-            var responseDirectoryPath = await GetResponseDirectory( aRequest.Id );
+            if( isRunnerAvailable ) {
+                string requestFilePath = FileNames.RunRequestFilePath( aRequest.Id );
+                JsonHelper.ToFile( requestFilePath, aRequest );
 
-            if( Directory.Exists( responseDirectoryPath ) ) {
-                bool run = true;
+                var responseDirectoryPath = await GetResponseDirectory( aRequest.Id );
 
-                while( run && !aCancellationToken.IsCancellationRequested ) {
-                    var runResult = JsonHelper.FromFile<RunResult>( Path.Combine( responseDirectoryPath, FileNames.RunResult ) );
+                if( Directory.Exists( responseDirectoryPath ) ) {
+                    bool run = true;
 
-                    if( runResult != null ) {
-                        bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
-                        ProcessResult result = new ProcessResult( runResult, isCompleted );
+                    while( run && !aCancellationToken.IsCancellationRequested ) {
+                        var runResult = JsonHelper.FromFile<RunResult>( Path.Combine( responseDirectoryPath, FileNames.RunResult ) );
 
-                        aCallback( result );
+                        if( runResult != null ) {
+                            bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
+                            ProcessResult result = new ProcessResult( runResult, isCompleted );
 
-                        run = !isCompleted;
+                            aCallback( result );
 
-                        if( run ) await Task.Delay( 500, aCancellationToken );
+                            run = !isCompleted;
+
+                            if( run ) await Task.Delay( 500, aCancellationToken );
+                        }
                     }
                 }
+                else {
+                    FileHelper.DeleteWithLock( requestFilePath );
+                    aCallback( new ProcessResult( null, true ) { Message = "Tests not executed! Service may not be running." } );
+                }
+
+                if( revit.IsNew ) RevitHelper.KillRevit( revit.ProcessId );
             }
             else {
-                FileHelper.DeleteWithLock( requestFilePath );
-                aCallback( new ProcessResult( null, true ) { Message = "Tests not executed! Service may not be running." } );
+                aCallback( new ProcessResult( null, true ) { Message = "Runner not available!" } );
             }
         }
 
@@ -119,6 +191,11 @@ namespace Revit.TestRunner.Shared.Client
             return result;
         }
 
+        private void ClearRunnerStatus()
+        {
+            FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
+        }
+
         private static string GenerateId()
         {
             Random r = new Random();
@@ -126,5 +203,6 @@ namespace Revit.TestRunner.Shared.Client
             int number = r.Next( 1000, 9999 );
             return $"{DateTime.Now:yyyyMMdd-HHmmss}_{number}";
         }
+        #endregion
     }
 }

@@ -50,7 +50,7 @@ namespace Revit.TestRunner
             ImageSource result = null;
 
             try {
-                string ressource = "pack://application:,,,/Revit.TestRunner;component/View/Pic/" + name;
+                string ressource = "pack://application:,,,/Revit.TestRunner;component/Commands/Pic/" + name;
                 result = new BitmapImage( new Uri( ressource ) );
                 result = Thumbnail( result, size );
             }

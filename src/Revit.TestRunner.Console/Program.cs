@@ -27,30 +27,66 @@ namespace Revit.TestRunner.Console
         private async Task MainAsync( string[] args )
         {
             RunRequest request = null;
+            string requestFile = GetFile( args );
+            string revitVersion = GetVersion( args );
 
-            if( args.Length == 1 ) {
-                request = GetRequestFromFile( args[0] );
-            }
-            else {
-                request = GetSampleRequest();
+            if( !string.IsNullOrEmpty( requestFile ) ) {
+                request = GetRequestFromFile( requestFile );
             }
 
-            await RunTests( request );
+            await RunTests( request, revitVersion );
         }
 
-        private async Task RunTests( RunRequest request )
+        private string GetVersion( string[] args )
+        {
+            string result = "2020";
+
+            if( args != null ) {
+                foreach( var arg in args ) {
+                    if( !string.IsNullOrEmpty( arg ) ) {
+                        if( int.TryParse( arg, out int i ) ) {
+                            result = i.ToString();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private string GetFile( string[] args )
+        {
+            string result = string.Empty;
+
+            if( args != null ) {
+                foreach( var arg in args ) {
+                    if( !string.IsNullOrEmpty( arg ) ) {
+                        if( File.Exists( arg ) ) {
+                            result = arg;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private async Task RunTests( RunRequest request, string aRevitVersion )
         {
             request.ClientName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
             request.ClientVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             TimeSpan duration = TimeSpan.Zero;
             System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
-            System.Console.WriteLine( $"Start test run {DateTime.Now}" );
+            System.Console.WriteLine( $"Start test run {DateTime.Now}; preferred on Revit {aRevitVersion}" );
+            System.Console.WriteLine();
 
             var complete = new List<TestCase>();
             Client client = new Client( ProgramName, ProgramVersion );
 
-            await client.StartTestRunAsync( request, result => {
+            await client.StartTestRunAsync( request, aRevitVersion, result => {
                 try {
                     if( result.Result != null ) {
                         foreach( var test in result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
@@ -99,20 +135,6 @@ namespace Revit.TestRunner.Console
             }
             else {
                 System.Console.WriteLine( $"File does not exist '{path}'" );
-            }
-
-            return request;
-        }
-
-        private RunRequest GetSampleRequest()
-        {
-            var dir = Directory.GetCurrentDirectory();
-            string pathToSampleRequest = Path.Combine( dir, "sampleMoreTests.json" );
-
-            RunRequest request = GetRequestFromFile( pathToSampleRequest );
-
-            foreach( TestCase testCase in request.Cases ) {
-                testCase.AssemblyPath = Path.Combine( dir, "Revit.TestRunner.SampleTestProject.dll" );
             }
 
             return request;
