@@ -18,6 +18,9 @@ using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.App.View
 {
+    /// <summary>
+    /// ViewModel for the <see cref="OverviewView"/>.
+    /// </summary>
     public class OverviewViewModel : AbstractViewModel
     {
         #region Members, Constructor
@@ -29,9 +32,12 @@ namespace Revit.TestRunner.App.View
         private string mAssemblyPath;
         private string mProgramState;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OverviewViewModel()
         {
-            mClient = GetClient();
+            mClient = CreateClient();
 
             Tree = new TreeViewModel();
             Tree.PropertyChanged += ( o, args ) => OnPropertyChangedAll();
@@ -42,18 +48,25 @@ namespace Revit.TestRunner.App.View
 
             InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
             
-            Task.Run( () => mClient.StartRunnerStatusWatcher( CheckStatus ) );
+            Task.Run( () => mClient.StartRunnerStatusWatcher( CheckStatus, CancellationToken.None ) );
         }
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Get all installed Revit applications on this host.
+        /// </summary>
         public IEnumerable<string> InstalledRevitVersions { get; }
 
+        /// <summary>
+        /// Get the program version of Revit.TestRunner.
+        /// </summary>
         public string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        public TreeViewModel Tree { get; set; }
-
+        /// <summary>
+        /// Get the test assembly path.
+        /// </summary>
         public string AssemblyPath
         {
             get => mAssemblyPath;
@@ -65,6 +78,14 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        /// <summary>
+        /// Get the Model Tree of the the assembly.
+        /// </summary>
+        public TreeViewModel Tree { get; set; }
+
+        /// <summary>
+        /// Get detail information of the selected test node.
+        /// </summary>
         public string DetailInformation
         {
             get {
@@ -78,6 +99,9 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        /// <summary>
+        /// Get the program state of the apüplication.
+        /// </summary>
         public string ProgramState
         {
             get => mProgramState;
@@ -89,16 +113,28 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        /// <summary>
+        /// Get the revit version of the current Revit version, which runs Revit.TestRunner.
+        /// </summary>
         public string RevitVersion => IsServerRunning ? mRunnerStatus.RevitVersion : "No Runner available!";
 
+        /// <summary>
+        /// Get the log file path of the current running Revit.TestRunner service.
+        /// </summary>
         public string LogFilePath => mRunnerStatus?.LogFilePath;
 
+        /// <summary>
+        /// Get true, if a Revit.TestRunner service is running.
+        /// </summary>
         public bool IsServerRunning => mRunnerStatus != null;
         #endregion
 
         #region Commands
 
         public ICommand OpenAssemblyCommand => new AsyncCommand( ExecuteOpenAssemblyCommand );
+        /// <summary>
+        /// Open assembly for exploring.
+        /// </summary>
         private async Task ExecuteOpenAssemblyCommand()
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -118,6 +154,9 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand RunCommand => new AsyncCommand( ExecuteRunCommand, () => Tree.HasObjects );
+        /// <summary>
+        /// Execute selected tests on Revit.TestRunner.
+        /// </summary>
         private async Task ExecuteRunCommand()
         {
             ProgramState = "Test Run in started";
@@ -158,6 +197,9 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand CreateRequestCommand => new DelegateWpfCommand( ExecuteCreateRequestCommand, () => Tree.HasObjects );
+        /// <summary>
+        /// Create a request file for selected tests.
+        /// </summary>
         private void ExecuteCreateRequestCommand()
         {
             var caseViewModels = GetSelectedCases().ToList();
@@ -193,13 +235,19 @@ namespace Revit.TestRunner.App.View
 
         #region Methods
 
+        /// <summary>
+        /// Callback method for the client. Get service status.
+        /// </summary>
         private void CheckStatus( RunnerStatus status )
         {
             mRunnerStatus = status;
             OnPropertyChangedAll();
         }
 
-        private Client GetClient()
+        /// <summary>
+        /// Create client to send requests to Revit.TestRunner.
+        /// </summary>
+        private Client CreateClient()
         {
             if( !Directory.Exists( FileNames.WatchDirectory ) ) {
                 Directory.CreateDirectory( FileNames.WatchDirectory );
@@ -213,6 +261,9 @@ namespace Revit.TestRunner.App.View
             return client;
         }
 
+        /// <summary>
+        /// Get selected test cases in a list.
+        /// </summary>
         private IEnumerable<NodeViewModel> GetSelectedCases()
         {
             var checkedNodes = Tree.ObjectTree.Where( node => node.IsChecked == true ).ToList();
@@ -226,6 +277,9 @@ namespace Revit.TestRunner.App.View
             return caseViewModels;
         }
 
+        /// <summary>
+        /// Start a explore request for the desired test assembly. 
+        /// </summary>
         private async Task LoadAssembly( string path )
         {
             if( !string.IsNullOrEmpty( path ) && File.Exists( path ) ) {
@@ -248,6 +302,9 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        /// <summary>
+        /// Load a explore response file to show it in the view. 
+        /// </summary>
         private void LoadExploreFile( string exploreFile )
         {
             AssemblyPath = string.Empty;

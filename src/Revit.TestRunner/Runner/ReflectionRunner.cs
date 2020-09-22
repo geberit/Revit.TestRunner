@@ -8,8 +8,6 @@ using Autodesk.Revit.UI;
 using NUnit.Framework;
 using Revit.TestRunner.Shared.Communication;
 
-// ReSharper disable TooWideLocalVariableScope
-
 namespace Revit.TestRunner.Runner
 {
     /// <summary>
@@ -68,8 +66,8 @@ namespace Revit.TestRunner.Runner
                     extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
                 }
 
-                await Invoke( obj, setUp, possibleParams );
-                await Invoke( obj, testMethod, extendedParams.ToArray() );
+                await InvokeMethod( obj, setUp, possibleParams );
+                await InvokeMethod( obj, testMethod, extendedParams.ToArray() );
 
                 result.State = TestState.Passed;
             }
@@ -78,7 +76,7 @@ namespace Revit.TestRunner.Runner
             }
             finally {
                 try {
-                    await Invoke( obj, tearDown, possibleParams );
+                    await InvokeMethod( obj, tearDown, possibleParams );
                 }
                 catch( Exception e ) {
                     ReportException( result, e );
@@ -90,7 +88,10 @@ namespace Revit.TestRunner.Runner
             return result;
         }
 
-        private async Task Invoke( object obj, MethodInfo method, object[] possibleParams )
+        /// <summary>
+        /// Invoke <paramref name="method"/> on <paramref name="obj"/>, passing <paramref name="possibleParams"/>.
+        /// </summary>
+        private async Task InvokeMethod( object obj, MethodInfo method, object[] possibleParams )
         {
             if( method != null ) {
                 var methodParams = OrderParameters( method, possibleParams );
@@ -105,6 +106,9 @@ namespace Revit.TestRunner.Runner
             }
         }
 
+        /// <summary>
+        /// Enrich test case with exception information.
+        /// </summary>
         private void ReportException( TestCase @case, Exception e )
         {
             @case.State = TestState.Failed;
@@ -116,6 +120,9 @@ namespace Revit.TestRunner.Runner
             @case.StackTrace = toLogEx.StackTrace;
         }
 
+        /// <summary>
+        /// Order parameters according to the method info.
+        /// </summary>
         private object[] OrderParameters( MethodInfo methodInfo, object[] possibleParams )
         {
             var result = new List<object>();

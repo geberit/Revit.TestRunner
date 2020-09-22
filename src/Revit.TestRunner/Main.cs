@@ -9,6 +9,9 @@ using Revit.TestRunner.Server;
 
 namespace Revit.TestRunner
 {
+    /// <summary>
+    /// Entreance object for the Revit.TestRunner addin in Revit.
+    /// </summary>
     public class Main : IExternalApplication
     {
         private Service mService;

@@ -9,11 +9,23 @@ using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Server
 {
+    /// <summary>
+    /// Service for handling request from the clients (explore test assembly, run tests)
+    /// The service is hooked to the OnIdle event of Revit.
+    /// The heartbeat information is written to the watch directory.
+    /// </summary>
     public class Service
     {
+        #region Members
+
         private UIControlledApplication mApplication;
+        #endregion
 
+        #region Manage
 
+        /// <summary>
+        /// Start the service.
+        /// </summary>
         internal void Start( UIControlledApplication application )
         {
             mApplication = application;
@@ -24,6 +36,9 @@ namespace Revit.TestRunner.Server
             Log.Info( $"Service started '{DateTime.Now}'" );
         }
 
+        /// <summary>
+        /// Stop the service.
+        /// </summary>
         internal void Stop()
         {
             mApplication.Idling -= OnIdle;
@@ -32,26 +47,9 @@ namespace Revit.TestRunner.Server
             Log.Info( $"Service stopped '{DateTime.Now}'" );
         }
 
-        private void OnIdle( object sender, Autodesk.Revit.UI.Events.IdlingEventArgs e )
-        {
-            var exploreRequestFile = GetNextExploreRequestFile();
-            var runRequestFile = GetNextRunRequestFile();
-
-            if( !string.IsNullOrEmpty( exploreRequestFile ) ) {
-                Explore( exploreRequestFile );
-            }
-            else if( !string.IsNullOrEmpty( runRequestFile ) ) {
-                UIApplication uiApplication = sender as UIApplication;
-                Run( runRequestFile, uiApplication );
-            }
-            else {
-                Thread.Sleep( 250 );
-            }
-
-            SetStatus();
-        }
-
-
+        /// <summary>
+        /// Initialize the watch directory. Remaining status information will be removed.
+        /// </summary>
         private void Initialize()
         {
             if( !Directory.Exists( FileNames.WatchDirectory ) ) {
@@ -62,7 +60,33 @@ namespace Revit.TestRunner.Server
                 FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
             }
         }
+        #endregion
 
+        #region Execute
+
+        /// <summary>
+        /// Main Service method. Observe the watch directory for new requests.
+        /// Only one request will be processed. Write status file on every call.
+        /// </summary>
+        private void OnIdle( object sender, Autodesk.Revit.UI.Events.IdlingEventArgs e )
+        {
+            var process = GetRequest<ExploreRequest>( FileNames.ExploreRequestBase );
+            if( process.Request == null ) process = GetRequest<RunRequest>( FileNames.RunRequestBase );
+
+            if( process.Request != null ) {
+                switch( process.Request ) {
+                    case ExploreRequest exploreRequest: Explore( exploreRequest, process.Response ); break;
+                    case RunRequest runRequest: Run( runRequest, process.Response, sender as UIApplication ); break;
+                    default: Thread.Sleep( 250 ); break;
+                }
+            }
+
+            SetStatus();
+        }
+
+        /// <summary>
+        /// Write the status of the service to the watch directory.
+        /// </summary>
         private void SetStatus()
         {
             RunnerStatus status = new RunnerStatus {
@@ -74,129 +98,90 @@ namespace Revit.TestRunner.Server
             JsonHelper.ToFile( FileNames.RunnerStatusFilePath, status );
         }
 
-        private void WriteResponse( string id, string responseDirectory )
+        /// <summary>
+        /// Explore a test assembly. 
+        /// </summary>
+        private void Explore( ExploreRequest request, Response response )
         {
-            Response response = new Response {
+            if( request == null ) throw new ArgumentNullException( nameof( request ) );
+            if( response == null ) throw new ArgumentNullException( nameof( response ) );
+
+            NUnitRunner runner = new NUnitRunner( request.AssemblyPath, response.Directory );
+            string message = runner.ExploreAssembly();
+
+            runner.Dispose();
+
+            ExploreResponse exploreResponse = new ExploreResponse {
                 Timestamp = DateTime.Now,
-                Id = id,
-                Directory = responseDirectory
+                Id = request.Id,
+                AssemblyPath = request.AssemblyPath,
+                ExploreFile = runner.ExploreResultFile,
+                Message = message
             };
 
-            JsonHelper.ToFile( FileNames.ResponseFilePath( id ), response );
+            JsonHelper.ToFile( Path.Combine( response.Directory, FileNames.ExploreResponseFileName ), exploreResponse );
         }
 
-        private void Explore( string filePath )
+        /// <summary>
+        /// Run desired tests.
+        /// </summary>
+        private void Run( RunRequest request, Response response, UIApplication application )
         {
-            if( File.Exists( filePath ) ) {
-                ExploreRequest request = null;
+            if( request == null ) throw new ArgumentNullException( nameof( request ) );
+            if( response == null ) throw new ArgumentNullException( nameof( response ) );
 
+            string summaryPath = Path.Combine( response.Directory, FileNames.RunSummary );
+            LogInfo( summaryPath, $"Test Request '{request.Id}' - {request.ClientName} ({request.ClientVersion})" );
+
+            RunResult runResult = new RunResult {
+                Id = request.Id,
+                StartTime = DateTime.Now,
+                State = TestState.Running,
+                Cases = request.Cases.ToArray(),
+                SummaryFile = summaryPath
+            };
+
+            RevitTask runnerTask = new RevitTask();
+            ReflectionRunner runner = new ReflectionRunner();
+
+            runnerTask.Run( async uiApplication => {
                 try {
-                    request = JsonHelper.FromFile<ExploreRequest>( filePath );
+                    runResult.Cases = request.Cases;
+
+                    foreach( TestCase test in request.Cases ) {
+                        var runTestResult = runResult.Cases.Single( t => t.Id == test.Id );
+
+                        WriteTestResultFile( response.Directory, runResult, false );
+
+                        var testResult = await runner.RunTest( test, application );
+
+                        runTestResult.State = testResult.State;
+                        runTestResult.Message = testResult.Message;
+                        runTestResult.StackTrace = testResult.StackTrace;
+
+                        LogInfo( summaryPath, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
+
+                        if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryPath, $"\t{test.Message}" );
+                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryPath, $"\t{test.StackTrace}" );
+                    }
+
                 }
-                catch {
-                    FileHelper.DeleteWithLock( filePath );
+                catch( Exception e ) {
+                    runResult.Output = e.ToString();
+                    LogInfo( summaryPath, e );
                 }
 
-                if( request != null ) {
-                    var responseDirectory = CreateResponseDirectory( request.Id );
-                    WriteResponse( request.Id, responseDirectory.FullName );
+                WriteTestResultFile( response.Directory, runResult, true );
 
-                    FileHelper.MoveWithLock( filePath, Path.Combine( responseDirectory.FullName, FileNames.RunRequest ) );
+                LogInfo( summaryPath, $"Test run end - duration {runResult.Timestamp - runResult.StartTime}" );
 
-                    NUnitRunner runner = new NUnitRunner( request.AssemblyPath );
-                    (string file, string message) = runner.ExploreAssembly( responseDirectory.FullName );
-
-                    runner.Dispose();
-
-                    ExploreResponse response = new ExploreResponse {
-                        Timestamp = DateTime.Now,
-                        Id = request.Id,
-                        AssemblyPath = request.AssemblyPath,
-                        ExploreFile = file,
-                        Message = message
-                    };
-
-                    JsonHelper.ToFile( Path.Combine( responseDirectory.FullName, FileNames.ExploreResponseFileName ), response );
-                }
-            }
+            } );
         }
 
-        private void Run( string filePath, UIApplication application )
-        {
-            if( File.Exists( filePath ) ) {
-                RunRequest request = null;
-
-                try {
-                    request = JsonHelper.FromFile<RunRequest>( filePath );
-                }
-                catch( Exception ) {
-                    FileHelper.DeleteWithLock( filePath );
-                }
-
-                if( request != null ) {
-                    var responseDirectory = CreateResponseDirectory( request.Id );
-                    WriteResponse( request.Id, responseDirectory.FullName );
-
-                    string summaryPath = Path.Combine( responseDirectory.FullName, FileNames.RunSummary );
-                    LogInfo( summaryPath, $"Test Request '{request.Id}' - {request.ClientName} ({request.ClientVersion})" );
-
-                    RunResult runResult = new RunResult {
-                        Id = request.Id,
-                        StartTime = DateTime.Now,
-                        State = TestState.Running,
-                        Cases = request.Cases.ToArray(),
-                        SummaryFile = summaryPath
-                    };
-
-                    RevitTask runnerTask = new RevitTask();
-                    ReflectionRunner runner = new ReflectionRunner();
-
-                    runnerTask.Run( async uiApplication => {
-                        try {
-                            FileHelper.MoveWithLock( filePath, Path.Combine( responseDirectory.FullName, FileNames.RunRequest ) );
-
-                            runResult.Cases = request.Cases;
-
-                            foreach( TestCase test in request.Cases ) {
-                                var runTestResult = runResult.Cases.Single( t => t.Id == test.Id );
-
-                                WriteTestStateFile( responseDirectory, runResult, false );
-
-                                var testResult = await runner.RunTest( test, application );
-
-                                runTestResult.State = testResult.State;
-                                runTestResult.Message = testResult.Message;
-                                runTestResult.StackTrace = testResult.StackTrace;
-
-                                LogInfo( summaryPath, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
-
-                                if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryPath, $"\t{test.Message}" );
-                                if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryPath, $"\t{test.StackTrace}" );
-                            }
-
-                        }
-                        catch( Exception e ) {
-                            runResult.Output = e.ToString();
-                            LogInfo( summaryPath, e );
-                        }
-
-                        WriteTestStateFile( responseDirectory, runResult, true );
-
-                        LogInfo( summaryPath, $"Test run end - duration {runResult.Timestamp - runResult.StartTime}" );
-
-                    } );
-                }
-            }
-        }
-
-        private void LogInfo( string summaryPath, object message )
-        {
-            Log.Info( message );
-            File.AppendAllText( summaryPath, message + "\n" );
-        }
-
-
-        private void WriteTestStateFile( DirectoryInfo runDirectory, RunResult result, bool finished )
+        /// <summary>
+        /// Write test result file to response directory.
+        /// </summary>
+        private void WriteTestResultFile( string runDirectory, RunResult result, bool finished )
         {
             if( finished ) {
                 result.State = result.Cases.Any( t => t.State == TestState.Failed ) ? TestState.Failed : TestState.Passed;
@@ -207,29 +192,52 @@ namespace Revit.TestRunner.Server
 
             result.Timestamp = DateTime.Now;
 
-            JsonHelper.ToFile( Path.Combine( runDirectory.FullName, FileNames.RunResult ), result );
+            JsonHelper.ToFile( Path.Combine( runDirectory, FileNames.RunResult ), result );
         }
 
-        private string GetNextRunRequestFile()
+
+        /// <summary>
+        /// Get the next request from watch directory.
+        /// </summary>
+        private (BaseRequest Request, Response Response) GetRequest<TRequest>( string baseFileName ) where TRequest : BaseRequest
         {
-            var files = Directory.GetFiles( FileNames.WatchDirectory, $"{FileNames.RunRequestBase}*.json" );
-            return files.FirstOrDefault();
+            BaseRequest request = null;
+            Response response = null;
+
+            var files = Directory.GetFiles( FileNames.WatchDirectory, $"{baseFileName}*.json" );
+            var file = files.FirstOrDefault();
+
+            if( file != null ) {
+                try {
+                    request = JsonHelper.FromFile<TRequest>( file );
+
+                    if( request == null ) throw new NullReferenceException( nameof(request) );
+
+                    var directory = FileHelper.GetDirectory( Path.Combine( FileNames.WatchDirectory, request.Id ) );
+                    directory.Create();
+
+                    response = new Response {
+                        Timestamp = DateTime.Now,
+                        Id = request.Id,
+                        Directory = directory.FullName
+                    };
+
+                    JsonHelper.ToFile( FileNames.ResponseFilePath( request.Id ), response );
+                    FileHelper.MoveWithLock( file, Path.Combine( directory.FullName, FileNames.RunRequest ) );
+                }
+                catch( Exception ) {
+                    FileHelper.DeleteWithLock( file );
+                }
+            }
+
+            return (request, response);
         }
 
-        private string GetNextExploreRequestFile()
+        private void LogInfo( string summaryPath, object message )
         {
-            var files = Directory.GetFiles( FileNames.WatchDirectory, $"{FileNames.ExploreRequestBase}*.json" );
-            return files.FirstOrDefault();
+            Log.Info( message );
+            File.AppendAllText( summaryPath, message + "\n" );
         }
-
-        private DirectoryInfo CreateResponseDirectory( string id )
-        {
-            string directoryName = $"{id}";
-            var directory = FileHelper.GetDirectory( Path.Combine( FileNames.WatchDirectory, directoryName ) );
-
-            directory.Create();
-
-            return directory;
-        }
+        #endregion
     }
 }

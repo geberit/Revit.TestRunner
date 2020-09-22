@@ -52,7 +52,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <ComboBox Width="80" />
+                <!--<ComboBox Width="80" />-->
                 <Button  Content="Run" Width="100" Command="{Binding RunCommand}" ToolTip="Run Selected"/>
                 <Button  Content="Create request" Width="100" Command="{Binding CreateRequestCommand}" ToolTip="Run Selected" Margin="20,0,0,0"/>
             </StackPanel>

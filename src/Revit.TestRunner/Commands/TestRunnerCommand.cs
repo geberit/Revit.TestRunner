@@ -8,6 +8,10 @@ using Autodesk.Revit.UI;
 
 namespace Revit.TestRunner.Commands
 {
+    /// <summary>
+    /// Command in Addin section of Revit.
+    /// Call the standalone app.exe if available.
+    /// </summary>
     [Transaction( TransactionMode.Manual )]
     public class TestRunnerCommand : IExternalCommand
     {

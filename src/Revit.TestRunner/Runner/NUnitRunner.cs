@@ -16,21 +16,47 @@ namespace Revit.TestRunner.Runner
     {
         #region Members, Constructor
 
-        public NUnitRunner( string testAssembly )
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="testAssembly">Assembly to be tested</param>
+        /// <param name="outputDirectory">Directory for Runner output</param>
+        public NUnitRunner( string testAssembly, string outputDirectory )
         {
             TestAssembly = testAssembly ?? throw new ArgumentNullException( nameof( testAssembly ) );
+
+            if( !Directory.Exists( outputDirectory ) ) throw new DirectoryNotFoundException( nameof( testAssembly ) );
+            OutputDirectory = outputDirectory;
         }
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Get test assembly to be used.
+        /// </summary>
         private string TestAssembly { get; }
 
+        /// <summary>
+        /// Get the directory for the output.
+        /// </summary>
+        private string OutputDirectory { get; }
+
+        /// <summary>
+        /// Get the path of the explore result file.
+        /// </summary>
+        internal string ExploreResultFile => Path.Combine( OutputDirectory, FileNames.ExploreResultFileName );
         #endregion
 
-        internal (string File, string Message) ExploreAssembly( string directoryName )
+        #region Methds
+
+
+        /// <summary>
+        /// Explore the assembly using nUnit.
+        /// </summary>
+        /// <returns>Exception message</returns>
+        internal string ExploreAssembly()
         {
-            string result = string.Empty;
             string message = string.Empty;
             ITestRunner testRunner = null;
 
@@ -38,9 +64,7 @@ namespace Revit.TestRunner.Runner
                 testRunner = CreateTestRunner();
                 XmlNode exploreResult = testRunner.Explore( TestFilter.Empty );
 
-                string file = Path.Combine( directoryName, FileNames.ExploreResultFileName );
-                exploreResult.OwnerDocument.Save( file );
-                result = file;
+                exploreResult.OwnerDocument.Save( ExploreResultFile );
             }
             catch( Exception e ) {
                 message = e.ToString();
@@ -49,9 +73,12 @@ namespace Revit.TestRunner.Runner
                 testRunner?.Unload();
             }
 
-            return (result, message);
+            return message;
         }
 
+        /// <summary>
+        /// Create the nUnit test runner.
+        /// </summary>
         private ITestRunner CreateTestRunner()
         {
             ITestRunner result = null;
@@ -72,6 +99,9 @@ namespace Revit.TestRunner.Runner
             return result;
         }
 
+        /// <summary>
+        /// Create the nUnit test engine.
+        /// </summary>
         private ITestEngine CreateTestEngine()
         {
             // Normal way to create a NUnit TestEngine.
@@ -93,6 +123,7 @@ namespace Revit.TestRunner.Runner
 
         public void Dispose()
         {
-        }
+        } 
+        #endregion
     }
 }

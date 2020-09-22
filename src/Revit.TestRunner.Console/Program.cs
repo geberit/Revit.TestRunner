@@ -11,13 +11,21 @@ using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Console
 {
+    /// <summary>
+    /// Revit.TestRunner console application.
+    /// Pass test request files to the service and get results.
+    /// </summary>
     public class Program
     {
         private string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         private const string ProgramName = "ConsoleRunner";
 
+        private static string[] TestArgs = new[] { "2020", @"C:\temp\TEstRequest.json" };
+
         public static void Main( string[] args )
         {
+            if( args == null || args.Length == 0 ) args = TestArgs;
+
             Program program = new Program();
             program.MainAsync( args ).GetAwaiter().GetResult();
 

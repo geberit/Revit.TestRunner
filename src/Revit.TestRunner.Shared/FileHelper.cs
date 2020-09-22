@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -87,7 +86,6 @@ namespace Revit.TestRunner.Shared
             return WriteStringWithLock( aPath, aContent, false, aWait, aMaxWait );
         }
 
-        [DebuggerStepThrough]
         private static bool WriteStringWithLock( string aPath, string aContent, bool aAppend, int aWait, int aMaxWait )
         {
             if( aContent == null ) throw new ArgumentNullException( nameof( aContent ) );

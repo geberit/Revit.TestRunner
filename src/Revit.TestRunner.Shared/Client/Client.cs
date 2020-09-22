@@ -8,6 +8,10 @@ using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Shared.Client
 {
+    /// <summary>
+    /// Revit.TestRunner client to interact with service.
+    /// Communication is over json files in watch directory.
+    /// </summary>
     public class Client
     {
         #region Members, Constructor
@@ -15,6 +19,9 @@ namespace Revit.TestRunner.Shared.Client
         private readonly string mClientName;
         private readonly string mClientVersion;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Client( string aClientName = "", string aClientVersion = "" )
         {
             mClientName = aClientName;
@@ -26,25 +33,30 @@ namespace Revit.TestRunner.Shared.Client
 
         #region Methods
 
-
-        public void StartRunnerStatusWatcher( Action<RunnerStatus> aCallback )
+        /// <summary>
+        /// Start loop of observing the watch directory. 
+        /// </summary>
+        public void StartRunnerStatusWatcher( Action<RunnerStatus> aCallback, CancellationToken aCancellationToken )
         {
-            while( true ) {
+            while( !aCancellationToken.IsCancellationRequested ) {
                 RunnerStatus status = CheckStatus();
 
-                Task.Delay( 1000 );
+                Task.Delay( 1000, aCancellationToken );
 
                 aCallback( status );
             }
         }
 
+        /// <summary>
+        /// Check if a Revit.TestRunner service is available. Timeout 60s.
+        /// </summary>
         private async Task<bool> IsRunnerAvailable( CancellationToken aCancellationToken )
         {
             bool result = false;
 
             ClearRunnerStatus();
 
-            for( int i = 0; i < 30; i++ ) {
+            for( int i = 0; i < 60; i++ ) {
                 try {
                     var status = CheckStatus();
                     result = status != null;
@@ -62,6 +74,9 @@ namespace Revit.TestRunner.Shared.Client
             return result;
         }
 
+        /// <summary>
+        /// Get service status file from watch directory.
+        /// </summary>
         private RunnerStatus CheckStatus()
         {
             RunnerStatus status = null;
@@ -76,6 +91,9 @@ namespace Revit.TestRunner.Shared.Client
             return status;
         }
 
+        /// <summary>
+        /// Start a expolre request.
+        /// </summary>
         public async Task<ExploreResponse> ExploreAssemblyAsync( string aAssemblyPath, string aRevitVersion, CancellationToken aCancellationToken )
         {
             ExploreResponse response = null;
@@ -114,6 +132,9 @@ namespace Revit.TestRunner.Shared.Client
             return response;
         }
 
+        /// <summary>
+        /// Start a test run request.
+        /// </summary>
         public async Task StartTestRunAsync( IEnumerable<TestCase> aTestCases, string aRevitVersion, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
         {
             RunRequest request = new RunRequest {
@@ -123,6 +144,9 @@ namespace Revit.TestRunner.Shared.Client
             await StartTestRunAsync( request, aRevitVersion, aCallback, aCancellationToken );
         }
 
+        /// <summary>
+        /// Start a test run request.
+        /// </summary>
         public async Task StartTestRunAsync( RunRequest aRequest, string aRevitVersion, Action<ProcessResult> aCallback, CancellationToken aCancellationToken )
         {
             aRequest.Timestamp = DateTime.Now;
@@ -169,7 +193,9 @@ namespace Revit.TestRunner.Shared.Client
             }
         }
 
-
+        /// <summary>
+        /// Get the specific response directory from the <see cref="Response"/> message.
+        /// </summary>
         private async Task<string> GetResponseDirectory( string aId )
         {
             string result = string.Empty;
@@ -191,11 +217,17 @@ namespace Revit.TestRunner.Shared.Client
             return result;
         }
 
+        /// <summary>
+        /// Clear server status information.
+        /// </summary>
         private void ClearRunnerStatus()
         {
             FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
         }
 
+        /// <summary>
+        /// Generate a (kind of unique) id.
+        /// </summary>
         private static string GenerateId()
         {
             Random r = new Random();
