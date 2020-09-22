@@ -2,12 +2,14 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/src/Revit.TestRunner.SampleTestProject/obj/x64
-/src/Revit.TestRunner/obj/x64
+/src/Revit.TestRunner.SampleTestProject/obj
+/src/Revit.TestRunner/obj
+/src/Revit.TestRunner.App/obj
+/src/Revit.TestRunner.Console/obj
+/src/Revit.TestRunner.Shared/obj
 /.vs
 /src/.vs
 /src/Revit.TestRunner/Revit.TestRunner.csproj.user
-/src/bin/RevitAPIUI.xml
-/src/bin/RevitAPIUI.dll
-/src/bin/RevitAPI.xml
-/src/bin/RevitAPI.dll
+/src/bin
+/src/Revit.TestRunner.sln.DotSettings.user
+/src/Revit.TestRunner.App/obj/x64/Debug

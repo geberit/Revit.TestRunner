@@ -8,7 +8,6 @@ using System.Resources;
 [assembly: AssemblyCulture( "" )]
 
 [assembly: NeutralResourcesLanguage( "en-US" )]
-[assembly: AssemblyTitle( "Revit.TestRunner" )]
 [assembly: AssemblyDescription( "UnitTest Runner for Revit" )]
 
 #if DEBUG

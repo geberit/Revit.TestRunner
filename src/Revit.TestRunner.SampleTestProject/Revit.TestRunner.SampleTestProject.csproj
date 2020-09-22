@@ -176,6 +176,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo\AssemblyInfo.Global.cs">
+      <Link>Properties\AssemblyInfo.Global.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo\AssemblyInfo.Version.cs">
+      <Link>Properties\AssemblyInfo.Version.cs</Link>
+    </Compile>
+    <Compile Include="MoreTests.cs" />
     <Compile Include="ParameterTest.cs" />
     <Compile Include="RevitTest.cs" />
     <Compile Include="SampleTest.cs" />

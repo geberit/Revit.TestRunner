@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2018</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -34,7 +34,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2018|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2018</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -43,7 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2019|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2019</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -53,7 +53,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2019|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2019</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
@@ -63,7 +63,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2020</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -72,7 +72,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2021</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -92,7 +92,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2021</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -223,28 +223,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Runner\Direct\ReflectionRunner.cs" />
-    <Compile Include="Runner\NUnit\NUnitResult.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestCase.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestRun.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestSuite.cs" />
-    <Compile Include="Runner\NUnit\NUnitRunner.cs" />
-    <Compile Include="View\AbstractViewModel.cs" />
-    <Compile Include="View\BoolToHiddenConverter.cs" />
-    <Compile Include="View\DelegateWpfCommand.cs" />
-    <Compile Include="View\DialogViewModel.cs" />
-    <Compile Include="View\DialogWindow.xaml.cs">
-      <DependentUpon>DialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerView.xaml.cs">
-      <DependentUpon>NUnitRunnerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerViewModel.cs" />
-    <Compile Include="View\TestTreeView\NodeViewModel.cs" />
-    <Compile Include="View\TestTreeView\TreeView.xaml.cs">
-      <DependentUpon>TreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\TestTreeView\TreeViewModel.cs" />
+    <Compile Include="RevitTask.cs" />
+    <Compile Include="Runner\ReflectionRunner.cs" />
+    <Compile Include="Runner\NUnitRunner.cs" />
+    <Compile Include="Server\Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -256,25 +238,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Revit.TestRunner.addin" />
-    <Resource Include="View\Pic\Testing.png" />
+    <Resource Include="Commands\Pic\Testing.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GlobalResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\DialogWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\NUnitRunnerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\TestTreeView\TreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj">
+      <Project>{2545888f-1273-45c6-81fa-aa06da6f8d11}</Project>
+      <Name>Revit.TestRunner.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

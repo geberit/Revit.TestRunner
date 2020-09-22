@@ -5,11 +5,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autodesk.Revit.UI;
 using Revit.TestRunner.Commands;
+using Revit.TestRunner.Server;
 
 namespace Revit.TestRunner
 {
+    /// <summary>
+    /// Entreance object for the Revit.TestRunner addin in Revit.
+    /// </summary>
     public class Main : IExternalApplication
     {
+        private Service mService;
+
         public Result OnStartup( UIControlledApplication application )
         {
             Log.Info( $"Revit.TestRunner started '{DateTime.Now}'" );
@@ -30,11 +36,15 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
+            mService = new Service();
+            mService.Start( application );
+
             return Result.Succeeded;
         }
 
         public Result OnShutdown( UIControlledApplication application )
         {
+            mService.Stop();
             return Result.Succeeded;
         }
 
@@ -43,7 +53,7 @@ namespace Revit.TestRunner
             ImageSource result = null;
 
             try {
-                string ressource = "pack://application:,,,/Revit.TestRunner;component/View/Pic/" + name;
+                string ressource = "pack://application:,,,/Revit.TestRunner;component/Commands/Pic/" + name;
                 result = new BitmapImage( new Uri( ressource ) );
                 result = Thumbnail( result, size );
             }

@@ -88,7 +88,8 @@ $targetAddinFile = "{0}\{1}" -f $addinVersionPath, $addinFileName
 
 # Copy addin file to target path
 Write-Host "Install addin file "$targetAddinFile
-Copy-Item $sourceAddinFile -Destination $addinVersionPath
+Delete-I
+Copy-Item $sourceAddinFile -Destination $addinVersionPath -Force
 
 # Manipulate target addin File
 Write-Host "Executing assembly "$targetPath
