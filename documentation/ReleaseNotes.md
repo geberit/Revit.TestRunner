@@ -1,10 +1,10 @@
 # Release Notes
-* v0.10 [20Q02]
-
-    * Revit 2021 Support
-    * .NET 4.8
-    * Support of NUnit Attributes 'TestCase'
-
+* v1.2 [20Q03]
+    * Service based execution
+    * Standalone desktop application
+    * Console application
+    * Multi test execution
+    * Async execution
 
 * v0.9 [19Q04]
 
@@ -15,3 +15,9 @@
     * Works as an addin with GUI
     * Installation script for libraries
     * Post build event in VS project to create addin files
+
+* v0.10 [20Q02]
+
+    * Revit 2021 Support
+    * .NET 4.8
+    * Support of NUnit Attributes 'TestCase'
