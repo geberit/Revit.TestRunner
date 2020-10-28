@@ -146,9 +146,15 @@ namespace Revit.TestRunner.Server
 
             runnerTask.Run( async uiApplication => {
                 try {
-                    runResult.Cases = request.Cases;
+                    var casesToRun = request.Cases
+                        .OrderBy( c => c.AssemblyPath )
+                        .ThenBy( c => c.TestClass )
+                        .ThenBy( c => c.MethodName )
+                        .ToArray();
 
-                    foreach( TestCase test in request.Cases ) {
+                    runResult.Cases = casesToRun;
+
+                    foreach( TestCase test in casesToRun ) {
                         var runTestResult = runResult.Cases.Single( t => t.Id == test.Id );
 
                         WriteTestResultFile( response.Directory, runResult, false );

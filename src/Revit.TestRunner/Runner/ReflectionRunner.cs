@@ -15,6 +15,8 @@ namespace Revit.TestRunner.Runner
     /// </summary>
     public class ReflectionRunner
     {
+        private readonly Dictionary<Type, object> mTestInstances = new Dictionary<Type, object>();
+
         /// <summary>
         /// Execute Test described in <paramref name="test"/>.
         /// Returns a new <see cref="TestCase"/> object with the test result.
@@ -43,7 +45,7 @@ namespace Revit.TestRunner.Runner
 
             var possibleParams = new object[] { uiApplication, uiApplication.Application };
 
-            object obj = null;
+            object testInstance = null;
             MethodInfo setUp = null;
             MethodInfo tearDown = null;
             MethodInfo testMethod = null;
@@ -53,7 +55,14 @@ namespace Revit.TestRunner.Runner
 
                 Assembly assembly = Assembly.LoadFile( test.AssemblyPath );
                 Type type = assembly.GetType( test.TestClass );
-                obj = Activator.CreateInstance( type );
+
+                if( mTestInstances.ContainsKey( type ) ) {
+                    testInstance = mTestInstances[type];
+                }
+                else {
+                    testInstance = Activator.CreateInstance( type );
+                    mTestInstances.Add( type, testInstance );
+                }
 
                 setUp = GetMethodByAttribute( type, typeof( SetUpAttribute ) );
                 testMethod = type.GetMethod( test.MethodName );
@@ -66,8 +75,8 @@ namespace Revit.TestRunner.Runner
                     extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
                 }
 
-                await InvokeMethod( obj, setUp, possibleParams );
-                await InvokeMethod( obj, testMethod, extendedParams.ToArray() );
+                await InvokeMethod( testInstance, setUp, possibleParams );
+                await InvokeMethod( testInstance, testMethod, extendedParams.ToArray() );
 
                 result.State = TestState.Passed;
             }
@@ -76,7 +85,7 @@ namespace Revit.TestRunner.Runner
             }
             finally {
                 try {
-                    await InvokeMethod( obj, tearDown, possibleParams );
+                    await InvokeMethod( testInstance, tearDown, possibleParams );
                 }
                 catch( Exception e ) {
                     ReportException( result, e );

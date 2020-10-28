@@ -13,3 +13,4 @@
 /src/bin
 /src/Revit.TestRunner.sln.DotSettings.user
 /src/Revit.TestRunner.App/obj/x64/Debug
+*.log

@@ -51,7 +51,7 @@ namespace Revit.TestRunner.Shared
             return result;
         }
 
-        public static (int ProcessId, bool IsNew) StartRevit( string version, string language = "ENU" )
+        public static (int ProcessId, bool IsNew) StartRevit( string version, string language = "" )
         {
             Process process = null;
             bool isNew = false;
@@ -62,7 +62,9 @@ namespace Revit.TestRunner.Shared
                 var programFiles = Environment.GetFolderPath( Environment.SpecialFolder.ProgramFiles );
                 var executablePath = Path.Combine( programFiles, "Autodesk", $"Revit {version}", "Revit.exe" );
 
-                var argument = $" /language {language}";
+                var argument = !string.IsNullOrEmpty( language )
+                    ? $" /language {language}"
+                    : string.Empty;
 
                 if( File.Exists( executablePath ) ) {
                     process = Process.Start( executablePath, argument );
