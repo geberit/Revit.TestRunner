@@ -4,7 +4,9 @@ Status: under active development, breaking changes may occur.
 Revit.TestRunner is a simple Addin for Autodesk Revit. It runs unit tests from a specified test assembly, which have references to the Revit API. The test framework used is [NUnit v3](https://github.com/nunit).
 
 ## How it works
-The Revit.TestRunner is designed to work as an Addin of Autodesk Revit. This means you must start Revit by yourself, start the Revit.TestRunner, chose your favorite test assembly and run the selected tests. There is no need for the test assembly to have any reference to the TestRunner. All you have to do, is get the nuget package of NUnit and write some fancy tests.
+The Revit.TestRunner is designed to work as an Addin of Autodesk Revit. Test runs can be started by using the standalone desktop application or the console application.
+
+Chose your favorite test assembly and run the desired tests. There is no need for the test assembly to have any reference to the Revit.TestRunner. All you have to do, is get the nuget package of NUnit and write some fancy tests.
 
 ## Getting started
 Get the Code from github and compile it. The Revit.TestRunner.addin file will be automatically placed in the ProgramData addin folder of the selected Revit version 
@@ -19,9 +21,17 @@ By pressing the Button, a Dialog will appear. By choosing your testing assembly,
 
 ![alt text](/images/testrunner_ui.png)
 
-Select the node you want to test and press the ‘Run’. All tests below the selected node will be executed.
+Select the nodes you want to test and press the ‘Run’ Button. All selected nodes will be executed.
 
 ![alt text](/images/testrunner_ui_executed.png)
+
+### Console application
+Instead of run test from the standalone application, create a request json file. This file contains all the selected tests. Call the Revit.TestRunner.Console.exe and pass the revit version and the request file as parameters. 
+
+``` Revit.TestRunner.Console.exe 2020 c:\temp\myRequest.json ```
+
+Revit 2020 will start and execute all desired tests. If a Revit instance is already running, this instance will be used for execution, even if it is ex. Revit 2021.
+
 
 ### Write Tests
 Create a test project in your solution and get the NUnit nuget package.
@@ -72,9 +82,13 @@ public void MultiParameterTest1( UIApplication uiApplication, Application applic
 
 In your test, you have access to it, and your able to make stuff with it (ex. `UIApplication.Application.OpenDocumentFile(…)`)
 
+## New in version 1.2
+* run test from console
+* Async Test execution
+* Pick multiple tests to execute
+
 ## Open Issues
-* Create report file
-* Run from command line
+* ...
 
 ## License
 [MIT](http://opensource.org/licenses/MIT)

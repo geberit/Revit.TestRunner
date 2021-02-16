@@ -44,5 +44,13 @@ namespace Revit.TestRunner.SampleTestProject
             Assert.IsNotNull( uiApplication );
             Assert.IsNotNull( application );
         }
+
+        [TestCase( 12, 3, ExpectedResult = 15 )]
+        [TestCase( 13, 7, ExpectedResult = 20 )]
+        [TestCase( 15, 4, ExpectedResult = 19 )]
+        public int SumTest( int n, int d )
+        {
+            return n + d;
+        }
     }
 }

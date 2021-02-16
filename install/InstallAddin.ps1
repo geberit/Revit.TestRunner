@@ -23,7 +23,7 @@ param (
 
 $binPath = $PSScriptRoot
 $addinFile = "Revit.TestRunner.addin"
-$assemblyFile = "Revit.TestRunner.dll"
+$assemblyFile = "Addin\Revit.TestRunner.dll"
 
 $assemblyFileName = Join-Path -Path $binPath -ChildPath $assemblyFile
 $addinFileName = Join-Path -Path $binPath -ChildPath $addinFile

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
+  <Import Project="..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Revit.TestRunner</RootNamespace>
     <AssemblyName>Revit.TestRunner</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2018</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -34,7 +34,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2018|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2018</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -43,7 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2019|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2019</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -53,7 +53,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2019|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2019</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
@@ -63,7 +63,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2020</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -72,7 +72,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -80,7 +80,38 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\bin\Addin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Revit2021</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|x64'">
+    <OutputPath>..\bin\Addin\</OutputPath>
+    <DefineConstants>TRACE;Revit2021</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Choose>
+    <When Condition="$(DefineConstants.Contains('Revit2021'))">
+      <ItemGroup>
+        <Reference Include="RevitAPI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+          <HintPath>..\Libs\Revit2021\lib\net47\RevitAPI.dll</HintPath>
+        </Reference>
+        <Reference Include="RevitAPIUI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+          <HintPath>..\Libs\Revit2021\lib\net47\RevitAPIUI.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
     <When Condition="$(DefineConstants.Contains('Revit2020'))">
       <ItemGroup>
         <Reference Include="RevitAPI, Version=20.0.0.0, Culture=neutral, processorArchitecture=AMD64">
@@ -139,32 +170,28 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.Engine.3.10.0\lib\net20\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit-agent, Version=3.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.Engine.3.10.0\lib\net20\nunit-agent.exe</HintPath>
-    </Reference>
-    <Reference Include="nunit-agent-x86, Version=3.10.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\NUnit.Engine.3.10.0\lib\net20\nunit-agent-x86.exe</HintPath>
-    </Reference>
-    <Reference Include="nunit.engine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.Engine.3.10.0\lib\net20\nunit.engine.dll</HintPath>
+    <Reference Include="nunit.engine, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.Engine.3.12.0\lib\net20\nunit.engine.dll</HintPath>
     </Reference>
     <Reference Include="nunit.engine.api, Version=3.0.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.Engine.3.10.0\lib\net20\nunit.engine.api.dll</HintPath>
+      <HintPath>..\packages\NUnit.Engine.3.12.0\lib\net20\nunit.engine.api.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.engine.core, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.Engine.3.12.0\lib\net20\nunit.engine.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -192,28 +219,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Runner\Direct\ReflectionRunner.cs" />
-    <Compile Include="Runner\NUnit\NUnitResult.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestCase.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestRun.cs" />
-    <Compile Include="Runner\NUnit\NUnitTestSuite.cs" />
-    <Compile Include="Runner\NUnit\NUnitRunner.cs" />
-    <Compile Include="View\AbstractViewModel.cs" />
-    <Compile Include="View\BoolToHiddenConverter.cs" />
-    <Compile Include="View\DelegateWpfCommand.cs" />
-    <Compile Include="View\DialogViewModel.cs" />
-    <Compile Include="View\DialogWindow.xaml.cs">
-      <DependentUpon>DialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerView.xaml.cs">
-      <DependentUpon>NUnitRunnerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NUnitRunnerViewModel.cs" />
-    <Compile Include="View\TestTreeView\NodeViewModel.cs" />
-    <Compile Include="View\TestTreeView\TreeView.xaml.cs">
-      <DependentUpon>TreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\TestTreeView\TreeViewModel.cs" />
+    <Compile Include="RevitTask.cs" />
+    <Compile Include="Runner\ReflectionRunner.cs" />
+    <Compile Include="Runner\NUnitRunner.cs" />
+    <Compile Include="Server\Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -225,25 +234,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Revit.TestRunner.addin" />
-    <Resource Include="View\Pic\Testing.png" />
+    <Resource Include="Commands\Pic\Testing.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GlobalResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\DialogWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\NUnitRunnerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\TestTreeView\TreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj">
+      <Project>{2545888f-1273-45c6-81fa-aa06da6f8d11}</Project>
+      <Name>Revit.TestRunner.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -258,7 +261,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.1\build\NUnit.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,6 +2,15 @@
 ## Intension
 The goal of this add-in is to write test for your add-in. Because it is not possible to start revit as a 'service' or start from a test, it is necessary to start Revit first, then start your tests. In this case, the Revit context is available in the tests.
 
+## Test execution
+Tests must be executed over the desktop or the console aplication. They must run in context of Revit. If Revit including Revit.TestRunner is running, they run directly. If Revit is not running, Revit will be started first.
+
+### Desktop application
+Browse thru a selected test assembly to select test for running or create a request file. Even displaing the tests in the assembly, Revit must be running or will be started.
+
+### Console application
+The console runner consume a reqeust file and run the tests specified.
+
 ## Writing Tests
 First add the NuGet package of [NUnit](https://www.nuget.org/packages/NUnit/) to the test project.
 
@@ -48,7 +57,7 @@ All the code of the add-in lives in the Revit.TestRunner assembly. The ```Main``
 Containing some sample Tests, showing how they could be implemented.
 
 ### Build the Solution
-The solution contains a 'Debug' and 'Release' build configuration for all the supported Revit versions (2018, 2019, 2020). A post-build event calls a power shell script, which will create an add-in file in the %ProgramData%\Autodesk\Revit\Addins\20xx pointing to the fresh compiled Revit.TestRunner.dll. See section Power Shell.
+The solution contains a 'Debug' and 'Release' build configuration for all the supported Revit versions (2018, 2019, 2020, 2021). A post-build event calls a power shell script, which will create an add-in file in the %ProgramData%\Autodesk\Revit\Addins\20xx pointing to the fresh compiled Revit.TestRunner.dll. See section Power Shell.
 
 
 ## Precompiled binaries
