@@ -194,6 +194,10 @@ namespace Revit.TestRunner.App.View
 
             ProgramState = message;
             MessageBox.Show( message, "Test run", MessageBoxButton.OK, total == passed ? MessageBoxImage.Information : MessageBoxImage.Error );
+
+            foreach( NodeViewModel node in Tree.ObjectTree ) {
+                node.IsChecked = false;
+            }
         }
 
         public ICommand CreateRequestCommand => new DelegateWpfCommand( ExecuteCreateRequestCommand, () => Tree.HasObjects );

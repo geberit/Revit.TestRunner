@@ -48,7 +48,7 @@ namespace Revit.TestRunner.Shared.Client
         }
 
         /// <summary>
-        /// Check if a Revit.TestRunner service is available. Timeout 60s.
+        /// Check if a Revit.TestRunner service is available. Timeout 120.
         /// </summary>
         private async Task<bool> IsRunnerAvailable( CancellationToken aCancellationToken )
         {
@@ -56,7 +56,7 @@ namespace Revit.TestRunner.Shared.Client
 
             ClearRunnerStatus();
 
-            for( int i = 0; i < 60; i++ ) {
+            for( int i = 0; i < 120; i++ ) {
                 try {
                     var status = CheckStatus();
                     result = status != null;
@@ -189,7 +189,7 @@ namespace Revit.TestRunner.Shared.Client
                 if( revit.IsNew ) RevitHelper.KillRevit( revit.ProcessId );
             }
             else {
-                aCallback( new ProcessResult( null, true ) { Message = "Runner not available!" } );
+                aCallback( new ProcessResult( null, true ) { Message = "TimeOut. Runner not available!" } );
             }
         }
 
