@@ -121,7 +121,7 @@ namespace Revit.TestRunner.App.View.TestTreeView
                 Children.Count == 0
                     ? mMessage
                     : State == TestState.Failed
-                        ? "One ore more child tests had errors."
+                        ? "One or more child tests had errors."
                         : string.Empty;
             set {
                 if( Children.Count == 0 ) {
