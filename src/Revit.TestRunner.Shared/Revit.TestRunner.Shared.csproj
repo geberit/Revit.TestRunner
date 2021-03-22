@@ -114,6 +114,17 @@
       <Link>Properties\AssemblyInfo.Version.cs</Link>
     </Compile>
     <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\TestRunnerClient.cs" />
+    <Compile Include="Communication\Client\FileClient.cs" />
+    <Compile Include="Communication\Dto\BaseRequestDto.cs" />
+    <Compile Include="Communication\Dto\BaseResponseDto.cs" />
+    <Compile Include="Communication\Dto\DtoType.cs" />
+    <Compile Include="Communication\Dto\ExploreRequestDto.cs" />
+    <Compile Include="Communication\Dto\ExploreResponseDto.cs" />
+    <Compile Include="Communication\Dto\NoParameterDto.cs" />
+    <Compile Include="Communication\Dto\HomeDto.cs" />
+    <Compile Include="Communication\Dto\TestRequestDto.cs" />
+    <Compile Include="Communication\Dto\TestResponseDto.cs" />
     <Compile Include="Communication\FileNames.cs" />
     <Compile Include="Communication\ProcessResult.cs" />
     <Compile Include="Communication\BaseRequest.cs" />
@@ -122,6 +133,9 @@
     <Compile Include="Communication\ExploreResponse.cs" />
     <Compile Include="Communication\Response.cs" />
     <Compile Include="Communication\RunnerStatus.cs" />
+    <Compile Include="Communication\Server\FileServer.cs" />
+    <Compile Include="Communication\Server\Request.cs" />
+    <Compile Include="Communication\Server\Route.cs" />
     <Compile Include="Communication\TestCase.cs" />
     <Compile Include="Communication\RunRequest.cs" />
     <Compile Include="Communication\RunResult.cs" />

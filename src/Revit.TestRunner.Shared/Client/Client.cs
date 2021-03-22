@@ -228,7 +228,7 @@ namespace Revit.TestRunner.Shared.Client
         /// <summary>
         /// Generate a (kind of unique) id.
         /// </summary>
-        private static string GenerateId()
+        public static string GenerateId()
         {
             Random r = new Random();
             r.Next( 1000, 9999 );

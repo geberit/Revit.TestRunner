@@ -31,11 +31,32 @@ namespace Revit.TestRunner.Shared
             return result;
         }
 
+        public static object FromFile( string aPath, Type type )
+        {
+            object result = null;
+
+            if( File.Exists( aPath ) ) {
+                string jsonString = FileHelper.ReadStringWithLock( aPath );
+
+                result = FromString( jsonString, type );
+            }
+            return result;
+        }
+
         public static TContent FromString<TContent>( string aJsonString )
         {
             if( aJsonString == null ) throw new ArgumentNullException();
 
             TContent result = JsonConvert.DeserializeObject<TContent>( aJsonString, JsonSerializerSettings );
+
+            return result;
+        }
+
+        public static object FromString( string aJsonString, Type type )
+        {
+            if( aJsonString == null ) throw new ArgumentNullException();
+
+            object result = JsonConvert.DeserializeObject( aJsonString, type, JsonSerializerSettings );
 
             return result;
         }

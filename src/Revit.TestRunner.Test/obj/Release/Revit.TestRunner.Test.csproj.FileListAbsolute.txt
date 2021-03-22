@@ -1,0 +1,16 @@
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Revit.TestRunner.Test.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Revit.TestRunner.Test.pdb
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\nunit.framework.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Revit.TestRunner.Shared.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Newtonsoft.Json.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Revit.TestRunner.Shared.pdb
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\nunit.framework.xml
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\bin\Release\Newtonsoft.Json.xml
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\obj\Release\Revit.TestRunner.Test.csprojAssemblyReference.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\obj\Release\Revit.TestRunner.Test.csproj.CoreCompileInputs.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\obj\Release\Revit.TestRunner.Test.csproj.CopyComplete
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\obj\Release\Revit.TestRunner.Test.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Test\obj\Release\Revit.TestRunner.Test.pdb

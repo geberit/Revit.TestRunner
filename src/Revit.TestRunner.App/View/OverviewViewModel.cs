@@ -14,6 +14,7 @@ using Revit.TestRunner.App.View.TestTreeView;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Client;
 using Revit.TestRunner.Shared.Communication;
+using Revit.TestRunner.Shared.Communication.Dto;
 using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.App.View
@@ -27,28 +28,25 @@ namespace Revit.TestRunner.App.View
 
         private const string ProgramName = "AppRunner";
 
-        private readonly Client mClient;
-        private RunnerStatus mRunnerStatus;
+        private readonly TestRunnerClient mClient;
+        private HomeDto mHomeDto;
         private string mAssemblyPath;
         private string mProgramState;
+        private bool mIsLoading;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public OverviewViewModel()
         {
-            mClient = CreateClient();
+            mClient = new TestRunnerClient( ProgramName, ProgramVersion );
 
             Tree = new TreeViewModel();
             Tree.PropertyChanged += ( o, args ) => OnPropertyChangedAll();
 
-            if( !string.IsNullOrEmpty( Properties.Settings.Default.AssemblyPath ) ) {
-                LoadAssembly( Properties.Settings.Default.AssemblyPath );
-            }
-
             InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
-            
-            Task.Run( () => mClient.StartRunnerStatusWatcher( CheckStatus, CancellationToken.None ) );
+
+            mClient.StartRunnerStatusWatcher( CheckHome, CancellationToken.None );
         }
         #endregion
 
@@ -116,22 +114,32 @@ namespace Revit.TestRunner.App.View
         /// <summary>
         /// Get the revit version of the current Revit version, which runs Revit.TestRunner.
         /// </summary>
-        public string RevitVersion => IsServerRunning ? mRunnerStatus.RevitVersion : "No Runner available!";
+        public string RevitVersion => IsServerRunning ? mHomeDto.RevitVersion : "No Runner available!";
 
         /// <summary>
         /// Get the log file path of the current running Revit.TestRunner service.
         /// </summary>
-        public string LogFilePath => mRunnerStatus?.LogFilePath;
+        public string LogFilePath => mHomeDto?.LogFilePath;
 
         /// <summary>
         /// Get true, if a Revit.TestRunner service is running.
         /// </summary>
-        public bool IsServerRunning => mRunnerStatus != null;
+        public bool IsServerRunning => mHomeDto != null;
         #endregion
 
         #region Commands
 
-        public ICommand OpenAssemblyCommand => new AsyncCommand( ExecuteOpenAssemblyCommand );
+        public ICommand OpenAssemblyCommand => new AsyncCommand( ExecuteOpenAssemblyCommand, CanExecute );
+
+        private bool CanExecute()
+        {
+            if( !Tree.HasObjects ) {
+                LoadAssembly( Properties.Settings.Default.AssemblyPath );   // this is ugly ;)
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Open assembly for exploring.
         /// </summary>
@@ -173,15 +181,17 @@ namespace Revit.TestRunner.App.View
                 ProgramState = "Test Run in progress" + points;
                 duration = result.Duration;
 
-                var completed = result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ).ToList();
+                if( result?.Result != null ) {
+                    var completed = result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed );
 
-                foreach( TestCase resultCase in completed ) {
-                    var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
+                    foreach( TestCase resultCase in completed.ToList() ) {
+                        var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
 
-                    if( caseViewModel != null ) {
-                        caseViewModel.State = resultCase.State;
-                        caseViewModel.Message = resultCase.Message;
-                        caseViewModel.StackTrace = resultCase.StackTrace;
+                        if( caseViewModel != null ) {
+                            caseViewModel.State = resultCase.State;
+                            caseViewModel.Message = resultCase.Message;
+                            caseViewModel.StackTrace = resultCase.StackTrace;
+                        }
                     }
                 }
 
@@ -242,27 +252,19 @@ namespace Revit.TestRunner.App.View
         /// <summary>
         /// Callback method for the client. Get service status.
         /// </summary>
-        private void CheckStatus( RunnerStatus status )
+        private void CheckHome( HomeDto home )
         {
-            mRunnerStatus = status;
+            mHomeDto = home;
             OnPropertyChangedAll();
-        }
 
-        /// <summary>
-        /// Create client to send requests to Revit.TestRunner.
-        /// </summary>
-        private Client CreateClient()
-        {
-            if( !Directory.Exists( FileNames.WatchDirectory ) ) {
-                Directory.CreateDirectory( FileNames.WatchDirectory );
+            if( mHomeDto != null && !Tree.HasObjects ) {
+                //Dispatcher.CurrentDispatcher.BeginInvoke( new Action( () => {
+                //    //Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Load assembly" );
+                //    LoadAssembly( Properties.Settings.Default.AssemblyPath );
+                //} ) );
+
+
             }
-
-            if( File.Exists( FileNames.RunnerStatusFilePath ) ) {
-                FileHelper.DeleteWithLock( FileNames.RunnerStatusFilePath );
-            }
-
-            var client = new Client( ProgramName, ProgramVersion );
-            return client;
         }
 
         /// <summary>
@@ -286,12 +288,13 @@ namespace Revit.TestRunner.App.View
         /// </summary>
         private async Task LoadAssembly( string path )
         {
-            if( !string.IsNullOrEmpty( path ) && File.Exists( path ) ) {
+            if( !string.IsNullOrEmpty( path ) && File.Exists( path ) && !mIsLoading ) {
                 ProgramState = "Explore file requested...";
 
+                mIsLoading = true;
                 Tree.Clear();
 
-                ExploreResponse response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
+                ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
 
                 if( response != null ) {
                     LoadExploreFile( response.ExploreFile );
@@ -303,6 +306,8 @@ namespace Revit.TestRunner.App.View
                 else {
                     ProgramState = $"Could not load '{path}'";
                 }
+
+                mIsLoading = false;
             }
         }
 
@@ -323,7 +328,9 @@ namespace Revit.TestRunner.App.View
                 NUnitTestRun run = new NUnitTestRun( rootNode );
                 NodeViewModel root = ToNodeTree( run );
 
+                Console.WriteLine($@"[{Thread.CurrentThread.ManagedThreadId}] Add to tree");
                 Tree.AddRootObject( root, true );
+                Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Added" );
 
                 AssemblyPath = root.FullName;
 

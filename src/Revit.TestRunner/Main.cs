@@ -14,7 +14,8 @@ namespace Revit.TestRunner
     /// </summary>
     public class Main : IExternalApplication
     {
-        private Service mService;
+        //private Service mService;
+        private TestRunnerController mController;
 
         public Result OnStartup( UIControlledApplication application )
         {
@@ -36,15 +37,19 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
-            mService = new Service();
-            mService.Start( application );
+            //mService = new Service();
+            //mService.Start( application );
+
+            mController = new TestRunnerController();
+            mController.Start( application );
 
             return Result.Succeeded;
         }
 
         public Result OnShutdown( UIControlledApplication application )
         {
-            mService.Stop();
+            //mService.Stop();
+            mController.Stop();
             return Result.Succeeded;
         }
 
