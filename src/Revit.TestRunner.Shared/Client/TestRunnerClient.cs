@@ -66,6 +66,8 @@ namespace Revit.TestRunner.Shared.Client
 
             RevitHelper.StartRevit( revitVersion );
 
+            await Home( cancellationToken );
+
             if( mHome != null ) {
                 result = await mFileClient.GetJson<ExploreRequestDto, ExploreResponseDto>( mHome.ExplorePath, request, cancellationToken );
             }
@@ -83,6 +85,8 @@ namespace Revit.TestRunner.Shared.Client
             };
 
             var revit = RevitHelper.StartRevit( revitVersion );
+
+            await Home( cancellationToken );
 
             if( mHome != null ) {
                 TestResponseDto response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>( mHome.TestPath, request, cancellationToken );
