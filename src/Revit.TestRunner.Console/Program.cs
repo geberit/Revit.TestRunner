@@ -14,6 +14,7 @@ namespace Revit.TestRunner.Console
         {
             //if( Debugger.IsAttached ) args = new[] { "--help" };
             if( Debugger.IsAttached ) args = new [] { "test", "-r", "2020", "-f", @"C:\Users\floto\Desktop\App.json" };
+            if( Debugger.IsAttached ) args = new [] { "all", "-r", "2020", "-a", @"C:\Code\Git\Revit_GeberitPlugIn\bin\Geberit.Revit.PlugIn.Tests.Native.dll" };
 
             Parser.Default.ParseArguments<TestCommand, AssemblyCommand, HelloCommand>( args )
                 .WithParsed<ICommand>( t => t.Execute() );

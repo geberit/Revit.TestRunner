@@ -8,13 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml;
 using Microsoft.Win32;
 using Revit.TestRunner.App.View.TestTreeView;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Client;
 using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Model;
 using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.App.View
@@ -22,7 +22,7 @@ namespace Revit.TestRunner.App.View
     /// <summary>
     /// ViewModel for the <see cref="OverviewView"/>.
     /// </summary>
-    public class OverviewViewModel : AbstractViewModel
+    public class OverviewViewModel : AbstractNotifyPropertyChanged
     {
         #region Members, Constructor
 
@@ -170,7 +170,7 @@ namespace Revit.TestRunner.App.View
             ProgramState = "Test Run in started";
 
             var caseViewModels = GetSelectedCases().ToList();
-            var testCases = caseViewModels.Select( ToTestCase );
+            var testCases = caseViewModels.Select( vm => ModelController.ToTestCase( vm.Model ) );
 
             int callbackCount = 0;
             TimeSpan duration = TimeSpan.Zero;
@@ -217,7 +217,7 @@ namespace Revit.TestRunner.App.View
         private void ExecuteCreateRequestCommand()
         {
             var caseViewModels = GetSelectedCases().ToList();
-            var testCases = caseViewModels.Select( ToTestCase );
+            var testCases = caseViewModels.Select( vm => ModelController.ToTestCase( vm.Model ) );
 
             TestRequestDto request = new TestRequestDto {
                 Timestamp = DateTime.Now,
@@ -319,16 +319,12 @@ namespace Revit.TestRunner.App.View
             AssemblyPath = string.Empty;
 
             if( File.Exists( exploreFile ) ) {
-                StreamReader xmlStreamReader = new StreamReader( exploreFile );
-                XmlDocument xmlDoc = new XmlDocument();
+                ModelController controller = new ModelController();
+                var rootModel = controller.ToNodeTree( exploreFile );
 
-                xmlDoc.Load( xmlStreamReader );
-                XmlNode rootNode = (XmlElement)xmlDoc.DocumentElement.FirstChild;
+                NodeViewModel root = ToNodeTree( rootModel );
 
-                NUnitTestRun run = new NUnitTestRun( rootNode );
-                NodeViewModel root = ToNodeTree( run );
-
-                Console.WriteLine($@"[{Thread.CurrentThread.ManagedThreadId}] Add to tree");
+                Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Add to tree" );
                 Tree.AddRootObject( root, true );
                 Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Added" );
 
@@ -341,45 +337,27 @@ namespace Revit.TestRunner.App.View
             }
         }
 
-        private NodeViewModel ToNodeTree( NUnitTestRun run )
+        private NodeViewModel ToNodeTree( NodeModel run )
         {
             NodeViewModel root = new NodeViewModel( run );
 
-            foreach( NUnitTestSuite testSuite in run.TestSuites ) {
+            foreach( NodeModel testSuite in run.Children ) {
                 ToNode( root, testSuite );
             }
 
             return root;
         }
 
-        private void ToNode( NodeViewModel parent, NUnitTestSuite testSuite )
+        private void ToNode( NodeViewModel parent, NodeModel testSuite )
         {
             NodeViewModel node = new NodeViewModel( testSuite );
             parent.Add( node );
             node.Parent = parent;
 
-            foreach( var suite in testSuite.TestSuites ) {
-                ToNode( node, suite );
+            foreach( var child in testSuite.Children ) {
+                ToNode( node, child );
             }
 
-            foreach( var test in testSuite.TestCases ) {
-                ToNode( node, test );
-            }
-        }
-
-        private TestCaseDto ToTestCase( NodeViewModel node )
-        {
-            if( node == null ) throw new ArgumentNullException();
-            if( node.Type != TestType.Case ) throw new ArgumentException( "Only TestCases allowed!" );
-
-            var result = new TestCaseDto {
-                Id = node.Id,
-                AssemblyPath = AssemblyPath,
-                TestClass = node.ClassName,
-                MethodName = node.MethodName
-            };
-
-            return result;
         }
         #endregion
     }

@@ -22,8 +22,9 @@ namespace Revit.TestRunner.Shared.Communication.Server
         {
             BasePath = basePath;
 
-            FileHelper.DeleteWithLock( BasePath );
-            Directory.CreateDirectory( BasePath );
+            var directory = Directory.CreateDirectory( BasePath );
+            directory.GetFiles().ToList().ForEach( f => FileHelper.DeleteWithLock( f.FullName ) );
+            directory.GetDirectories().Where( d => !d.Name.StartsWith("_")).ToList().ForEach( d => FileHelper.DeleteWithLock( d.FullName ) );
 
             mRoutes = new List<Route>();
         }

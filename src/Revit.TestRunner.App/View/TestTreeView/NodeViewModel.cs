@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
+using Revit.TestRunner.Shared.Model;
 using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.App.View.TestTreeView
@@ -9,18 +11,15 @@ namespace Revit.TestRunner.App.View.TestTreeView
     /// <summary>
     /// Hierarchic ViewModel
     /// </summary>
-    public class NodeViewModel : AbstractViewModel
+    public class NodeViewModel : AbstractNotifyPropertyChanged
     {
         #region Members, Constructor
 
-        private readonly NUnitResult mNUnitResult;
+        
         private bool mIsExpanded;
-        private TestState mState;
-        private string mMessage;
-        private string mStackTrace;
         private bool? mIsChecked;
 
-        internal NodeViewModel( NUnitResult nUnitResult )
+        internal NodeViewModel( NodeModel model )
         {
             // Tree Stuff
             Children = new List<NodeViewModel>();
@@ -29,64 +28,35 @@ namespace Revit.TestRunner.App.View.TestTreeView
             mIsChecked = false;
 
             // Test Stuff
-            mNUnitResult = nUnitResult ?? throw new System.ArgumentNullException( nameof( nUnitResult ) );
-
-            State = mNUnitResult.Result;
-            Message = mNUnitResult.Message;
-            StackTrace = mNUnitResult.FailureStackTrace;
-
+            Model = model ?? throw new System.ArgumentNullException( nameof( model ) );
         }
 
         #endregion
 
         #region Test Properties
 
-        public string Text
-        {
-            get {
-                string result = string.Empty;
+        public NodeModel Model { get; }
 
-                if( Type == TestType.Run ) result = "Test Run";
-                else if( Type != TestType.Unknown ) result = mNUnitResult.Name;
+        public string Text => Model.Text;
 
-                return result;
-            }
-        }
-
-        public string ToolTip => Path;
+        public string ToolTip => Model.Path;
 
         public string Path => Text + "/" + string.Join( "/", Ancestors.Select( a => a.Text ) );
 
-        public string FullName => mNUnitResult.FullName;
+        public string FullName => Model.FullName;
 
-        public TestType Type => mNUnitResult.Type;
+        public TestType Type => Model.Type;
 
         public TestState State
         {
-            get {
-                TestState result = TestState.Unknown;
-
-                if( Children.Count == 0 ) result = mState;
-                else {
-                    if( Children.Any( c => c.State == TestState.Passed ) ) result = TestState.Passed;
-                    if( Children.Any( c => c.State == TestState.Failed ) ) result = TestState.Failed;
-                }
-
-                return result;
-            }
-            set {
-                if( Children.Count == 0 ) {
-                    if( value == mState ) return;
-                    mState = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => Model.State;
+            set => Model.State = value;
         }
 
         public bool? IsChecked
         {
             get {
-                if( mNUnitResult == null || Type == TestType.Case ) {
+                if( Type == TestType.Case ) {
                     return mIsChecked;
                 }
                 else {
@@ -97,7 +67,7 @@ namespace Revit.TestRunner.App.View.TestTreeView
                 }
             }
             set {
-                if( mNUnitResult == null || Type == TestType.Case ) {
+                if( Type == TestType.Case ) {
                     mIsChecked = value == true;
                 }
                 else {
@@ -109,37 +79,22 @@ namespace Revit.TestRunner.App.View.TestTreeView
             }
         }
 
-        public string Id => mNUnitResult.Id;
+        public string Id => Model.Id;
 
-        public string ClassName => mNUnitResult.ClassName;
+        public string ClassName => Model.ClassName;
 
-        public string MethodName => mNUnitResult.MethodName;
+        public string MethodName => Model.MethodName;
 
         public string Message
         {
-            get =>
-                Children.Count == 0
-                    ? mMessage
-                    : State == TestState.Failed
-                        ? "One or more child tests had errors."
-                        : string.Empty;
-            set {
-                if( Children.Count == 0 ) {
-                    if( value == mMessage ) return;
-                    mMessage = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => Model.Message;
+            set => Model.Message = value;
         }
 
         public string StackTrace
         {
-            get => mStackTrace;
-            set {
-                if( value == mStackTrace ) return;
-                mStackTrace = value;
-                OnPropertyChanged();
-            }
+            get => Model.StackTrace;
+            set => Model.StackTrace = value;
         }
 
         #endregion
@@ -211,12 +166,6 @@ namespace Revit.TestRunner.App.View.TestTreeView
         internal void Add( NodeViewModel child )
         {
             Children.Add( child );
-            child.PropertyChanged += OnNodePropertyChanged;
-        }
-
-        internal void Remove( NodeViewModel child )
-        {
-            Children.Remove( child );
             child.PropertyChanged += OnNodePropertyChanged;
         }
 

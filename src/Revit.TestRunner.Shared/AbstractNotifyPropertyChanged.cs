@@ -3,12 +3,12 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace Revit.TestRunner.App.View
+namespace Revit.TestRunner.Shared
 {
     /// <summary>
     /// BaseClass for WPF ViewModels
     /// </summary>
-    public abstract class AbstractViewModel : INotifyPropertyChanged
+    public abstract class AbstractNotifyPropertyChanged : INotifyPropertyChanged
     {
         public virtual event PropertyChangedEventHandler PropertyChanged;
 

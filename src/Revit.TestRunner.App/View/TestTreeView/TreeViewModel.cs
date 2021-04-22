@@ -2,13 +2,14 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Revit.TestRunner.Shared;
 
 namespace Revit.TestRunner.App.View.TestTreeView
 {
     /// <summary>
     /// ViewModel für die PropertyTree View
     /// </summary>
-    public class TreeViewModel : AbstractViewModel
+    public class TreeViewModel : AbstractNotifyPropertyChanged
     {
         #region Members, Constructor
 

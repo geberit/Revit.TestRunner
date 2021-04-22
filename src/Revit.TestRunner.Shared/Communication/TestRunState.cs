@@ -1,7 +1,7 @@
 ﻿using System;
 using Revit.TestRunner.Shared.Communication.Dto;
 
-namespace Revit.TestRunner.Shared.Client
+namespace Revit.TestRunner.Shared.Communication
 {
     public class TestRunState
     {

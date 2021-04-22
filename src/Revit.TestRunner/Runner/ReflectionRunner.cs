@@ -22,7 +22,7 @@ namespace Revit.TestRunner.Runner
         /// Execute Test described in <paramref name="test"/>.
         /// Returns a new <see cref="TestCaseDto"/> object with the test result.
         /// </summary>
-        internal async Task<TestCaseDto> RunTest( TestCaseDto test, UIApplication uiApplication )
+        internal async Task<TestCaseDto> RunTest( TestCaseDto test, bool isSingleTest, UIApplication uiApplication )
         {
             TestCaseDto result = new TestCaseDto {
                 Id = test.Id,
@@ -42,7 +42,6 @@ namespace Revit.TestRunner.Runner
                 test.State = TestState.Failed;
                 return result;
             }
-
 
             var possibleParams = new object[] { uiApplication, uiApplication.Application };
 
@@ -76,17 +75,27 @@ namespace Revit.TestRunner.Runner
                     extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
                 }
 
-                await InvokeMethod( testInstance, setUp, possibleParams );
-                await InvokeMethod( testInstance, testMethod, extendedParams.ToArray() );
+                if( !isSingleTest && MarkedByAttribute( testMethod, typeof( ExplicitAttribute ) ) ) {
+                    result.State = TestState.Explicit;
+                }
+                else if( MarkedByAttribute( testMethod, typeof( IgnoreAttribute ) ) ) {
+                    result.State = TestState.Ignore;
+                }
+                else {
+                    await InvokeMethod( testInstance, setUp, possibleParams );
+                    await InvokeMethod( testInstance, testMethod, extendedParams.ToArray() );
 
-                result.State = TestState.Passed;
+                    result.State = TestState.Passed;
+                }
             }
             catch( Exception e ) {
                 ReportException( result, e );
             }
             finally {
                 try {
-                    await InvokeMethod( testInstance, tearDown, possibleParams );
+                    if( result.State == TestState.Passed || result.State == TestState.Failed ) {
+                        await InvokeMethod( testInstance, tearDown, possibleParams );
+                    }
                 }
                 catch( Exception e ) {
                     ReportException( result, e );

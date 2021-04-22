@@ -130,13 +130,15 @@ namespace Revit.TestRunner.Server
             var summaryFile = Path.Combine( testDir, FileNames.RunSummary );
             Directory.CreateDirectory( testDir );
 
+            JsonHelper.ToFile( Path.Combine( testDir, "request.json" ), request );
+
             var result = new TestResponseDto {
                 ResponseDirectory = testDir,
                 ResultFile = resultFile,
                 SummaryFile = summaryFile
             };
 
-            
+
             LogInfo( summaryFile, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
 
             TestRunStateDto testRunStateDto = new TestRunStateDto {
@@ -157,6 +159,7 @@ namespace Revit.TestRunner.Server
                         .ThenBy( c => c.TestClass )
                         .ThenBy( c => c.MethodName )
                         .ToArray();
+                    var isSingleTest = casesToRun.Count() == 1;
 
                     testRunStateDto.Cases = casesToRun;
 
@@ -165,7 +168,7 @@ namespace Revit.TestRunner.Server
 
                         WriteTestResultFile( resultFile, testRunStateDto, false );
 
-                        var testResult = await runner.RunTest( test, mUiApplication );
+                        var testResult = await runner.RunTest( test, isSingleTest, mUiApplication );
 
                         runTestResult.State = testResult.State;
                         runTestResult.Message = testResult.Message;

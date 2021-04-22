@@ -61,6 +61,7 @@
     <Compile Include="Commands\AssemblyCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
+    <Compile Include="Commands\AbstractTestCommand.cs" />
     <Compile Include="ConsoleConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

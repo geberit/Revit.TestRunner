@@ -1,5 +1,11 @@
-﻿using System.IO;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
+using Revit.TestRunner.Shared.Client;
+using Revit.TestRunner.Shared.Communication;
+using Revit.TestRunner.Shared.Model;
+using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.Console.Commands
 {
@@ -7,7 +13,7 @@ namespace Revit.TestRunner.Console.Commands
     /// Execute Test Command
     /// </summary>
     [Verb( "all", HelpText = "Execute all UnitTests from a specified assembly" )]
-    public class AssemblyCommand : ICommand
+    public class AssemblyCommand : AbstractTestCommand
     {
         /// <summary>
         /// Request File Path
@@ -16,23 +22,31 @@ namespace Revit.TestRunner.Console.Commands
         public string AssemblyPath { get; set; }
 
         /// <summary>
-        /// Preferred Revit Version.
-        /// </summary>
-        [Option( 'r', "revit", Default = 2020, HelpText = "Start Revit in Version" )]
-        public int RevitVersion { get; set; }
-
-        /// <summary>
         /// Execute Command.
         /// </summary>
-        public void Execute()
+        public override void Execute()
         {
-            if( !string.IsNullOrEmpty( AssemblyPath ) && File.Exists( AssemblyPath ) ) {
-                //await RunAll( AssemblyPath, RevitVersion.ToString() );
-                System.Console.WriteLine( "Not implemented yet." );
+            if( FileExist( AssemblyPath ) ) {
+                System.Console.WriteLine( $"Run all tests in assembly '{AssemblyPath}'" );
+                System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
+
+                RunAll( AssemblyPath ).GetAwaiter().GetResult();
             }
-            else {
-                System.Console.WriteLine( "Request file not recognized." );
-            }
+        }
+
+        private async Task RunAll( string assemblyPath )
+        {
+            System.Console.WriteLine( "Explore assembly" );
+            TestRunnerClient client = new TestRunnerClient( ConsoleConstants.ProgramName, ConsoleConstants.ProgramVersion );
+            var explore = await client.ExploreAssemblyAsync( assemblyPath, RevitVersion.ToString(), CancellationToken.None );
+
+            System.Console.WriteLine( "Get tests from assembly" );
+            var controller = new ModelController();
+            var root = controller.ToNodeTree( explore.ExploreFile );
+
+            var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
+
+            await RunTests( cases.Select( ModelController.ToTestCase ) );
         }
     }
 }
