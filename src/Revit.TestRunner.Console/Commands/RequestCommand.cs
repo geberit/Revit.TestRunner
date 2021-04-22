@@ -10,13 +10,14 @@ namespace Revit.TestRunner.Console.Commands
     /// <summary>
     /// Execute Test Command
     /// </summary>
-    [Verb( "test", HelpText = "Execute UnitTests" )]
-    public class TestCommand : AbstractTestCommand
+
+    [Verb( "request", HelpText = "Execute UnitTests in Revit, specified in a request file" )]
+    public class RequestCommand : AbstractTestCommand
     {
         /// <summary>
         /// Request File Path
         /// </summary>
-        [Option( 'f', "file", Required = true, HelpText = "Request file path containing Tests to execute" )]
+        [Value( 0, HelpText = "Request file path containing Tests specifications to execute" )]
         public string RequestFile { get; set; }
 
 

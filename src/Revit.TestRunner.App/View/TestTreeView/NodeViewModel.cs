@@ -29,8 +29,9 @@ namespace Revit.TestRunner.App.View.TestTreeView
 
             // Test Stuff
             Model = model ?? throw new System.ArgumentNullException( nameof( model ) );
+            Model.PropertyChanged += OnNodePropertyChanged;
         }
-
+        
         #endregion
 
         #region Test Properties

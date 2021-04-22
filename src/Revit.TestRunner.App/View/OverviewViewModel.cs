@@ -182,7 +182,7 @@ namespace Revit.TestRunner.App.View
                 duration = result.Duration;
 
                 if( result?.StateDto != null ) {
-                    var completed = result.StateDto.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed );
+                    var completed = result.StateDto.Cases.Where( c => c.State != TestState.Unknown );
 
                     foreach( TestCaseDto resultCase in completed.ToList() ) {
                         var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
@@ -198,7 +198,7 @@ namespace Revit.TestRunner.App.View
                 if( !string.IsNullOrEmpty( result.Message ) ) ProgramState = result.Message;
             }, CancellationToken.None );
 
-            int total = caseViewModels.Count();
+            int total = caseViewModels.Count( c => c.State == TestState.Passed || c.State == TestState.Failed );
             int passed = caseViewModels.Count( c => c.State == TestState.Passed );
             string message = $"Run finished - duration {duration:g} - {passed} of {total} Tests passed ({Math.Round( 100 * (double)passed / total )}%)";
 

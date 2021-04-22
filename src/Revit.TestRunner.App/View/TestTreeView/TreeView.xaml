@@ -32,6 +32,12 @@
                 <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Failed}">
                     <Setter Property="Foreground" Value="Red"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Explicit}">
+                    <Setter Property="Foreground" Value="Orange"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Explicit}">
+                    <Setter Property="Foreground" Value="Orange"/>
+                </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static nUnit:TestType.Case}">
                     <Setter Property="FontWeight" Value="Bold"/>
                 </DataTrigger>

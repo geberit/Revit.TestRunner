@@ -12,13 +12,13 @@ namespace Revit.TestRunner.Console.Commands
     /// <summary>
     /// Execute Test Command
     /// </summary>
-    [Verb( "all", HelpText = "Execute all UnitTests from a specified assembly" )]
+    [Verb( "assembly", HelpText = "Execute all UnitTests from a specified assembly" )]
     public class AssemblyCommand : AbstractTestCommand
     {
         /// <summary>
         /// Request File Path
         /// </summary>
-        [Option( 'a', "assembly", Required = true, HelpText = "Assembly path containing Tests to execute" )]
+        [Value( 0, HelpText = "Assembly path containing Tests to execute" )]
         public string AssemblyPath { get; set; }
 
         /// <summary>

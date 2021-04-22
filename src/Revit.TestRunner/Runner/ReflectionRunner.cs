@@ -77,9 +77,11 @@ namespace Revit.TestRunner.Runner
 
                 if( !isSingleTest && MarkedByAttribute( testMethod, typeof( ExplicitAttribute ) ) ) {
                     result.State = TestState.Explicit;
+                    result.Message = "Test is marked as Explicit";
                 }
                 else if( MarkedByAttribute( testMethod, typeof( IgnoreAttribute ) ) ) {
                     result.State = TestState.Ignore;
+                    result.Message = "Test is marked as Ignore";
                 }
                 else {
                     await InvokeMethod( testInstance, setUp, possibleParams );

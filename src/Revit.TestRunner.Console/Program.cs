@@ -12,11 +12,11 @@ namespace Revit.TestRunner.Console
     {
         public static void Main( string[] args )
         {
-            //if( Debugger.IsAttached ) args = new[] { "--help" };
-            if( Debugger.IsAttached ) args = new [] { "test", "-r", "2020", "-f", @"C:\Users\floto\Desktop\App.json" };
-            if( Debugger.IsAttached ) args = new [] { "all", "-r", "2020", "-a", @"C:\Code\Git\Revit_GeberitPlugIn\bin\Geberit.Revit.PlugIn.Tests.Native.dll" };
+            if( Debugger.IsAttached ) args = new[] { "--help" };
+            //if( Debugger.IsAttached ) args = new [] { "request", @"C:\temp\App.json", "-r", "2020" };
+            //if( Debugger.IsAttached ) args = new [] { "assembly", @"C:\temp\Tests.dll", "-r", "2020", };
 
-            Parser.Default.ParseArguments<TestCommand, AssemblyCommand, HelloCommand>( args )
+            Parser.Default.ParseArguments<RequestCommand, AssemblyCommand, HelloCommand>( args )
                 .WithParsed<ICommand>( t => t.Execute() );
 
             if( Debugger.IsAttached ) System.Console.ReadKey();
