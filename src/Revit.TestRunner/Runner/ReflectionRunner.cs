@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using NUnit.Framework;
 using Revit.TestRunner.Shared.Communication;
+using Revit.TestRunner.Shared.Communication.Dto;
 
 namespace Revit.TestRunner.Runner
 {
@@ -19,11 +20,11 @@ namespace Revit.TestRunner.Runner
 
         /// <summary>
         /// Execute Test described in <paramref name="test"/>.
-        /// Returns a new <see cref="TestCase"/> object with the test result.
+        /// Returns a new <see cref="TestCaseDto"/> object with the test result.
         /// </summary>
-        internal async Task<TestCase> RunTest( TestCase test, UIApplication uiApplication )
+        internal async Task<TestCaseDto> RunTest( TestCaseDto test, UIApplication uiApplication )
         {
-            TestCase result = new TestCase {
+            TestCaseDto result = new TestCaseDto {
                 Id = test.Id,
                 AssemblyPath = test.AssemblyPath,
                 TestClass = test.MethodName,
@@ -118,7 +119,7 @@ namespace Revit.TestRunner.Runner
         /// <summary>
         /// Enrich test case with exception information.
         /// </summary>
-        private void ReportException( TestCase @case, Exception e )
+        private void ReportException( TestCaseDto @case, Exception e )
         {
             @case.State = TestState.Failed;
 

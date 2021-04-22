@@ -52,7 +52,7 @@ namespace Revit.TestRunner.Shared.Communication.Client
             where TRequest : BaseRequestDto
         {
             const int timeout = 10000;
-            string id = Shared.Client.Client.GenerateId();
+            string id = GenerateId();
 
             request.RequestId = id;
             request.ClientName = mClientName;
@@ -116,6 +116,16 @@ namespace Revit.TestRunner.Shared.Communication.Client
             return absolutPath;
         }
 
+        /// <summary>
+        /// Generate a (kind of unique) id.
+        /// </summary>
+        public static string GenerateId()
+        {
+            Random r = new Random();
+            r.Next( 1000, 9999 );
+            int number = r.Next( 1000, 9999 );
+            return $"{DateTime.Now:yyyyMMdd-HHmmss}_{number}";
+        }
     }
 
     public class NotFoundException : Exception

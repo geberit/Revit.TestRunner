@@ -51,6 +51,9 @@ namespace Revit.TestRunner.Shared.Communication.Server
             Directory.CreateDirectory( Path.Combine( BasePath, route ) );
         }
 
+        /// <summary>
+        /// Start endless loop of all concurrent routes.
+        /// </summary>
         public void StartConcurrentRoutes()
         {
             Task.Run( () => {

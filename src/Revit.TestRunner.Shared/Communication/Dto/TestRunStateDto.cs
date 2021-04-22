@@ -1,9 +1,12 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Revit.TestRunner.Shared.Communication
+namespace Revit.TestRunner.Shared.Communication.Dto
 {
-    public class RunResult
+    /// <summary>
+    /// Represents the current state of a test run.
+    /// </summary>
+    public class TestRunStateDto
     {
         [JsonProperty( Order = 1 )]
         public DateTime Timestamp { get; set; }
@@ -24,7 +27,7 @@ namespace Revit.TestRunner.Shared.Communication
         public TestState State { get; set; }
 
         [JsonProperty( Order = 10 )]
-        public TestCase[] Cases { get; set; }
+        public TestCaseDto[] Cases { get; set; }
 
         
     }

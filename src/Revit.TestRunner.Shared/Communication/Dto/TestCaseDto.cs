@@ -1,9 +1,9 @@
-﻿namespace Revit.TestRunner.Shared.Communication
+﻿namespace Revit.TestRunner.Shared.Communication.Dto
 {
     /// <summary>
     /// Represents a TestCase.
     /// </summary>
-    public class TestCase
+    public class TestCaseDto
     {
         public string Id { get; set; }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Client;
 using Revit.TestRunner.Shared.Communication;
+using Revit.TestRunner.Shared.Communication.Dto;
 
 namespace Revit.TestRunner.Console
 {
@@ -20,7 +21,7 @@ namespace Revit.TestRunner.Console
         private string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         private const string ProgramName = "ConsoleRunner";
 
-        private static string[] TestArgs = new[] { "2020", @"C:\temp\TEstRequest.json" };
+        private static string[] TestArgs = new[] { "2020", @"C:\temp\TestRequest.json" };
 
         public static void Main( string[] args )
         {
@@ -34,7 +35,7 @@ namespace Revit.TestRunner.Console
 
         private async Task MainAsync( string[] args )
         {
-            RunRequest request = null;
+            TestRequestDto request = null;
             string requestFile = GetFile( args );
             string revitVersion = GetVersion( args );
 
@@ -42,7 +43,7 @@ namespace Revit.TestRunner.Console
                 request = GetRequestFromFile( requestFile );
             }
 
-            await RunTests( request, revitVersion );
+            await RunTests( request.Cases, revitVersion );
         }
 
         private string GetVersion( string[] args )
@@ -81,23 +82,20 @@ namespace Revit.TestRunner.Console
             return result;
         }
 
-        private async Task RunTests( RunRequest request, string aRevitVersion )
+        private async Task RunTests( IEnumerable<TestCaseDto> cases, string aRevitVersion )
         {
-            request.ClientName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
-            request.ClientVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
             TimeSpan duration = TimeSpan.Zero;
             System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
             System.Console.WriteLine( $"Start test run {DateTime.Now}; preferred on Revit {aRevitVersion}" );
             System.Console.WriteLine();
 
-            var complete = new List<TestCase>();
-            Client client = new Client( ProgramName, ProgramVersion );
+            var complete = new List<TestCaseDto>();
+            TestRunnerClient client = new TestRunnerClient( ProgramName, ProgramVersion );
 
-            await client.StartTestRunAsync( request, aRevitVersion, result => {
+            await client.StartTestRunAsync( cases, aRevitVersion, result => {
                 try {
-                    if( result.Result != null ) {
-                        foreach( var test in result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
+                    if( result.StateDto != null ) {
+                        foreach( var test in result.StateDto.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed ) ) {
                             if( complete.All( t => t.Id != test.Id ) ) {
                                 complete.Add( test );
 
@@ -127,13 +125,13 @@ namespace Revit.TestRunner.Console
 
         }
 
-        private RunRequest GetRequestFromFile( string path )
+        private TestRequestDto GetRequestFromFile( string path )
         {
-            RunRequest request = null;
+            TestRequestDto request = null;
 
             if( File.Exists( path ) ) {
                 try {
-                    request = JsonHelper.FromFile<RunRequest>( path );
+                    request = JsonHelper.FromFile<TestRequestDto>( path );
 
                     System.Console.WriteLine( $"Request loaded from '{path}'" );
                 }

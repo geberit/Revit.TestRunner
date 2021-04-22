@@ -76,7 +76,7 @@ namespace Revit.TestRunner.Shared.Client
         /// <summary>
         /// Start a test run request.
         /// </summary>
-        public async Task StartTestRunAsync( IEnumerable<TestCase> testCases, string revitVersion, Action<ProcessResult> callback, CancellationToken cancellationToken )
+        public async Task StartTestRunAsync( IEnumerable<TestCaseDto> testCases, string revitVersion, Action<TestRunState> callback, CancellationToken cancellationToken )
         {
             var request = new TestRequestDto {
                 Cases = testCases.ToArray()
@@ -88,17 +88,17 @@ namespace Revit.TestRunner.Shared.Client
                 TestResponseDto response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>( mHome.TestPath, request, cancellationToken );
 
                 if( response != null ) {
-                    var responseDirectoryPath = response.ResponseDirectory;
+                    var resultFile = response.ResultFile;
 
-                    if( Directory.Exists( responseDirectoryPath ) ) {
+                    if( File.Exists( resultFile ) ) {
                         bool run = true;
 
                         while( run && !cancellationToken.IsCancellationRequested ) {
-                            var runResult = JsonHelper.FromFile<RunResult>( Path.Combine( responseDirectoryPath, FileNames.RunResult ) );
+                            var runResult = JsonHelper.FromFile<TestRunStateDto>( resultFile );
 
                             if( runResult != null ) {
                                 bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
-                                ProcessResult result = new ProcessResult( runResult, isCompleted );
+                                TestRunState result = new TestRunState( runResult, isCompleted );
 
                                 callback( result );
 
@@ -109,7 +109,7 @@ namespace Revit.TestRunner.Shared.Client
                         }
                     }
                     else {
-                        callback( new ProcessResult( null, true ) { Message = "Tests not executed! Service may not be running." } );
+                        callback( new TestRunState( null, true ) { Message = "Tests not executed! Service may not be running." } );
                     }
 
                     if( revit.IsNew ) RevitHelper.KillRevit( revit.ProcessId );
@@ -117,7 +117,7 @@ namespace Revit.TestRunner.Shared.Client
                 }
             }
             else {
-                callback( new ProcessResult( null, true ) { Message = "TimeOut. Runner not available!" } );
+                callback( new TestRunState( null, true ) { Message = "TimeOut. Runner not available!" } );
             }
 
         }

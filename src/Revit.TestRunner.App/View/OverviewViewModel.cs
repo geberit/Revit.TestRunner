@@ -181,10 +181,10 @@ namespace Revit.TestRunner.App.View
                 ProgramState = "Test Run in progress" + points;
                 duration = result.Duration;
 
-                if( result?.Result != null ) {
-                    var completed = result.Result.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed );
+                if( result?.StateDto != null ) {
+                    var completed = result.StateDto.Cases.Where( c => c.State == TestState.Passed || c.State == TestState.Failed );
 
-                    foreach( TestCase resultCase in completed.ToList() ) {
+                    foreach( TestCaseDto resultCase in completed.ToList() ) {
                         var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
 
                         if( caseViewModel != null ) {
@@ -219,7 +219,7 @@ namespace Revit.TestRunner.App.View
             var caseViewModels = GetSelectedCases().ToList();
             var testCases = caseViewModels.Select( ToTestCase );
 
-            RunRequest request = new RunRequest {
+            TestRequestDto request = new TestRequestDto {
                 Timestamp = DateTime.Now,
                 Cases = testCases.ToArray()
             };
@@ -367,12 +367,12 @@ namespace Revit.TestRunner.App.View
             }
         }
 
-        private TestCase ToTestCase( NodeViewModel node )
+        private TestCaseDto ToTestCase( NodeViewModel node )
         {
             if( node == null ) throw new ArgumentNullException();
             if( node.Type != TestType.Case ) throw new ArgumentException( "Only TestCases allowed!" );
 
-            var result = new TestCase {
+            var result = new TestCaseDto {
                 Id = node.Id,
                 AssemblyPath = AssemblyPath,
                 TestClass = node.ClassName,

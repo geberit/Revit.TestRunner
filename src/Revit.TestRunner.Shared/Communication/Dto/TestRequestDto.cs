@@ -9,6 +9,6 @@ namespace Revit.TestRunner.Shared.Communication.Dto
         }
 
         [JsonProperty( Order = 11 )]
-        public TestCase[] Cases { get; set; }
+        public TestCaseDto[] Cases { get; set; }
     }
 }

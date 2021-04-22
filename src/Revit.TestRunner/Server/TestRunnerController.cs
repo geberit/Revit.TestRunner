@@ -126,21 +126,25 @@ namespace Revit.TestRunner.Server
             Log.Info( "Process Test request" );
 
             var testDir = Path.Combine( FileNames.WatchDirectory, TestDirectory, request.RequestId );
+            var resultFile = Path.Combine( testDir, FileNames.RunResult );
+            var summaryFile = Path.Combine( testDir, FileNames.RunSummary );
             Directory.CreateDirectory( testDir );
 
             var result = new TestResponseDto {
-                ResponseDirectory = testDir
+                ResponseDirectory = testDir,
+                ResultFile = resultFile,
+                SummaryFile = summaryFile
             };
 
-            string summaryPath = Path.Combine( testDir, FileNames.RunSummary );
-            LogInfo( summaryPath, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
+            
+            LogInfo( summaryFile, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
 
-            RunResult runResult = new RunResult {
+            TestRunStateDto testRunStateDto = new TestRunStateDto {
                 Id = request.RequestId,
                 StartTime = DateTime.Now,
                 State = TestState.Running,
                 Cases = request.Cases.ToArray(),
-                SummaryFile = summaryPath
+                SummaryFile = summaryFile
             };
 
             RevitTask runnerTask = new RevitTask();
@@ -154,12 +158,12 @@ namespace Revit.TestRunner.Server
                         .ThenBy( c => c.MethodName )
                         .ToArray();
 
-                    runResult.Cases = casesToRun;
+                    testRunStateDto.Cases = casesToRun;
 
-                    foreach( TestCase test in casesToRun ) {
-                        var runTestResult = runResult.Cases.Single( t => t.Id == test.Id );
+                    foreach( TestCaseDto test in casesToRun ) {
+                        var runTestResult = testRunStateDto.Cases.Single( t => t.Id == test.Id );
 
-                        WriteTestResultFile( testDir, runResult, false );
+                        WriteTestResultFile( resultFile, testRunStateDto, false );
 
                         var testResult = await runner.RunTest( test, mUiApplication );
 
@@ -167,21 +171,21 @@ namespace Revit.TestRunner.Server
                         runTestResult.Message = testResult.Message;
                         runTestResult.StackTrace = testResult.StackTrace;
 
-                        LogInfo( summaryPath, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
+                        LogInfo( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
 
-                        if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryPath, $"\t{test.Message}" );
-                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryPath, $"\t{test.StackTrace}" );
+                        if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryFile, $"\t{test.Message}" );
+                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryFile, $"\t{test.StackTrace}" );
                     }
 
                 }
                 catch( Exception e ) {
-                    runResult.Output = e.ToString();
-                    LogInfo( summaryPath, e );
+                    testRunStateDto.Output = e.ToString();
+                    LogInfo( summaryFile, e );
                 }
 
-                WriteTestResultFile( testDir, runResult, true );
+                WriteTestResultFile( resultFile, testRunStateDto, true );
 
-                LogInfo( summaryPath, $"Test run end - duration {runResult.Timestamp - runResult.StartTime}" );
+                LogInfo( summaryFile, $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
 
             } );
 
@@ -191,18 +195,18 @@ namespace Revit.TestRunner.Server
         /// <summary>
         /// Write test result file to response directory.
         /// </summary>
-        private void WriteTestResultFile( string directory, RunResult result, bool finished )
+        private void WriteTestResultFile( string resultFile, TestRunStateDto stateDto, bool finished )
         {
             if( finished ) {
-                result.State = result.Cases.Any( t => t.State == TestState.Failed ) ? TestState.Failed : TestState.Passed;
+                stateDto.State = stateDto.Cases.Any( t => t.State == TestState.Failed ) ? TestState.Failed : TestState.Passed;
             }
             else {
-                result.State = TestState.Running;
+                stateDto.State = TestState.Running;
             }
 
-            result.Timestamp = DateTime.Now;
+            stateDto.Timestamp = DateTime.Now;
 
-            JsonHelper.ToFile( Path.Combine( directory, FileNames.RunResult ), result );
+            JsonHelper.ToFile( resultFile, stateDto );
         }
 
         private void LogInfo( string summaryPath, object message )
