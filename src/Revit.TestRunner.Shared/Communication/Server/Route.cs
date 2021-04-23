@@ -1,5 +1,5 @@
 ﻿using System;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Shared.Communication.Server
 {

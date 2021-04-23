@@ -11,9 +11,8 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using Revit.TestRunner.App.View.TestTreeView;
 using Revit.TestRunner.Shared;
-using Revit.TestRunner.Shared.Client;
 using Revit.TestRunner.Shared.Communication;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 using Revit.TestRunner.Shared.Model;
 using Revit.TestRunner.Shared.NUnit;
 
@@ -170,7 +169,7 @@ namespace Revit.TestRunner.App.View
             ProgramState = "Test Run in started";
 
             var caseViewModels = GetSelectedCases().ToList();
-            var testCases = caseViewModels.Select( vm => ModelController.ToTestCase( vm.Model ) );
+            var testCases = caseViewModels.Select( vm => ModelHelper.ToTestCase( vm.Model ) );
 
             int callbackCount = 0;
             TimeSpan duration = TimeSpan.Zero;
@@ -217,7 +216,7 @@ namespace Revit.TestRunner.App.View
         private void ExecuteCreateRequestCommand()
         {
             var caseViewModels = GetSelectedCases().ToList();
-            var testCases = caseViewModels.Select( vm => ModelController.ToTestCase( vm.Model ) );
+            var testCases = caseViewModels.Select( vm => ModelHelper.ToTestCase( vm.Model ) );
 
             TestRequestDto request = new TestRequestDto {
                 Timestamp = DateTime.Now,
@@ -319,8 +318,7 @@ namespace Revit.TestRunner.App.View
             AssemblyPath = string.Empty;
 
             if( File.Exists( exploreFile ) ) {
-                ModelController controller = new ModelController();
-                var rootModel = controller.ToNodeTree( exploreFile );
+                var rootModel = ModelHelper.ToNodeTree( exploreFile );
 
                 NodeViewModel root = ToNodeTree( rootModel );
 

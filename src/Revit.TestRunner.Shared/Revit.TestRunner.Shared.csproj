@@ -13,37 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Revit2021</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Revit2020</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2019|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Revit2019</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2018</DefineConstants>
@@ -53,39 +23,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2018|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE;Revit2018</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2019|x64'">
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;Revit2019</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|x64'">
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;Revit2020</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|x64'">
-    <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;Revit2021</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -114,28 +54,28 @@
       <Link>Properties\AssemblyInfo.Version.cs</Link>
     </Compile>
     <Compile Include="AbstractNotifyPropertyChanged.cs" />
-    <Compile Include="Client\TestRunnerClient.cs" />
+    <Compile Include="TestRunnerClient.cs" />
     <Compile Include="Communication\Client\FileClient.cs" />
-    <Compile Include="Communication\Dto\BaseRequestDto.cs" />
-    <Compile Include="Communication\Dto\BaseResponseDto.cs" />
-    <Compile Include="Communication\Dto\DtoType.cs" />
-    <Compile Include="Communication\Dto\ExploreRequestDto.cs" />
-    <Compile Include="Communication\Dto\ExploreResponseDto.cs" />
-    <Compile Include="Communication\Dto\NoParameterDto.cs" />
-    <Compile Include="Communication\Dto\HomeDto.cs" />
-    <Compile Include="Communication\Dto\TestRequestDto.cs" />
-    <Compile Include="Communication\Dto\TestResponseDto.cs" />
+    <Compile Include="Dto\BaseRequestDto.cs" />
+    <Compile Include="Dto\BaseResponseDto.cs" />
+    <Compile Include="Dto\DtoType.cs" />
+    <Compile Include="Dto\ExploreRequestDto.cs" />
+    <Compile Include="Dto\ExploreResponseDto.cs" />
+    <Compile Include="Dto\NoParameterDto.cs" />
+    <Compile Include="Dto\HomeDto.cs" />
+    <Compile Include="Dto\TestRequestDto.cs" />
+    <Compile Include="Dto\TestResponseDto.cs" />
     <Compile Include="Communication\FileNames.cs" />
-    <Compile Include="Communication\TestRunState.cs" />
+    <Compile Include="Model\TestRunState.cs" />
     <Compile Include="Communication\Enumerations.cs" />
     <Compile Include="Communication\Server\FileServer.cs" />
     <Compile Include="Communication\Server\Request.cs" />
     <Compile Include="Communication\Server\Route.cs" />
-    <Compile Include="Communication\Dto\TestCaseDto.cs" />
-    <Compile Include="Communication\Dto\TestRunStateDto.cs" />
+    <Compile Include="Dto\TestCaseDto.cs" />
+    <Compile Include="Dto\TestRunStateDto.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="JsonHelper.cs" />
-    <Compile Include="Model\ModelController.cs" />
+    <Compile Include="Model\ModelHelper.cs" />
     <Compile Include="Model\NodeModel.cs" />
     <Compile Include="NUnit\NUnitResult.cs" />
     <Compile Include="NUnit\NUnitTestCase.cs" />

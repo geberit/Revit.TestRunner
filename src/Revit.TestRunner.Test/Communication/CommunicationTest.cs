@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication.Client;
-using Revit.TestRunner.Shared.Communication.Dto;
 using Revit.TestRunner.Shared.Communication.Server;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Test.Communication
 {

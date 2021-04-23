@@ -19,7 +19,7 @@ namespace Revit.TestRunner.Console
             Parser.Default.ParseArguments<RequestCommand, AssemblyCommand, HelloCommand>( args )
                 .WithParsed<ICommand>( t => t.Execute() );
 
-            if( Debugger.IsAttached ) System.Console.ReadKey();
+            System.Console.ReadKey();
         }
     }
 }

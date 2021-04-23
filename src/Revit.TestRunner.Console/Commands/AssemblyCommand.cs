@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Revit.TestRunner.Shared.Client;
+using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.Shared.Model;
 using Revit.TestRunner.Shared.NUnit;
@@ -41,12 +41,11 @@ namespace Revit.TestRunner.Console.Commands
             var explore = await client.ExploreAssemblyAsync( assemblyPath, RevitVersion.ToString(), CancellationToken.None );
 
             System.Console.WriteLine( "Get tests from assembly" );
-            var controller = new ModelController();
-            var root = controller.ToNodeTree( explore.ExploreFile );
+            var root = ModelHelper.ToNodeTree( explore.ExploreFile );
 
             var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
 
-            await RunTests( cases.Select( ModelController.ToTestCase ) );
+            await RunTests( cases.Select( ModelHelper.ToTestCase ) );
         }
     }
 }

@@ -11,13 +11,13 @@ Chose your favorite test assembly and run the desired tests. There is no need fo
 ## Getting started
 Get the Code from github and compile it. The Revit.TestRunner.addin file will be automatically placed in the ProgramData addin folder of the selected Revit version 
 
-It is also possible to download the pre compiled binaries. Start the InstallAddin v20xx.cmd of your favorite Revit version and run Revit. 
+Or download the pre compiled binaries ([install dir](../install)) . Start the InstallAddin v20xx.cmd of your favorite Revit version and run Revit. 
 
 The Addin hooks in the ‘Add-Ins’ Ribbon of Revit. 
 
 ![alt text](/images/testrunner_start.png)
 
-By pressing the Button, a Dialog will appear. By choosing your testing assembly, the view will show all your tests.
+By pressing the Button, the standalone application start. By choosing your testing assembly, the view presents all test in the assembly.
 
 ![alt text](/images/testrunner_ui.png)
 
@@ -26,11 +26,7 @@ Select the nodes you want to test and press the ‘Run’ Button. All selected n
 ![alt text](/images/testrunner_ui_executed.png)
 
 ### Console application
-Instead of run test from the standalone application, create a request json file. This file contains all the selected tests. Call the Revit.TestRunner.Console.exe and pass the revit version and the request file as parameters. 
-
-``` Revit.TestRunner.Console.exe 2020 c:\temp\myRequest.json ```
-
-Revit 2020 will start and execute all desired tests. If a Revit instance is already running, this instance will be used for execution, even if it is ex. Revit 2021.
+Instead of running test from the standalone application, tests can also be executed by the consol application.
 
 
 ### Write Tests
@@ -82,10 +78,8 @@ public void MultiParameterTest1( UIApplication uiApplication, Application applic
 
 In your test, you have access to it, and your able to make stuff with it (ex. `UIApplication.Application.OpenDocumentFile(…)`)
 
-## New in version 1.2
-* run test from console
-* Async Test execution
-* Pick multiple tests to execute
+## Release History
+See [ReleaseNotes](/documentation/ReleaseNotes.md)
 
 ## Open Issues
 * ...
@@ -94,5 +88,5 @@ In your test, you have access to it, and your able to make stuff with it (ex. `U
 [MIT](http://opensource.org/licenses/MIT)
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
--	Author Copyright (C) 2017-2019 Tobias Flöscher
--	Company Copyright (C) 2017-2019 Geberit Verwaltungs AG 
+-	Author Copyright (C) 2017-2021 Tobias Flöscher
+-	Company Copyright (C) 2017-2021 Geberit Verwaltungs AG 

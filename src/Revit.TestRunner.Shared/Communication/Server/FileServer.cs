@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Shared.Communication.Server
 {

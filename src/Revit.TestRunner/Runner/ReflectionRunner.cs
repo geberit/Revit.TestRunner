@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using NUnit.Framework;
 using Revit.TestRunner.Shared.Communication;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Runner
 {

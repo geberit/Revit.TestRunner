@@ -44,18 +44,18 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug2022|x64' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Revit2018</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Revit2022</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2018|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release2022|x64' ">
     <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;Revit2018</DefineConstants>
+    <DefineConstants>TRACE;Revit2022</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -101,13 +101,27 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Choose>
+    <When Condition="$(DefineConstants.Contains('Revit2022'))">
+      <ItemGroup>
+        <Reference Include="RevitAPI, Version=22.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+          <HintPath>..\Libs\Revit2022\lib\net48\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI, Version=22.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+          <HintPath>..\Libs\Revit2022\lib\net48\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
     <When Condition="$(DefineConstants.Contains('Revit2021'))">
       <ItemGroup>
         <Reference Include="RevitAPI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
           <HintPath>..\Libs\Revit2021\lib\net47\RevitAPI.dll</HintPath>
+		  <Private>False</Private>
         </Reference>
         <Reference Include="RevitAPIUI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
           <HintPath>..\Libs\Revit2021\lib\net47\RevitAPIUI.dll</HintPath>
+		  <Private>False</Private>
         </Reference>
       </ItemGroup>
     </When>
@@ -131,38 +145,6 @@
         </Reference>
         <Reference Include="RevitAPIUI, Version=19.0.0.0, Culture=neutral, processorArchitecture=AMD64">
           <HintPath>..\Libs\Revit2019\lib\net45\RevitAPIUI.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(DefineConstants.Contains('Revit2018'))">
-      <ItemGroup>
-        <Reference Include="AdWindows, Version=2016.11.4.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\Libs\Revit2018\lib\net46\AdWindows.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAPI, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAPI.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAPIIFC, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAPIIFC.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAPIMacros, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAPIMacros.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAPIUI, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAPIUI.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAPIUIMacros, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAPIUIMacros.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="RevitAddInUtility, Version=18.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\Libs\Revit2018\lib\net46\RevitAddInUtility.dll</HintPath>
           <Private>False</Private>
         </Reference>
       </ItemGroup>

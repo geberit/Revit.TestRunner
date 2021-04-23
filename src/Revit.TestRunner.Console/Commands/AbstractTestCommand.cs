@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Revit.TestRunner.Shared.Client;
+using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Console.Commands
 {
@@ -82,9 +82,10 @@ namespace Revit.TestRunner.Console.Commands
             }, CancellationToken.None );
 
             int passedCount = complete.Count( t => t.State == TestState.Passed );
+            int completeCount = complete.Count( t => t.State == TestState.Passed || t.State == TestState.Failed );
 
             System.Console.WriteLine();
-            System.Console.WriteLine( $"Run finished - duration {duration:g} - {passedCount} of {complete.Count} Tests passed ({Math.Round( 100 * (double)passedCount / complete.Count )}%)" );
+            System.Console.WriteLine( $"Run finished - duration {duration:g} - {passedCount} of {completeCount} Tests passed ({Math.Round( 100 * (double)passedCount / completeCount )}%)" );
 
         }
     }

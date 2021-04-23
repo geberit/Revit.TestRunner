@@ -3,7 +3,7 @@ using System.IO;
 using CommandLine;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
-using Revit.TestRunner.Shared.Communication.Dto;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Console.Commands
 {

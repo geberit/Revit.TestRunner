@@ -1,4 +1,11 @@
 # Release Notes
+* v1.3 [21Q02]
+    * 'Run all tests from an assembly' command in console application
+    * Change of parameters in console application
+    * Rough implementation of nUnit Explicit- and Ignore- Attributes
+    * Change of communication between client and service
+        * Please recreate request files!
+
 * v1.2 [20Q03]
     * Service based execution
     * Standalone desktop application

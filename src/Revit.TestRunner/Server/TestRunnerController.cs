@@ -5,8 +5,8 @@ using Autodesk.Revit.UI;
 using Revit.TestRunner.Runner;
 using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
-using Revit.TestRunner.Shared.Communication.Dto;
 using Revit.TestRunner.Shared.Communication.Server;
+using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Server
 {
