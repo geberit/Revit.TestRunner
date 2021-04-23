@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using CommandLine;
 using Revit.TestRunner.Shared;
-using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.Shared.Dto;
 
 namespace Revit.TestRunner.Console.Commands
@@ -26,34 +24,31 @@ namespace Revit.TestRunner.Console.Commands
         /// </summary>
         public override void Execute()
         {
+            base.Execute();
+
             if( FileExist( RequestFile ) ) {
-                System.Console.WriteLine( $"Run tests from request file '{RequestFile}'" );
-                System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
-
-                System.Console.WriteLine( "Get requests from file" );
+                System.Console.WriteLine( "Run tests from request file" );
+                System.Console.WriteLine( $"Get requests from file '{RequestFile}'" );
+                
                 var request = GetRequestFromFile( RequestFile );
-
                 RunTests( request.Cases ).GetAwaiter().GetResult();
             }
         }
 
+        /// <summary>
+        /// Get request from file.
+        /// </summary>
         private TestRequestDto GetRequestFromFile( string path )
         {
             TestRequestDto request = null;
 
-            if( File.Exists( path ) ) {
-                try {
-                    request = JsonHelper.FromFile<TestRequestDto>( path );
+            try {
+                request = JsonHelper.FromFile<TestRequestDto>( path );
+            }
+            catch( Exception e ) {
+                System.Console.WriteLine( $"Can not create Request from '{path}' - {e}" );
+            }
 
-                    System.Console.WriteLine( $"Request loaded from '{path}'" );
-                }
-                catch( Exception e ) {
-                    System.Console.WriteLine( $"Can not create Request from '{path}' - {e}" );
-                }
-            }
-            else {
-                System.Console.WriteLine( $"File does not exist '{path}'" );
-            }
 
             return request;
         }

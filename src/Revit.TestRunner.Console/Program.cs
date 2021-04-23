@@ -14,7 +14,7 @@ namespace Revit.TestRunner.Console
         {
             if( Debugger.IsAttached ) args = new[] { "--help" };
             //if( Debugger.IsAttached ) args = new [] { "request", @"C:\temp\App.json", "-r", "2020" };
-            //if( Debugger.IsAttached ) args = new [] { "assembly", @"C:\temp\Tests.dll", "-r", "2020", };
+            if( Debugger.IsAttached ) args = new [] { "assembly", @"C:\temp\Revit.TestRunner.SampleTestProject.dll", "-r", "2020", };
 
             Parser.Default.ParseArguments<RequestCommand, AssemblyCommand, HelloCommand>( args )
                 .WithParsed<ICommand>( t => t.Execute() );

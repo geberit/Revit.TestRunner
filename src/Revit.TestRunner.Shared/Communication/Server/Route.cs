@@ -29,6 +29,11 @@ namespace Revit.TestRunner.Shared.Communication.Server
         public string RoutePath { get; }
 
         /// <summary>
+        /// Relative route path for logging. Path contains all requests and responses.
+        /// </summary>
+        public string LogPath => "__logs\\" + RoutePath;
+
+        /// <summary>
         /// Type of request for this route.
         /// </summary>
         public abstract Type RequestType { get; }

@@ -3,8 +3,8 @@
     * 'Run all tests from an assembly' command in console application
     * Change of parameters in console application
     * Rough implementation of nUnit Explicit- and Ignore- Attributes
-    * Change of communication between client and service
-        * Please recreate request files!
+    * Change of communication between client and service (Please recreate request files!)
+    * Recent files in desktop app
 
 * v1.2 [20Q03]
     * Service based execution

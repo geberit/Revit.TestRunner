@@ -37,9 +37,16 @@ namespace Revit.TestRunner.Shared.Communication.Client
         /// Post a request json object and get back a response json object.
         /// Path can be absolute or relative. Must be under <see cref="BasePath"/>.
         /// </summary>
-        public async Task<TResponse> GetJson<TResponse>( string path, CancellationToken cancellationToken ) where TResponse : BaseResponseDto
+        public async Task<TResponse> GetJson<TResponse>( string path, CancellationToken cancellationToken, int maxTry = 10, int timeout = 10000 ) where TResponse : BaseResponseDto
         {
-            return await GetJson<NoParameterDto, TResponse>( path, new NoParameterDto(), cancellationToken );
+            TResponse result = null;
+
+            for( int i = 0; i < maxTry; i++ ) {
+                result = await GetJson<NoParameterDto, TResponse>( path, new NoParameterDto(), cancellationToken, timeout );
+                if( result != null ) break;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -47,11 +54,10 @@ namespace Revit.TestRunner.Shared.Communication.Client
         /// Path can be absolute or relative. Must be under <see cref="BasePath"/>.
         /// Timeout 10s.
         /// </summary>
-        public async Task<TResponse> GetJson<TRequest, TResponse>( string path, TRequest request, CancellationToken cancellationToken )
+        public async Task<TResponse> GetJson<TRequest, TResponse>( string path, TRequest request, CancellationToken cancellationToken, int timeout = 10000 )
             where TResponse : BaseResponseDto
             where TRequest : BaseRequestDto
         {
-            const int timeout = 10000;
             string id = GenerateId();
 
             request.RequestId = id;
@@ -93,7 +99,7 @@ namespace Revit.TestRunner.Shared.Communication.Client
                 ? JsonHelper.FromString<TResponse>( responseString )
                 : default;
         }
-        
+
         /// <summary>
         /// Check if the given path is valid. Can be absolut ore relative.
         /// Directory must exist and must be under <see cref="BasePath"/>.

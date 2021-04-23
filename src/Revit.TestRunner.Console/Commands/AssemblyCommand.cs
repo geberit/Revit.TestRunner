@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Revit.TestRunner.Shared;
-using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.Shared.Model;
 using Revit.TestRunner.Shared.NUnit;
 
@@ -26,26 +25,31 @@ namespace Revit.TestRunner.Console.Commands
         /// </summary>
         public override void Execute()
         {
-            if( FileExist( AssemblyPath ) ) {
-                System.Console.WriteLine( $"Run all tests in assembly '{AssemblyPath}'" );
-                System.Console.WriteLine( $"App dir {FileNames.WatchDirectory}" );
+            base.Execute();
 
+            if( FileExist( AssemblyPath ) ) {
                 RunAll( AssemblyPath ).GetAwaiter().GetResult();
             }
         }
 
+        /// <summary>
+        /// Run all tests in assembly.
+        /// </summary>
         private async Task RunAll( string assemblyPath )
         {
-            System.Console.WriteLine( "Explore assembly" );
+            System.Console.WriteLine( "Run all tests in assembly" );
+            System.Console.WriteLine( $"Explore assembly '{AssemblyPath}'" );
+
             TestRunnerClient client = new TestRunnerClient( ConsoleConstants.ProgramName, ConsoleConstants.ProgramVersion );
             var explore = await client.ExploreAssemblyAsync( assemblyPath, RevitVersion.ToString(), CancellationToken.None );
 
-            System.Console.WriteLine( "Get tests from assembly" );
-            var root = ModelHelper.ToNodeTree( explore.ExploreFile );
+            if( explore != null ) {
+                System.Console.WriteLine( "Get tests from assembly" );
+                var root = ModelHelper.ToNodeTree( explore.ExploreFile );
+                var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
 
-            var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
-
-            await RunTests( cases.Select( ModelHelper.ToTestCase ) );
+                await RunTests( cases.Select( ModelHelper.ToTestCase ) );
+            }
         }
     }
 }

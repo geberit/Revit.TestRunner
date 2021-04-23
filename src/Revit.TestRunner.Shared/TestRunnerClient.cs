@@ -48,9 +48,9 @@ namespace Revit.TestRunner.Shared
         /// <summary>
         /// Call Home
         /// </summary>
-        public async Task<HomeDto> Home( CancellationToken cancellationToken )
+        private async Task<HomeDto> Home( CancellationToken cancellationToken )
         {
-            mHome = await mFileClient.GetJson<HomeDto>( "", cancellationToken );
+            mHome = await mFileClient.GetJson<HomeDto>( "", cancellationToken, 30, 2000 );
             return mHome;
         }
 
@@ -71,6 +71,9 @@ namespace Revit.TestRunner.Shared
 
             if( mHome != null ) {
                 result = await mFileClient.GetJson<ExploreRequestDto, ExploreResponseDto>( mHome.ExplorePath, request, cancellationToken );
+            }
+            else {
+                Console.WriteLine( "TestRunner service not available!" );
             }
 
             return result;

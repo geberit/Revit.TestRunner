@@ -71,6 +71,13 @@ namespace Revit.TestRunner.Shared.Communication.Server
             response.RequestId = Id;
             response.ThisPath = responseFilePath;
 
+            var logPath = Path.Combine( basePath, Route.LogPath );
+            Directory.CreateDirectory( logPath );
+            var logResponseFilePath = Path.Combine( logPath, $"{Id}.response" );
+            var logRequestFilePath = Path.Combine( logPath, $"{Id}.request" );
+            JsonHelper.ToFile( logResponseFilePath, response );
+            JsonHelper.ToFile( logRequestFilePath, RequestObject );
+
             JsonHelper.ToFile( responseFilePath, response );
         }
     }

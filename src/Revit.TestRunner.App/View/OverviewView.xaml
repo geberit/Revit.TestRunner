@@ -41,7 +41,8 @@
         <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top">
             <DockPanel >
                 <Button DockPanel.Dock="Right" Content="..." Width="50" Command="{Binding OpenAssemblyCommand}" ToolTip="Open Test Assembly"/>
-                <TextBox DockPanel.Dock="Left" Text="{Binding AssemblyPath}" IsReadOnly="True" />
+                <!--<TextBox DockPanel.Dock="Left" Text="{Binding AssemblyPath}" IsReadOnly="True" />-->
+                <ComboBox DockPanel.Dock="Left" SelectedItem="{Binding AssemblyPath}" ItemsSource="{Binding Recent}" />
             </DockPanel>
         </StackPanel>
 

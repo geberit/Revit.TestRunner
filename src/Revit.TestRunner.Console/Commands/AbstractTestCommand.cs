@@ -25,7 +25,10 @@ namespace Revit.TestRunner.Console.Commands
         /// <summary>
         /// Execute Command.
         /// </summary>
-        public abstract void Execute();
+        public virtual void Execute()
+        {
+            System.Console.WriteLine( $"App dir '{FileNames.WatchDirectory}'" );
+        }
 
         /// <summary>
         /// Validate File existance. Write to console if not.
@@ -37,7 +40,7 @@ namespace Revit.TestRunner.Console.Commands
                 result = true;
             }
             else {
-                System.Console.WriteLine( "Request file not recognized." );
+                System.Console.WriteLine( "Input file not found!" );
             }
 
             return result;

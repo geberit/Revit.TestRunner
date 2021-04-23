@@ -46,6 +46,9 @@ namespace Revit.TestRunner.App.View
             InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
 
             mClient.StartRunnerStatusWatcher( CheckHome, CancellationToken.None );
+
+            Recent = Properties.Settings.Default.AssemblyPath?.Split( ';' ) ?? Enumerable.Empty<string>();
+            AssemblyPath = Recent.FirstOrDefault();
         }
         #endregion
 
@@ -71,14 +74,33 @@ namespace Revit.TestRunner.App.View
                 if( mAssemblyPath != value ) {
                     mAssemblyPath = value;
                     OnPropertyChanged();
+
+                    if( !string.IsNullOrEmpty( value ) ) {
+                        _ = LoadAssembly( value );
+                    }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Recent loaded assemblies. max count = 10.
+        /// </summary>
+        public IEnumerable<string> Recent
+        {
+            get => Properties.Settings.Default.AssemblyPath.Split( ';' );
+            private set
+            {
+                var list = value != null ? value.Take( 10 ) : Enumerable.Empty<string>();
+                Properties.Settings.Default.AssemblyPath = string.Join( ";", list );
+                Properties.Settings.Default.Save();
+                OnPropertyChanged();
             }
         }
 
         /// <summary>
         /// Get the Model Tree of the the assembly.
         /// </summary>
-        public TreeViewModel Tree { get; set; }
+        public TreeViewModel Tree { get; }
 
         /// <summary>
         /// Get detail information of the selected test node.
@@ -128,12 +150,12 @@ namespace Revit.TestRunner.App.View
 
         #region Commands
 
-        public ICommand OpenAssemblyCommand => new AsyncCommand( ExecuteOpenAssemblyCommand, CanExecute );
+        public ICommand OpenAssemblyCommand => new DelegateWpfCommand( ExecuteOpenAssemblyCommand, CanExecute );
 
         private bool CanExecute()
         {
             if( !Tree.HasObjects ) {
-                LoadAssembly( Properties.Settings.Default.AssemblyPath );   // this is ugly ;)
+                _ = LoadAssembly( Recent.FirstOrDefault() );   // this is ugly ;)
             }
 
             return true;
@@ -142,7 +164,7 @@ namespace Revit.TestRunner.App.View
         /// <summary>
         /// Open assembly for exploring.
         /// </summary>
-        private async Task ExecuteOpenAssemblyCommand()
+        private void ExecuteOpenAssemblyCommand()
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "dll files (*.dll)|*.dll|explore files (*.xml)|*.xml";
@@ -152,11 +174,8 @@ namespace Revit.TestRunner.App.View
                     LoadExploreFile( dialog.FileName );
                 }
                 else if( dialog.FileName.EndsWith( ".dll" ) ) {
-                    await LoadAssembly( dialog.FileName );
+                    AssemblyPath = dialog.FileName;
                 }
-
-                Properties.Settings.Default.AssemblyPath = AssemblyPath;
-                Properties.Settings.Default.Save();
             }
         }
 
@@ -255,15 +274,6 @@ namespace Revit.TestRunner.App.View
         {
             mHomeDto = home;
             OnPropertyChangedAll();
-
-            if( mHomeDto != null && !Tree.HasObjects ) {
-                //Dispatcher.CurrentDispatcher.BeginInvoke( new Action( () => {
-                //    //Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Load assembly" );
-                //    LoadAssembly( Properties.Settings.Default.AssemblyPath );
-                //} ) );
-
-
-            }
         }
 
         /// <summary>
@@ -287,26 +297,34 @@ namespace Revit.TestRunner.App.View
         /// </summary>
         private async Task LoadAssembly( string path )
         {
-            if( !string.IsNullOrEmpty( path ) && File.Exists( path ) && !mIsLoading ) {
-                ProgramState = "Explore file requested...";
+            if( !mIsLoading ) {
+                var recentList = Recent.ToList();
+                if( recentList.Contains( path ) ) recentList.Remove( path );
 
-                mIsLoading = true;
-                Tree.Clear();
+                if( !string.IsNullOrEmpty( path ) && File.Exists( path ) ) {
+                    ProgramState = "Explore file requested...";
 
-                ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
+                    mIsLoading = true;
+                    Tree.Clear();
 
-                if( response != null ) {
-                    LoadExploreFile( response.ExploreFile );
+                    ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
 
-                    if( !string.IsNullOrEmpty( response.Message ) ) {
-                        MessageBox.Show( response.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error );
+                    if( response != null ) {
+                        LoadExploreFile( response.ExploreFile );
+                        recentList.Insert( 0, path );
+
+                        if( !string.IsNullOrEmpty( response.Message ) ) {
+                            MessageBox.Show( response.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error );
+                        }
                     }
-                }
-                else {
-                    ProgramState = $"Could not load '{path}'";
+                    else {
+                        ProgramState = $"Could not load '{path}'";
+                    }
+
+                    mIsLoading = false;
                 }
 
-                mIsLoading = false;
+                Recent = recentList;
             }
         }
 
@@ -321,14 +339,13 @@ namespace Revit.TestRunner.App.View
                 var rootModel = ModelHelper.ToNodeTree( exploreFile );
 
                 NodeViewModel root = ToNodeTree( rootModel );
-
-                Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Add to tree" );
                 Tree.AddRootObject( root, true );
-                Console.WriteLine( $@"[{Thread.CurrentThread.ManagedThreadId}] Added" );
 
                 AssemblyPath = root.FullName;
 
                 ProgramState = $"Test Assembly definition loaded '{AssemblyPath}'";
+
+
             }
             else {
                 ProgramState = $"Explore file not found '{exploreFile}'";
