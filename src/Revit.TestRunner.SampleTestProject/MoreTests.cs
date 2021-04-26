@@ -58,6 +58,18 @@ namespace Revit.TestRunner.SampleTestProject
             Assert.Fail( "This test should fail!" );
         }
 
+        [Test, Explicit]
+        public void Test6Explicit()
+        {
+            Delay( 2 );
+        }
+
+        [Test, Ignore( "Ignore Test" )]
+        public void TestIgnore()
+        {
+            Delay( 2 );
+        }
+
         private async Task DelayAsync( int aSeconds )
         {
             await Task.Delay( aSeconds * 1000 );

@@ -16,8 +16,6 @@ namespace Revit.TestRunner.Server
 
         private const string ExplorePath = "explore";
         private const string TestPath = "test";
-        private const string DownloadDirectory = "_download";
-        private const string TestDirectory = "_test";
 
         private FileServer mServer;
         private UIApplication mUiApplication;
@@ -102,10 +100,9 @@ namespace Revit.TestRunner.Server
         {
             Log.Info( "Process Explore request" );
 
-            var downloadDir = Path.Combine( FileNames.WatchDirectory, DownloadDirectory, request.RequestId );
-            Directory.CreateDirectory( downloadDir );
+            var requestDirectory = CreateRequestDirectory( request, ExplorePath );
 
-            NUnitRunner runner = new NUnitRunner( request.AssemblyPath, downloadDir );
+            NUnitRunner runner = new NUnitRunner( request.AssemblyPath, requestDirectory.FullName );
             string message = runner.ExploreAssembly();
 
             var result = new ExploreResponseDto {
@@ -115,7 +112,6 @@ namespace Revit.TestRunner.Server
             };
 
             return result;
-
         }
 
         /// <summary>
@@ -125,19 +121,15 @@ namespace Revit.TestRunner.Server
         {
             Log.Info( "Process Test request" );
 
-            var testDir = Path.Combine( FileNames.WatchDirectory, TestDirectory, request.RequestId );
-            var resultFile = Path.Combine( testDir, FileNames.RunResult );
-            var summaryFile = Path.Combine( testDir, FileNames.RunSummary );
-            Directory.CreateDirectory( testDir );
-
-            JsonHelper.ToFile( Path.Combine( testDir, "request.json" ), request );
+            var requestDirectory = CreateRequestDirectory( request, TestPath );
+            var resultFile = Path.Combine( requestDirectory.FullName, FileNames.RunResult );
+            var summaryFile = Path.Combine( requestDirectory.FullName, FileNames.RunSummary );
 
             var result = new TestResponseDto {
-                ResponseDirectory = testDir,
+                ResponseDirectory = requestDirectory.FullName,
                 ResultFile = resultFile,
                 SummaryFile = summaryFile
             };
-
 
             LogInfo( summaryFile, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
 
@@ -159,7 +151,7 @@ namespace Revit.TestRunner.Server
                         .ThenBy( c => c.TestClass )
                         .ThenBy( c => c.MethodName )
                         .ToArray();
-                    var isSingleTest = casesToRun.Count() == 1;
+                    var isSingleTest = casesToRun.Length == 1;
 
                     testRunStateDto.Cases = casesToRun;
 
@@ -191,6 +183,19 @@ namespace Revit.TestRunner.Server
                 LogInfo( summaryFile, $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
 
             } );
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates the request directory according to the request route and id.
+        /// </summary>
+        private DirectoryInfo CreateRequestDirectory( BaseRequestDto request, string route )
+        {
+            var requestDirectoryPath = Path.Combine( FileNames.WatchDirectory, route, request.RequestId );
+            var result = Directory.CreateDirectory( requestDirectoryPath );
+
+            JsonHelper.ToFile( Path.Combine( result.FullName, "request.json" ), request );
 
             return result;
         }

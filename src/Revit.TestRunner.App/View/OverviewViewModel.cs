@@ -47,7 +47,7 @@ namespace Revit.TestRunner.App.View
 
             mClient.StartRunnerStatusWatcher( CheckHome, CancellationToken.None );
 
-            Recent = Properties.Settings.Default.AssemblyPath?.Split( ';' ) ?? Enumerable.Empty<string>();
+            Recent = Properties.Settings.Default.AssemblyPath?.Trim(';').Split( ';' ) ?? Enumerable.Empty<string>();
             AssemblyPath = Recent.FirstOrDefault();
         }
         #endregion

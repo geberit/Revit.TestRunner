@@ -21,11 +21,6 @@ namespace Revit.TestRunner.Shared.Communication.Server
         public FileServer( string basePath )
         {
             BasePath = basePath;
-
-            var directory = Directory.CreateDirectory( BasePath );
-            directory.GetFiles().ToList().ForEach( f => FileHelper.DeleteWithLock( f.FullName ) );
-            directory.GetDirectories().Where( d => !d.Name.StartsWith("_")).ToList().ForEach( d => FileHelper.DeleteWithLock( d.FullName ) );
-
             mRoutes = new List<Route>();
         }
 
@@ -49,7 +44,9 @@ namespace Revit.TestRunner.Shared.Communication.Server
 
             mRoutes.Add( routeObject );
 
-            Directory.CreateDirectory( Path.Combine( BasePath, route ) );
+            var routeDirectory = new DirectoryInfo( Path.Combine( BasePath, route ) );
+            if( !routeDirectory.Exists ) routeDirectory.Create();
+            routeDirectory.GetFiles().ToList().ForEach( f => FileHelper.DeleteWithLock( f.FullName ) );
         }
 
         /// <summary>
