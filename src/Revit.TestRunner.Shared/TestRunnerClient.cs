@@ -106,7 +106,7 @@ namespace Revit.TestRunner.Shared
 
                             if( runResult != null ) {
                                 bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
-                                TestRunState result = new TestRunState( runResult, isCompleted );
+                                TestRunState result = new TestRunState( runResult, isCompleted ) { Message = runResult.Output };
 
                                 callback( result );
 

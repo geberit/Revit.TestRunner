@@ -56,6 +56,8 @@ namespace Revit.TestRunner.Runner
                 Assembly assembly = Assembly.LoadFile( test.AssemblyPath );
                 Type type = assembly.GetType( test.TestClass );
 
+                if( type == null ) throw new ArgumentException( $"Type not found! {test.TestClass}" );
+
                 if( mTestInstances.ContainsKey( type ) ) {
                     testInstance = mTestInstances[type];
                 }
@@ -67,6 +69,8 @@ namespace Revit.TestRunner.Runner
                 setUp = GetMethodByAttribute( type, typeof( SetUpAttribute ) );
                 testMethod = type.GetMethod( test.MethodName );
                 tearDown = GetMethodByAttribute( type, typeof( TearDownAttribute ) );
+
+                if( testMethod == null ) throw new ArgumentException( $"Method not found! {test.MethodName}" );
 
                 var customAttributes = testMethod.CustomAttributes;
                 var extendedParams = possibleParams.ToList();

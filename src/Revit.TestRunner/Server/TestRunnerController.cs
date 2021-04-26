@@ -156,6 +156,7 @@ namespace Revit.TestRunner.Server
                     testRunStateDto.Cases = casesToRun;
 
                     foreach( TestCaseDto test in casesToRun ) {
+                        if( testRunStateDto.Cases.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
                         var runTestResult = testRunStateDto.Cases.Single( t => t.Id == test.Id );
 
                         WriteTestResultFile( resultFile, testRunStateDto, false );
@@ -175,6 +176,8 @@ namespace Revit.TestRunner.Server
                 }
                 catch( Exception e ) {
                     testRunStateDto.Output = e.ToString();
+                    testRunStateDto.State = TestState.Failed;
+
                     LogInfo( summaryFile, e );
                 }
 
@@ -206,7 +209,11 @@ namespace Revit.TestRunner.Server
         private void WriteTestResultFile( string resultFile, TestRunStateDto stateDto, bool finished )
         {
             if( finished ) {
-                stateDto.State = stateDto.Cases.Any( t => t.State == TestState.Failed ) ? TestState.Failed : TestState.Passed;
+                if( stateDto.State == TestState.Running ) {
+                    stateDto.State = stateDto.Cases.Any( t => t.State == TestState.Failed )
+                        ? TestState.Failed
+                        : TestState.Passed;
+                }
             }
             else {
                 stateDto.State = TestState.Running;

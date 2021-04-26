@@ -75,6 +75,10 @@ namespace Revit.TestRunner.Console.Commands
                             }
                         }
                     }
+
+                    if( result.IsCompleted && !string.IsNullOrEmpty( result.Message ) ) {
+                        System.Console.WriteLine( result.Message );
+                    }
                 }
                 catch( Exception e ) {
                     System.Console.WriteLine( $"Callback Exception: {e}" );
