@@ -150,16 +150,7 @@ namespace Revit.TestRunner.App.View
 
         #region Commands
 
-        public ICommand OpenAssemblyCommand => new DelegateWpfCommand( ExecuteOpenAssemblyCommand, CanExecute );
-
-        private bool CanExecute()
-        {
-            if( !Tree.HasObjects ) {
-                _ = LoadAssembly( Recent.FirstOrDefault() );   // this is ugly ;)
-            }
-
-            return true;
-        }
+        public ICommand OpenAssemblyCommand => new DelegateWpfCommand( ExecuteOpenAssemblyCommand );
 
         /// <summary>
         /// Open assembly for exploring.
