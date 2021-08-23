@@ -1,0 +1,63 @@
+{
+  "DtoType": "TestRequestDto",
+  "RequestId": null,
+  "Timestamp": "2021-04-23T07:43:25.6130478Z",
+  "ClientName": null,
+  "ClientVersion": null,
+  "Cases": [
+    {
+      "Id": "0-1001",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test2",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "Id": "0-1005",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test3Async",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "Id": "0-1006",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test3AsyncFail",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "Id": "0-1002",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test4",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "Id": "0-1003",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test5",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "Id": "0-1004",
+      "AssemblyPath": "Replace_with_current_path_to_Revit.TestRunner.SampleTestProject",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test5Fail",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}
