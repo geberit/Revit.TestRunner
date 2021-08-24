@@ -14,8 +14,8 @@
 /src/Revit.TestRunner.Shared/bin
 /src/Revit.TestRunner.Test/bin
 /src/Revit.TestRunner.Test/obj
-/src/Revit.TestRunner.SampleTestProject/bin
-/src/Revit.TestRunner.SampleTestProject/obj
+/src/Revit.TestRunner.SampleTestProject2/bin
+/src/Revit.TestRunner.SampleTestProject2/obj
 /.vs
 /src/.vs
 /src/Revit.TestRunner/Revit.TestRunner.csproj.user
