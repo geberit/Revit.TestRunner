@@ -5,6 +5,7 @@
 /src/Revit.TestRunner.SampleTestProject/obj
 /src/Revit.TestRunner/obj
 /src/Revit.TestRunner/src
+/src/Revit.TestRunner/bin
 /src/Revit.TestRunner.App/obj
 /src/Revit.TestRunner.App/bin
 /src/Revit.TestRunner.Console/obj
