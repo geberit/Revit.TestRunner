@@ -47,7 +47,7 @@ namespace Revit.TestRunner.App.View
 
             mClient.StartRunnerStatusWatcher( CheckHome, CancellationToken.None );
 
-            Recent = Properties.Settings.Default.AssemblyPath?.Trim(';').Split( ';' ) ?? Enumerable.Empty<string>();
+            Recent = Properties.Settings.Default.AssemblyPath?.Trim( ';' ).Split( ';' ) ?? Enumerable.Empty<string>();
             AssemblyPath = Recent.FirstOrDefault();
         }
         #endregion
@@ -88,8 +88,7 @@ namespace Revit.TestRunner.App.View
         public IEnumerable<string> Recent
         {
             get => Properties.Settings.Default.AssemblyPath.Split( ';' );
-            private set
-            {
+            private set {
                 var list = value != null ? value.Take( 10 ) : Enumerable.Empty<string>();
                 Properties.Settings.Default.AssemblyPath = string.Join( ";", list );
                 Properties.Settings.Default.Save();
@@ -245,13 +244,23 @@ namespace Revit.TestRunner.App.View
         public ICommand OpenWorkDirCommand => new DelegateWpfCommand( ExecuteOpenWorkDirCommand );
         private void ExecuteOpenWorkDirCommand()
         {
-            Process.Start( FileNames.WatchDirectory );
+            ProcessStartInfo startInfo = new ProcessStartInfo {
+                Arguments = FileNames.WatchDirectory,
+                FileName = "explorer.exe"
+            };
+
+            Process.Start( startInfo );
+
         }
 
         public ICommand OpenLogCommand => new DelegateWpfCommand( ExecuteOpenLogCommand );
         private void ExecuteOpenLogCommand()
         {
-            Process.Start( LogFilePath );
+            ProcessStartInfo startInfo = new ProcessStartInfo( LogFilePath ) {
+                UseShellExecute = true
+            };
+
+            Process.Start( startInfo );
         }
 
         #endregion
