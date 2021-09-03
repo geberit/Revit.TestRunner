@@ -5,11 +5,17 @@
 /src/Revit.TestRunner.SampleTestProject/obj
 /src/Revit.TestRunner/obj
 /src/Revit.TestRunner/src
+/src/Revit.TestRunner/bin
 /src/Revit.TestRunner.App/obj
+/src/Revit.TestRunner.App/bin
 /src/Revit.TestRunner.Console/obj
+/src/Revit.TestRunner.Console/bin
 /src/Revit.TestRunner.Shared/obj
+/src/Revit.TestRunner.Shared/bin
 /src/Revit.TestRunner.Test/bin
 /src/Revit.TestRunner.Test/obj
+/src/Revit.TestRunner.SampleTestProject2/bin
+/src/Revit.TestRunner.SampleTestProject2/obj
 /.vs
 /src/.vs
 /src/Revit.TestRunner/Revit.TestRunner.csproj.user
