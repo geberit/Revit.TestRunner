@@ -19,6 +19,9 @@ namespace Revit.TestRunner.Shared.Dto
         public string ResultFile { get; set; }
 
         [JsonProperty( Order = 13 )]
+        public string ResultXmlFile { get; set; }
+
+        [JsonProperty( Order = 14 )]
         public string SummaryFile { get; set; }
     }
 }

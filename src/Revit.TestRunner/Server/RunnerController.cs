@@ -7,10 +7,14 @@ using Revit.TestRunner.Shared;
 using Revit.TestRunner.Shared.Communication;
 using Revit.TestRunner.Shared.Communication.Server;
 using Revit.TestRunner.Shared.Dto;
+using Revit.TestRunner.Shared.NUnit;
 
 namespace Revit.TestRunner.Server
 {
-    public class TestRunnerController
+    /// <summary>
+    /// Start/stop the server. Register and implement routes.
+    /// </summary>
+    public class RunnerController
     {
         #region Constants, Members
 
@@ -123,11 +127,13 @@ namespace Revit.TestRunner.Server
 
             var requestDirectory = CreateRequestDirectory( request, TestPath );
             var resultFile = Path.Combine( requestDirectory.FullName, FileNames.RunResult );
+            var resultXmlFile = Path.Combine( requestDirectory.FullName, FileNames.RunResultXml );
             var summaryFile = Path.Combine( requestDirectory.FullName, FileNames.RunSummary );
 
             var result = new TestResponseDto {
                 ResponseDirectory = requestDirectory.FullName,
                 ResultFile = resultFile,
+                ResultXmlFile = resultXmlFile,
                 SummaryFile = summaryFile
             };
 
@@ -158,11 +164,14 @@ namespace Revit.TestRunner.Server
                     foreach( TestCaseDto test in casesToRun ) {
                         if( testRunStateDto.Cases.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
                         var runTestResult = testRunStateDto.Cases.Single( t => t.Id == test.Id );
+                        runTestResult.StartTime = DateTime.Now;
 
                         WriteTestResultFile( resultFile, testRunStateDto, false );
+                        WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
 
                         var testResult = await runner.RunTest( test, isSingleTest, mUiApplication );
 
+                        runTestResult.EndTime = DateTime.Now;
                         runTestResult.State = testResult.State;
                         runTestResult.Message = testResult.Message;
                         runTestResult.StackTrace = testResult.StackTrace;
@@ -181,7 +190,10 @@ namespace Revit.TestRunner.Server
                     LogInfo( summaryFile, e );
                 }
 
+                testRunStateDto.EndTime = DateTime.Now;
+
                 WriteTestResultFile( resultFile, testRunStateDto, true );
+                WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
 
                 LogInfo( summaryFile, $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
 
@@ -222,6 +234,15 @@ namespace Revit.TestRunner.Server
             stateDto.Timestamp = DateTime.Now;
 
             JsonHelper.ToFile( resultFile, stateDto );
+        }
+
+        /// <summary>
+        /// Write the NUnit test result xml file to response directory.
+        /// </summary>
+        private void WriteTestResultXmlFile( string resultXmlFile, TestRunStateDto stateDto )
+        {
+            ResultXmlWriter writer = new ResultXmlWriter( resultXmlFile );
+            writer.Write( stateDto );
         }
 
         private void LogInfo( string summaryPath, object message )

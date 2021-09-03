@@ -1,4 +1,11 @@
 # Release Notes
+* v1.3.4 [September 2021]
+    * NUnit result file
+
+* v1.3.3 [September 2021]
+    * Clients using .net core 3.1
+    * Shared using .net standard 2.0
+
 * v1.3 [21Q02]
     * 'Run all tests from an assembly' command in console application
     * Change of parameters in console application
@@ -13,8 +20,12 @@
     * Multi test execution
     * Async execution
 
-* v0.9 [19Q04]
+* v0.10 [20Q02]
+    * Revit 2021 Support
+    * .NET 4.8
+    * Support of NUnit Attributes 'TestCase'
 
+* v0.9 [19Q04]
     * Using NUnit3
     * No reference to Revit.TestRunner needed in test assembly
     * Support of NUnit attributes SetUp and TearDown
@@ -23,8 +34,3 @@
     * Installation script for libraries
     * Post build event in VS project to create addin files
 
-* v0.10 [20Q02]
-
-    * Revit 2021 Support
-    * .NET 4.8
-    * Support of NUnit Attributes 'TestCase'

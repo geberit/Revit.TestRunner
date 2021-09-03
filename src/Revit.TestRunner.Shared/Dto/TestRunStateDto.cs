@@ -19,12 +19,15 @@ namespace Revit.TestRunner.Shared.Dto
         public DateTime StartTime { get; set; }
 
         [JsonProperty( Order = 6 )]
-        public string Output { get; set; }
+        public DateTime EndTime { get; set; }
 
         [JsonProperty( Order = 7 )]
-        public string SummaryFile { get; set; }
+        public string Output { get; set; }
 
         [JsonProperty( Order = 8 )]
+        public string SummaryFile { get; set; }
+
+        [JsonProperty( Order = 9 )]
         public TestState State { get; set; }
 
         [JsonProperty( Order = 10 )]

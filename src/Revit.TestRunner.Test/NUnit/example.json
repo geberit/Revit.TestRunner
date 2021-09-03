@@ -1,0 +1,220 @@
+{
+  "Timestamp": "2021-09-03T12:33:23.9853925Z",
+  "Id": "20210903-143301_4102",
+  "StartTime": "2021-09-03T12:33:01.7680833Z",
+  "EndTime": "2021-09-03T12:33:23.9853925Z",
+  "Output": null,
+  "SummaryFile": "C:\\Users\\tobi\\AppData\\Roaming\\Revit.TestRunner\\test\\20210903-143301_4102\\summary.txt",
+  "State": "Failed",
+  "Cases": [
+    {
+      "Id": "0-1001",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test2",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:01.7750668Z",
+      "EndTime": "2021-09-03T12:33:03.7982677Z"
+    },
+    {
+      "Id": "0-1005",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test3Async",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:03.7982677Z",
+      "EndTime": "2021-09-03T12:33:06.8449991Z"
+    },
+    {
+      "Id": "0-1006",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test3AsyncFail",
+      "State": "Failed",
+      "Message": "This test should fail!",
+      "StackTrace": "   bei NUnit.Framework.Assert.ReportFailure(String message)\r\n   bei NUnit.Framework.Assert.Fail(String message, Object[] args)\r\n   bei NUnit.Framework.Assert.Fail(String message)\r\n   bei Revit.TestRunner.SampleTestProject.MoreTests.<Test3AsyncFail>d__7.MoveNext() in C:\\Code\\Revit.TestRunner\\src\\Revit.TestRunner.SampleTestProject2\\MoreTests.cs:Zeile 58.\r\n--- Ende der Stapelüberwachung vom vorhergehenden Ort, an dem die Ausnahme ausgelöst wurde ---\r\n   bei System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   bei System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   bei System.Runtime.CompilerServices.TaskAwaiter.GetResult()\r\n   bei Revit.TestRunner.Runner.ReflectionRunner.<InvokeMethod>d__2.MoveNext() in C:\\Code\\Revit.TestRunner\\src\\Revit.TestRunner\\Runner\\ReflectionRunner.cs:Zeile 126.\r\n--- Ende der Stapelüberwachung vom vorhergehenden Ort, an dem die Ausnahme ausgelöst wurde ---\r\n   bei System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   bei System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   bei System.Runtime.CompilerServices.TaskAwaiter.GetResult()\r\n   bei Revit.TestRunner.Runner.ReflectionRunner.<RunTest>d__1.MoveNext() in C:\\Code\\Revit.TestRunner\\src\\Revit.TestRunner\\Runner\\ReflectionRunner.cs:Zeile 92.",
+      "StartTime": "2021-09-03T12:33:06.8457609Z",
+      "EndTime": "2021-09-03T12:33:09.9031847Z"
+    },
+    {
+      "Id": "0-1002",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test4",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:09.9072861Z",
+      "EndTime": "2021-09-03T12:33:13.9117398Z"
+    },
+    {
+      "Id": "0-1003",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test5",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:13.912432Z",
+      "EndTime": "2021-09-03T12:33:18.9153767Z"
+    },
+    {
+      "Id": "0-1004",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test5Fail",
+      "State": "Failed",
+      "Message": "This test should fail!",
+      "StackTrace": "   bei NUnit.Framework.Assert.ReportFailure(String message)\r\n   bei NUnit.Framework.Assert.Fail(String message, Object[] args)\r\n   bei NUnit.Framework.Assert.Fail(String message)\r\n   bei Revit.TestRunner.SampleTestProject.MoreTests.Test5Fail() in C:\\Code\\Revit.TestRunner\\src\\Revit.TestRunner.SampleTestProject2\\MoreTests.cs:Zeile 45.",
+      "StartTime": "2021-09-03T12:33:18.9172015Z",
+      "EndTime": "2021-09-03T12:33:23.9265836Z"
+    },
+    {
+      "Id": "0-1007",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "Test6Explicit",
+      "State": "Explicit",
+      "Message": "Test is marked as Explicit",
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9275469Z",
+      "EndTime": "2021-09-03T12:33:23.9295979Z"
+    },
+    {
+      "Id": "0-1008",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.MoreTests",
+      "MethodName": "TestIgnore",
+      "State": "Ignore",
+      "Message": "Test is marked as Ignore",
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9305371Z",
+      "EndTime": "2021-09-03T12:33:23.9315344Z"
+    },
+    {
+      "Id": "0-1011",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "ApplicationTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9325319Z",
+      "EndTime": "2021-09-03T12:33:23.9335293Z"
+    },
+    {
+      "Id": "0-1012",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "MultiParameterTest1",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9345612Z",
+      "EndTime": "2021-09-03T12:33:23.9355239Z"
+    },
+    {
+      "Id": "0-1013",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "MultiParameterTest2",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9355239Z",
+      "EndTime": "2021-09-03T12:33:23.9365238Z"
+    },
+    {
+      "Id": "0-1014",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "SumTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9375191Z",
+      "EndTime": "2021-09-03T12:33:23.9385695Z"
+    },
+    {
+      "Id": "0-1015",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "SumTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9385695Z",
+      "EndTime": "2021-09-03T12:33:23.9405136Z"
+    },
+    {
+      "Id": "0-1016",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "SumTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9415418Z",
+      "EndTime": "2021-09-03T12:33:23.9435026Z"
+    },
+    {
+      "Id": "0-1010",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.ParameterTest",
+      "MethodName": "UiApplicationTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9435026Z",
+      "EndTime": "2021-09-03T12:33:23.9454994Z"
+    },
+    {
+      "Id": "0-1020",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.RevitTest",
+      "MethodName": "XyzMultiplyTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9465291Z",
+      "EndTime": "2021-09-03T12:33:23.9624866Z"
+    },
+    {
+      "Id": "0-1019",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.RevitTest",
+      "MethodName": "XyzTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9634857Z",
+      "EndTime": "2021-09-03T12:33:23.9654791Z"
+    },
+    {
+      "Id": "0-1023",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "FailTest",
+      "State": "Failed",
+      "Message": "  This Test should fail!\r\n  Expected: True\r\n  But was:  False\r\n",
+      "StackTrace": "   bei NUnit.Framework.Assert.ReportFailure(String message)\r\n   bei NUnit.Framework.Assert.ReportFailure(ConstraintResult result, String message, Object[] args)\r\n   bei NUnit.Framework.Assert.That[TActual](TActual actual, IResolveConstraint expression, String message, Object[] args)\r\n   bei NUnit.Framework.Assert.True(Boolean condition, String message, Object[] args)\r\n   bei Revit.TestRunner.SampleTestProject.SampleTest.FailTest() in C:\\Code\\Revit.TestRunner\\src\\Revit.TestRunner.SampleTestProject2\\SampleTest.cs:Zeile 29.",
+      "StartTime": "2021-09-03T12:33:23.9654791Z",
+      "EndTime": "2021-09-03T12:33:23.9764485Z"
+    },
+    {
+      "Id": "0-1022",
+      "AssemblyPath": "C:\\Code\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "PassTest",
+      "State": "Passed",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "2021-09-03T12:33:23.9834438Z",
+      "EndTime": "2021-09-03T12:33:23.9853925Z"
+    }
+  ]
+}

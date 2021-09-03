@@ -14,7 +14,7 @@ namespace Revit.TestRunner
     /// </summary>
     public class Main : IExternalApplication
     {
-        private TestRunnerController mController;
+        private RunnerController mController;
 
         public Result OnStartup( UIControlledApplication application )
         {
@@ -25,7 +25,7 @@ namespace Revit.TestRunner
 
             RibbonPanel ribbonPanel = application.CreateRibbonPanel( "Testing" );
 
-            string command = typeof( TestRunnerCommand ).FullName;
+            string command = typeof( RunnerCommand ).FullName;
 
             PushButtonData buttonData = new PushButtonData( command, "Open Runner", Assembly.GetExecutingAssembly().Location, command ) {
                 ToolTip = "Open the Test Runner Dialog\nStart Tests using the Revit API.",
@@ -36,7 +36,7 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
-            mController = new TestRunnerController();
+            mController = new RunnerController();
             mController.Start( application );
 
             return Result.Succeeded;

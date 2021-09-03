@@ -7,10 +7,10 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj" />
@@ -18,5 +18,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="NUnit\example.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

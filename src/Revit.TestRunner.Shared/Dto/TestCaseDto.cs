@@ -1,4 +1,5 @@
-﻿using Revit.TestRunner.Shared.Communication;
+﻿using System;
+using Revit.TestRunner.Shared.Communication;
 
 namespace Revit.TestRunner.Shared.Dto
 {
@@ -20,5 +21,9 @@ namespace Revit.TestRunner.Shared.Dto
         public string Message { get; set; }
 
         public string StackTrace { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
     }
 }

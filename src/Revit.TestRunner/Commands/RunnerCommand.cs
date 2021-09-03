@@ -13,7 +13,7 @@ namespace Revit.TestRunner.Commands
     /// Call the standalone app.exe if available.
     /// </summary>
     [Transaction( TransactionMode.Manual )]
-    public class TestRunnerCommand : IExternalCommand
+    public class RunnerCommand : IExternalCommand
     {
         public Result Execute( ExternalCommandData commandData, ref string message, ElementSet elements )
         {

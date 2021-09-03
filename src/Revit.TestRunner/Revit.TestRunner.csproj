@@ -274,7 +274,7 @@
       <Link>Properties\AssemblyInfo.Version.cs</Link>
     </Compile>
     <Compile Include="AvailableInStartScreen.cs" />
-    <Compile Include="Commands\TestRunnerCommand.cs" />
+    <Compile Include="Commands\RunnerCommand.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -286,7 +286,7 @@
     <Compile Include="RevitTask.cs" />
     <Compile Include="Runner\ReflectionRunner.cs" />
     <Compile Include="Runner\NUnitRunner.cs" />
-    <Compile Include="Server\TestRunnerController.cs" />
+    <Compile Include="Server\RunnerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
