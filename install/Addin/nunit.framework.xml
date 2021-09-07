@@ -14832,7 +14832,7 @@
             <param name="recursive">True if child work items should be created and added.</param>
             <returns></returns>
         </member>
-        <member name="M:NUnit.Framework.Internal.Execution.WorkItemBuilder.CreateWorkItem(NUnit.Framework.Interfaces.ITest,NUnit.Framework.Interfaces.ITestFilter,NUnit.Framework.Internal.Abstractions.IDebugger,System.Boolean)">
+        <member name="M:NUnit.Framework.Internal.Execution.WorkItemBuilder.CreateWorkItem(NUnit.Framework.Interfaces.ITest,NUnit.Framework.Interfaces.ITestFilter,NUnit.Framework.Internal.Abstractions.IDebugger,System.Boolean,System.Boolean)">
             <summary>
             Creates a work item.
             </summary>
@@ -14840,6 +14840,7 @@
             <param name="filter">The filter to be used in selecting any child Tests.</param>
             <param name="debugger">An <see cref="T:NUnit.Framework.Internal.Abstractions.IDebugger" /> instance.</param>
             <param name="recursive">True if child work items should be created and added.</param>
+            <param name="root"><see langword="true"/> if work item needs to be created unconditionally, if <see langword="false"/> <see langword="null"/> will be returned for tests that don't match the filter.</param>
             <returns></returns>
         </member>
         <member name="M:NUnit.Framework.Internal.Execution.WorkItemBuilder.WorkItemOrderComparer.Compare(NUnit.Framework.Internal.Execution.WorkItem,NUnit.Framework.Internal.Execution.WorkItem)">
@@ -15347,12 +15348,6 @@
             </summary>
             <param name="filters"></param>
         </member>
-        <member name="M:NUnit.Framework.Internal.Filters.CompositeFilter.Add(NUnit.Framework.Internal.TestFilter)">
-            <summary>
-            Adds a filter to the list of filters
-            </summary>
-            <param name="filter">The filter to be added</param>
-        </member>
         <member name="P:NUnit.Framework.Internal.Filters.CompositeFilter.Filters">
             <summary>
             Return a list of the composing filters.
@@ -15528,7 +15523,7 @@
         </member>
         <member name="T:NUnit.Framework.Internal.Filters.OrFilter">
             <summary>
-            Combines multiple filters so that a test must pass one 
+            Combines multiple filters so that a test must pass one
             of them in order to pass this filter.
             </summary>
         </member>

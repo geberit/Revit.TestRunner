@@ -1,8 +1,6 @@
 # Release Notes
-* v1.3.4 [September 2021]
-    * NUnit result file
-
 * v1.3.3 [September 2021]
+    * NUnit result file
     * Clients using .net core 3.1
     * Shared using .net standard 2.0
 
