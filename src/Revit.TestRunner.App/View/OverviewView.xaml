@@ -60,22 +60,21 @@
         </DockPanel>
 
 
+        <DockPanel>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <testTreeView:TreeView DataContext="{Binding Tree}" />
 
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch"/>
 
-            <TextBox Grid.Row="2" Text="{Binding DetailInformation, Mode=OneWay}"
-                         HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                         IsReadOnly="True" MinHeight="50"
-                         FontFamily="Segoe UI"/>
+            <DockPanel Grid.Row="2" Visibility="{Binding IsNodeSelected, Converter={StaticResource BoolToVisConverter}}" >
+                <testTreeView:DetailView DataContext="{Binding Tree.SelectedNode}" Margin="2"/>
+            </DockPanel>
         </Grid>
-
-
+        </DockPanel>
     </DockPanel>
 </UserControl>

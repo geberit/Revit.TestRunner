@@ -60,8 +60,14 @@ namespace Revit.TestRunner.Shared.Model
 
                 if( Children.Count == 0 ) result = mState;
                 else {
-                    if( Children.Any( c => c.State == TestState.Passed ) ) result = TestState.Passed;
-                    if( Children.Any( c => c.State == TestState.Failed ) ) result = TestState.Failed;
+                    var cases = Descendents.Where( n => n.Type == TestType.Case );
+
+                    if( cases.Any( c => c.State == TestState.Failed ) ) {
+                        result = TestState.Failed;
+                    }
+                    else if( cases.Where( c => c.State != TestState.Explicit && c.State != TestState.Ignore ).All( c => c.State == TestState.Passed ) ) {
+                        result = TestState.Passed;
+                    }
                 }
 
                 return result;

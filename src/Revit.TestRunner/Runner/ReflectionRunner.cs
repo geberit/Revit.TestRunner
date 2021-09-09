@@ -22,25 +22,20 @@ namespace Revit.TestRunner.Runner
         /// Execute Test described in <paramref name="test"/>.
         /// Returns a new <see cref="TestCaseDto"/> object with the test result.
         /// </summary>
-        internal async Task<TestCaseDto> RunTest( TestCaseDto test, bool isSingleTest, UIApplication uiApplication )
+        internal async Task RunTest( TestCaseDto test, bool isSingleTest, UIApplication uiApplication, Action updateAction )
         {
-            TestCaseDto result = new TestCaseDto {
-                Id = test.Id,
-                AssemblyPath = test.AssemblyPath,
-                TestClass = test.MethodName,
-                MethodName = test.MethodName,
-                State = TestState.Unknown
-            };
+            Log.Info( $"Test Case {test.TestClass}.{test.MethodName}" );
 
-            if( string.IsNullOrEmpty( test.Id ) ) result.Message = "Missing ID";
-            if( string.IsNullOrEmpty( test.AssemblyPath ) ) result.Message = "Missing AssemblyPath";
-            if( string.IsNullOrEmpty( test.TestClass ) ) result.Message = "Missing ClassName";
-            if( string.IsNullOrEmpty( test.MethodName ) ) result.Message = "Missing MethodName";
-            if( test.State != TestState.Unknown ) result.Message = $"Wrong not in State '{TestState.Unknown}'";
+            if( string.IsNullOrEmpty( test.Id ) ) test.Message = "Missing ID";
+            if( string.IsNullOrEmpty( test.AssemblyPath ) ) test.Message = "Missing AssemblyPath";
+            if( string.IsNullOrEmpty( test.TestClass ) ) test.Message = "Missing ClassName";
+            if( string.IsNullOrEmpty( test.MethodName ) ) test.Message = "Missing MethodName";
+            if( test.State != TestState.Unknown && test.State != TestState.Running ) test.Message = $"Test not in State '{TestState.Unknown}'";
 
             if( !string.IsNullOrEmpty( test.Message ) ) {
                 test.State = TestState.Failed;
-                return result;
+                Log.Error( $"> {test.State} - {test.Message}" );
+                return;
             }
 
             var possibleParams = new object[] { uiApplication, uiApplication.Application };
@@ -49,6 +44,11 @@ namespace Revit.TestRunner.Runner
             MethodInfo setUp = null;
             MethodInfo tearDown = null;
             MethodInfo testMethod = null;
+
+            test.StartTime = DateTime.Now;
+            test.State = TestState.Running;
+
+            updateAction();
 
             try {
                 if( !File.Exists( test.AssemblyPath ) ) throw new FileNotFoundException( $"Assembly not found! {test.AssemblyPath}" );
@@ -80,37 +80,39 @@ namespace Revit.TestRunner.Runner
                 }
 
                 if( !isSingleTest && MarkedByAttribute( testMethod, typeof( ExplicitAttribute ) ) ) {
-                    result.State = TestState.Explicit;
-                    result.Message = "Test is marked as Explicit";
+                    test.State = TestState.Explicit;
+                    test.Message = "Test is marked as Explicit";
                 }
                 else if( MarkedByAttribute( testMethod, typeof( IgnoreAttribute ) ) ) {
-                    result.State = TestState.Ignore;
-                    result.Message = "Test is marked as Ignore";
+                    test.State = TestState.Ignore;
+                    test.Message = "Test is marked as Ignore";
                 }
                 else {
                     await InvokeMethod( testInstance, setUp, possibleParams );
                     await InvokeMethod( testInstance, testMethod, extendedParams.ToArray() );
 
-                    result.State = TestState.Passed;
+                    test.State = TestState.Passed;
                 }
+
+                Log.Info( $"> {test.State} - {test.Message}" );
             }
             catch( Exception e ) {
-                ReportException( result, e );
+                ReportException( test, e );
             }
             finally {
                 try {
-                    if( result.State == TestState.Passed || result.State == TestState.Failed ) {
+                    if( test.State == TestState.Passed || test.State == TestState.Failed ) {
                         await InvokeMethod( testInstance, tearDown, possibleParams );
                     }
                 }
                 catch( Exception e ) {
-                    ReportException( result, e );
+                    ReportException( test, e );
                 }
             }
 
-            Log.Info( $" >> {result.TestClass}.{result.MethodName} - {result.State} - {result.Message}" );
+            test.EndTime = DateTime.Now;
 
-            return result;
+            updateAction();
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace Revit.TestRunner.Runner
 
             Exception toLogEx = e.InnerException ?? e;
 
-            Log.Error( toLogEx );
+            Log.Error( $"> {@case.State} - {e.Message}", toLogEx );
             @case.Message = toLogEx.Message;
             @case.StackTrace = toLogEx.StackTrace;
         }
@@ -163,6 +165,10 @@ namespace Revit.TestRunner.Runner
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Get method of <paramref name="type"/> marked by attribute.
+        /// Only 1 methode marked with specific attribute is allowed.
+        /// </summary>
         private MethodInfo GetMethodByAttribute( Type type, Type attributeType )
         {
             var listOfMethods = new List<MethodInfo>();

@@ -102,20 +102,9 @@ namespace Revit.TestRunner.App.View
         public TreeViewModel Tree { get; }
 
         /// <summary>
-        /// Get detail information of the selected test node.
+        /// Get true if a node is selected
         /// </summary>
-        public string DetailInformation
-        {
-            get {
-                string result = string.Empty;
-
-                if( Tree.SelectedNode != null ) {
-                    result = $"{Tree.SelectedNode.Message}\n\n{Tree.SelectedNode.StackTrace}";
-                }
-
-                return result;
-            }
-        }
+        public bool IsNodeSelected => Tree.SelectedNode != null;
 
         /// <summary>
         /// Get the program state of the apüplication.
@@ -199,6 +188,8 @@ namespace Revit.TestRunner.App.View
                             caseViewModel.State = resultCase.State;
                             caseViewModel.Message = resultCase.Message;
                             caseViewModel.StackTrace = resultCase.StackTrace;
+                            caseViewModel.StartTime = resultCase.StartTime;
+                            caseViewModel.EndTime = resultCase.EndTime;
                         }
                     }
                 }

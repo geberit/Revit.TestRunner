@@ -60,6 +60,11 @@ namespace Revit.TestRunner
             Logger.Error( message );
         }
 
+        public static void Error( object message, Exception exception )
+        {
+            Logger.Error( message, exception );
+        }
+
 
         private static ILog SetupLog()
         {

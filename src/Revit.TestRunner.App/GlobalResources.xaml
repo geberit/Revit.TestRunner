@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=PresentationFramework">
+                    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=PresentationFramework"
+                    xmlns:converter="clr-namespace:Revit.TestRunner.App.View.Converter">
 
     <!-- DesignTime Style -->
     <Style TargetType="{x:Type UserControl}">
@@ -10,5 +11,18 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <converter:BoolToHiddenConverter x:Key="BoolToVisConverter"/>
+
+    <Color x:Key="ColorRunning">#FF1BD1C0</Color>
+    <Color x:Key="ColorPassed">Green</Color>
+    <Color x:Key="ColorFailed">Red</Color>
+    <Color x:Key="ColorExplicit">Orange</Color>
+    <Color x:Key="ColorIgnore">Orange</Color>
+    <SolidColorBrush x:Key="StateRunning" Color="{StaticResource ColorRunning}" />
+    <SolidColorBrush x:Key="StatePassed" Color="{StaticResource ColorPassed}" />
+    <SolidColorBrush x:Key="StateFailed" Color="{StaticResource ColorFailed}" />
+    <SolidColorBrush x:Key="StateExplicit" Color="{StaticResource ColorExplicit}" />
+    <SolidColorBrush x:Key="StateIgnore" Color="{StaticResource ColorIgnore}" />
 
 </ResourceDictionary>

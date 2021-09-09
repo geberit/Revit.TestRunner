@@ -123,7 +123,7 @@ namespace Revit.TestRunner.Server
         /// </summary>
         private TestResponseDto ProcessTests( TestRequestDto request )
         {
-            Log.Info( "Process Test request" );
+
 
             var requestDirectory = CreateRequestDirectory( request, TestPath );
             var resultFile = Path.Combine( requestDirectory.FullName, FileNames.RunResult );
@@ -137,7 +137,8 @@ namespace Revit.TestRunner.Server
                 SummaryFile = summaryFile
             };
 
-            LogInfo( summaryFile, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
+            Log.Info( $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
+            LogSummary( summaryFile, $"Test Request '{request.RequestId}' - {request.ClientName} ({request.ClientVersion})" );
 
             TestRunStateDto testRunStateDto = new TestRunStateDto {
                 Id = request.RequestId,
@@ -162,24 +163,17 @@ namespace Revit.TestRunner.Server
                     testRunStateDto.Cases = casesToRun;
 
                     foreach( TestCaseDto test in casesToRun ) {
-                        if( testRunStateDto.Cases.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
-                        var runTestResult = testRunStateDto.Cases.Single( t => t.Id == test.Id );
-                        runTestResult.StartTime = DateTime.Now;
+                        if( casesToRun.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
 
-                        WriteTestResultFile( resultFile, testRunStateDto, false );
-                        WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
+                        await runner.RunTest( test, isSingleTest, mUiApplication, () => {
+                            WriteTestResultFile( resultFile, testRunStateDto, false );
+                            WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
+                        } );
 
-                        var testResult = await runner.RunTest( test, isSingleTest, mUiApplication );
+                        LogSummary( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
 
-                        runTestResult.EndTime = DateTime.Now;
-                        runTestResult.State = testResult.State;
-                        runTestResult.Message = testResult.Message;
-                        runTestResult.StackTrace = testResult.StackTrace;
-
-                        LogInfo( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
-
-                        if( !string.IsNullOrEmpty( test.Message ) ) LogInfo( summaryFile, $"\t{test.Message}" );
-                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogInfo( summaryFile, $"\t{test.StackTrace}" );
+                        if( !string.IsNullOrEmpty( test.Message ) ) LogSummary( summaryFile, $"\t{test.Message}" );
+                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogSummary( summaryFile, $"\t{test.StackTrace}" );
                     }
 
                 }
@@ -187,7 +181,7 @@ namespace Revit.TestRunner.Server
                     testRunStateDto.Output = e.ToString();
                     testRunStateDto.State = TestState.Failed;
 
-                    LogInfo( summaryFile, e );
+                    LogSummary( summaryFile, e );
                 }
 
                 testRunStateDto.EndTime = DateTime.Now;
@@ -195,7 +189,8 @@ namespace Revit.TestRunner.Server
                 WriteTestResultFile( resultFile, testRunStateDto, true );
                 WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
 
-                LogInfo( summaryFile, $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
+                Log.Info( $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
+                LogSummary( summaryFile, $"Test run end - duration {testRunStateDto.Timestamp - testRunStateDto.StartTime}" );
 
             } );
 
@@ -245,9 +240,8 @@ namespace Revit.TestRunner.Server
             writer.Write( stateDto );
         }
 
-        private void LogInfo( string summaryPath, object message )
+        private void LogSummary( string summaryPath, object message )
         {
-            Log.Info( message );
             File.AppendAllText( summaryPath, message + "\n" );
         }
         #endregion

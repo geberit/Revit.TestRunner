@@ -13,6 +13,10 @@
     <OutputPath>..\bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo\AssemblyInfo.Global.cs" Link="Properties\AssemblyInfo.Global.cs" />
+    <Compile Include="..\AssemblyInfo\AssemblyInfo.Version.cs" Link="Properties\AssemblyInfo.Version.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
