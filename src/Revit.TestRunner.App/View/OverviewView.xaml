@@ -40,8 +40,12 @@
 
         <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top">
             <DockPanel >
+                <TextBlock DockPanel.Dock="Right" FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0,0,0">
+                    <Hyperlink Command="{Binding RefreshCommand}">
+                        <TextBlock Text="Refresh" />
+                    </Hyperlink>
+                </TextBlock>
                 <Button DockPanel.Dock="Right" Content="..." Width="50" Command="{Binding OpenAssemblyCommand}" ToolTip="Open Test Assembly"/>
-                <!--<TextBox DockPanel.Dock="Left" Text="{Binding AssemblyPath}" IsReadOnly="True" />-->
                 <ComboBox DockPanel.Dock="Left" SelectedItem="{Binding AssemblyPath}" ItemsSource="{Binding Recent}" />
             </DockPanel>
         </StackPanel>

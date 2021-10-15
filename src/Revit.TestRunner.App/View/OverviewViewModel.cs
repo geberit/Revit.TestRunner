@@ -231,6 +231,15 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        public ICommand RefreshCommand => new DelegateWpfCommand( RefreshExecute );
+        private void RefreshExecute()
+        {
+            if( !string.IsNullOrEmpty( AssemblyPath ) ) {
+                var path = AssemblyPath;
+                AssemblyPath = string.Empty;
+                AssemblyPath = path;
+            }
+        }
 
         public ICommand OpenWorkDirCommand => new DelegateWpfCommand( ExecuteOpenWorkDirCommand );
         private void ExecuteOpenWorkDirCommand()
