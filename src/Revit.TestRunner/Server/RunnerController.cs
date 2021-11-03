@@ -162,13 +162,14 @@ namespace Revit.TestRunner.Server
 
                     testRunStateDto.Cases = casesToRun;
 
-                    foreach( TestCaseDto test in casesToRun ) {
-                        if( casesToRun.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
+                    foreach(var iteration in casesToRun.Select((testCase, index) => (testCase, index))) {
+                        var test = iteration.testCase;
+                        if ( casesToRun.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
 
                         await runner.RunTest( test, isSingleTest, mUiApplication, () => {
                             WriteTestResultFile( resultFile, testRunStateDto, false );
                             WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
-                        } );
+                        }, iteration.index );
 
                         LogSummary( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
 

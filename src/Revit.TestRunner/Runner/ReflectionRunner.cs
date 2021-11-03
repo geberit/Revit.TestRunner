@@ -22,7 +22,7 @@ namespace Revit.TestRunner.Runner
         /// Execute Test described in <paramref name="test"/>.
         /// Returns a new <see cref="TestCaseDto"/> object with the test result.
         /// </summary>
-        internal async Task RunTest( TestCaseDto test, bool isSingleTest, UIApplication uiApplication, Action updateAction )
+        internal async Task RunTest(TestCaseDto test, bool isSingleTest, UIApplication uiApplication, Action updateAction, int caseIndex)
         {
             Log.Info( $"Test Case {test.TestClass}.{test.MethodName}" );
 
@@ -75,11 +75,14 @@ namespace Revit.TestRunner.Runner
                 var customAttributes = testMethod.CustomAttributes;
                 var extendedParams = possibleParams.ToList();
 
-                foreach( CustomAttributeData customAttribute in customAttributes ) {
-                    extendedParams.AddRange( customAttribute.ConstructorArguments.Select( a => a.Value ) );
-                }
+                var testCaseParams = customAttributes
+                    .Where(x => x.AttributeType == typeof(TestCaseAttribute))
+                    .ToList();
 
-                if( !isSingleTest && MarkedByAttribute( testMethod, typeof( ExplicitAttribute ) ) ) {
+                if (testCaseParams.Count >= caseIndex + 1)
+                    extendedParams.AddRange(testCaseParams[caseIndex].ConstructorArguments.Select(a => a.Value));
+
+                if ( !isSingleTest && MarkedByAttribute( testMethod, typeof( ExplicitAttribute ) ) ) {
                     test.State = TestState.Explicit;
                     test.Message = "Test is marked as Explicit";
                 }
