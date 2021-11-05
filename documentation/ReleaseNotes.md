@@ -2,6 +2,8 @@
 * v1.3.4 [November 2021]
     * NUnit attribute 'OneTimeSetUp' and 'OneTimeTearDown' ar supported.
     * NUnit attribute 'TestCase' is not supported anymore!
+    * Console output in message
+    * Test duration
 
 * v1.3.3 [September 2021]
     * NUnit result files

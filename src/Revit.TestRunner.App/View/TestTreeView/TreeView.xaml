@@ -24,6 +24,7 @@
                 <Setter Property="Height" Value="15" />
                 <Setter Property="VerticalAlignment" Value="Top" />
                 <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                <Setter Property="HorizontalAlignment" Value="Right"></Setter>
             </Style>
 
             <Style x:Key="TextStateStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextStyle}">
@@ -133,13 +134,22 @@
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
                             <TextBlock Style="{StaticResource TextStateStyle}"
-                                   Text="{Binding Message}"
+                                   Text="{Binding MessageForTree}"
                                    VerticalAlignment="Center"/>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Header="Type" Width="60" >
+                <GridViewColumn Header="Duration" Width="80" >
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                            <TextBlock Style="{StaticResource TextStateStyle}"
+                                       Text="{Binding Duration,StringFormat=mm\\:ss\\.ffff}" ToolTip="{Binding Duration}"/>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <GridViewColumn Header="Type" Width="40" >
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
                             <TextBlock Style="{StaticResource TextStateStyle}"

@@ -103,6 +103,14 @@ namespace Revit.TestRunner.App.View.TestTreeView
         }
 
         /// <summary>
+        /// Get the message.
+        /// </summary>
+        public string MessageForTree
+        {
+            get => State != TestState.Passed ? Message : null;
+        }
+
+        /// <summary>
         /// Get the StackTrace.
         /// </summary>
         public string StackTrace

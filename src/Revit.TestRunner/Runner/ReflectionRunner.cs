@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autodesk.Revit.UI;
@@ -48,26 +49,34 @@ namespace Revit.TestRunner.Runner
             // run tests
             foreach( TestCaseDto test in testClassGroup ) {
                 Log.Info( $"Test Case {test.TestClass}.{test.MethodName}" );
+                
+                var sw = new StringWriter();
+                Console.SetOut(sw);
+                Console.SetError(sw);
+                string consoleString = string.Empty;
 
                 try {
+                    test.StartTime = DateTime.Now;
+                    test.State = TestState.Running;
+
                     if( !ValidateProperties( test ) || !ValidateEnvironment( test, instance, isSingleTest ) ) {
                         Log.Error( $"> {test.State}: {test.Message}" );
                         updateAction( test, true );
                         continue;
                     }
 
-                    test.StartTime = DateTime.Now;
-                    test.State = TestState.Running;
-
                     updateAction( test, false );
 
                     await instance.ExecuteTestMethod( test.MethodName );
 
                     test.State = TestState.Passed;
+                    consoleString = sw.ToString();
+
                     Log.Info( $"> {test.State}: {test.Message}" );
                 }
                 catch( Exception e ) {
                     test.State = TestState.Failed;
+                    consoleString = sw.ToString();
 
                     Exception toLogEx = e.InnerException ?? e;
 
@@ -77,6 +86,10 @@ namespace Revit.TestRunner.Runner
                 }
                 finally {
                     test.EndTime = DateTime.Now;
+
+                    test.Message += "\n" + consoleString;
+                    test.Message = test.Message.Trim( '\n' );
+
                     updateAction( test, true );
                 }
             }
