@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Autodesk.Revit.UI;
@@ -123,8 +124,6 @@ namespace Revit.TestRunner.Server
         /// </summary>
         private TestResponseDto ProcessTests( TestRequestDto request )
         {
-
-
             var requestDirectory = CreateRequestDirectory( request, TestPath );
             var resultFile = Path.Combine( requestDirectory.FullName, FileNames.RunResult );
             var resultXmlFile = Path.Combine( requestDirectory.FullName, FileNames.RunResultXml );
@@ -149,7 +148,7 @@ namespace Revit.TestRunner.Server
             };
 
             RevitTask runnerTask = new RevitTask();
-            ReflectionRunner runner = new ReflectionRunner();
+            ReflectionRunner runner = new ReflectionRunner( mUiApplication );
 
             runnerTask.Run( async uiApplication => {
                 try {
@@ -161,19 +160,24 @@ namespace Revit.TestRunner.Server
                     var isSingleTest = casesToRun.Length == 1;
 
                     testRunStateDto.Cases = casesToRun;
+                    IEnumerable<string> duplicatesIds = casesToRun.GroupBy( x => x.Id )
+                        .Where( g => g.Count() > 1 )
+                        .Select( x => x.Key );
 
-                    foreach( TestCaseDto test in casesToRun ) {
-                        if( casesToRun.Count( t => t.Id == test.Id ) > 1 ) throw new ArgumentException( $"Case Id must be unique! {test.Id}" );
+                    if( duplicatesIds.Any() ) throw new ArgumentException( $"Case Id must be unique! {string.Join( ",", duplicatesIds )}" );
 
-                        await runner.RunTest( test, isSingleTest, mUiApplication, () => {
+                    foreach( var classGroup in casesToRun.GroupBy( c => c.TestClass ) ) {
+                        await runner.RunTestClassGroup( classGroup, isSingleTest, ( test, isFinished ) => {
                             WriteTestResultFile( resultFile, testRunStateDto, false );
                             WriteTestResultXmlFile( resultXmlFile, testRunStateDto );
+
+                            if( isFinished ) {
+                                LogSummary( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
+
+                                if( !string.IsNullOrEmpty( test.Message ) ) LogSummary( summaryFile, $"\t{test.Message}" );
+                                if( !string.IsNullOrEmpty( test.StackTrace ) ) LogSummary( summaryFile, $"\t{test.StackTrace}" );
+                            }
                         } );
-
-                        LogSummary( summaryFile, $"{test.Id,-8} Test {test.State,-7} - {test.TestClass}.{test.MethodName}" );
-
-                        if( !string.IsNullOrEmpty( test.Message ) ) LogSummary( summaryFile, $"\t{test.Message}" );
-                        if( !string.IsNullOrEmpty( test.StackTrace ) ) LogSummary( summaryFile, $"\t{test.StackTrace}" );
                     }
 
                 }

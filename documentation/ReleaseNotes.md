@@ -1,6 +1,10 @@
 # Release Notes
+* v1.3.4 [November 2021]
+    * NUnit attribute 'OneTimeSetUp' and 'OneTimeTearDown' ar supported.
+    * NUnit attribute 'TestCase' is not supported anymore!
+
 * v1.3.3 [September 2021]
-    * NUnit result file
+    * NUnit result files
     * Clients using .net core 3.1
     * Shared using .net standard 2.0
 

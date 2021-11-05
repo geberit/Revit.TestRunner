@@ -74,6 +74,8 @@ namespace Revit.TestRunner.Shared.Communication.Client
 
             FileHelper.WriteStringWithLock( requestFilePath, requestString );
 
+            await Task.Delay( 20, cancellationToken );
+
             Task responseTask = new Task( () => {
                 while( responseString == null && !cancellationToken.IsCancellationRequested ) {
                     responseString = FileHelper.ReadStringWithLock( responseFilePath );

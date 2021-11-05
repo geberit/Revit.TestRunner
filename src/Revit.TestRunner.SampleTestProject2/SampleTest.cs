@@ -5,6 +5,12 @@ namespace Revit.TestRunner.SampleTestProject
 {
     public class SampleTest
     {
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            Console.WriteLine( $"Run 'OneTimeSetup' in {GetType().Name}" );
+        }
+
         [SetUp]
         public void RunBeforeTest()
         {
@@ -15,6 +21,12 @@ namespace Revit.TestRunner.SampleTestProject
         public void RunAfterTest()
         {
             Console.WriteLine( $"Run 'TearDown' in {GetType().Name}" );
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Console.WriteLine( $"Run 'OneTimeTearDown' in {GetType().Name}" );
         }
 
         [Test]

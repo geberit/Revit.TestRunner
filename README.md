@@ -32,7 +32,9 @@ Instead of running test from the standalone application, tests can also be execu
 ### Write Tests
 Create a test project in your solution and get the NUnit nuget package.
 
-Let us have a look to the SampleTest class. As you see, test is marked by the NUnit Attribute ‘Test’. Also ‘SetUp’ and ‘TearDown’ Attributes are supported.
+Let us have a look to the SampleTest class. As you see, test is marked by the NUnit Attribute ‘Test’. Also ‘SetUp’, ‘TearDown’, ‘OneTimeSetUp’ and ‘OneTimeTearDown’ Attributes are supported.
+
+The ‘TestCase’ attribute is not supportet, please use specific test methodes.
 
 ```c#
 public class SampleTest

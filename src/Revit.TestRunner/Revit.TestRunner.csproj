@@ -203,6 +203,7 @@
     <Compile Include="RevitTask.cs" />
     <Compile Include="Runner\ReflectionRunner.cs" />
     <Compile Include="Runner\NUnitRunner.cs" />
+    <Compile Include="Runner\TestInstance.cs" />
     <Compile Include="Server\RunnerController.cs" />
   </ItemGroup>
   <ItemGroup>
