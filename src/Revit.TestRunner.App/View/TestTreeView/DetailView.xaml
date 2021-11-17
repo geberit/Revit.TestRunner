@@ -67,14 +67,16 @@
                          IsReadOnly="True"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Message:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Message}" 
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Message}" FontFamily="Consolas"
                          BorderThickness="0"
-                         IsReadOnly="True"/>
+                         IsReadOnly="True"
+                         HorizontalScrollBarVisibility="Auto"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,4" Text="StackTrace:" Visibility="{Binding HasStackTrace, Converter={StaticResource BoolToVisConverter}}"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,4"  Text="{Binding StackTrace}"
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,4" Text="{Binding StackTrace}" FontFamily="Consolas"
                          BorderThickness="0"
-                         IsReadOnly="True" />
+                         IsReadOnly="True"
+                         HorizontalScrollBarVisibility="Auto"/>
             </Grid>
         </ScrollViewer>
     </DockPanel>

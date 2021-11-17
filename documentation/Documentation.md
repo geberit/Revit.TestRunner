@@ -16,18 +16,17 @@ The console runner consumes a request json file containing the tests to execute.
 The console runner can also consume a specific test assembly. All tests in this assembly will be executed.
 
 ``` Revit.TestRunner.Console.exe request c:\temp\myRequest.json -r 2021 ```
+
 ``` Revit.TestRunner.Console.exe assembly c:\temp\myTestAssembly.dll -r 2021 ```
 
 ## Writing Tests
-First add the NuGet package of [NUnit](https://www.nuget.org/packages/NUnit/) to the test project.
+First add the NuGet package of [NUnit](https://www.nuget.org/packages/NUnit/) to the test project. But be aware that this is only a NUnit like framework. Not all features of NUnit are supported. 
 
 A test must be marked with the ```Test``` Attribute of the NUnit 3 library. All marked methods will be recognized when the test assembly is loaded. A ```Test``` is executable. 
 A method marked with the ```OneTimeSetUp``` Attribute will be executed before the first test runs.
 A method marked with the ```SetUp``` Attribute will be executed before each test.
 A method marked with the ```TearDown``` Attribute will be executed after each test.
 A method marked with the ```OneTimeTearDown``` Attribute will be executed after the last test runs.
-
-Be aware that the ```TestCase``` Attribute, to pass some parameters, is NOT supportet!
 
 ```C#
 [OneTimeSetUp]
@@ -57,6 +56,8 @@ public void MyTest(){
 ```
 
 NUnit ```Explicit``` and ```Ignore``` Attributes are also supported.
+
+The ```TestCase``` Attribute, to pass some parameters, is NOT supported!
 
 To get Revit API objects like ```Application``` or ```UIApplication```, extend the test method signature with one or both Classes (order is not relevant). The injected objects can be used to do some stuff, for example open a file.
 

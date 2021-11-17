@@ -3,6 +3,8 @@ Status: under active development, breaking changes may occur.
 
 Revit.TestRunner is a simple Addin for Autodesk Revit. It runs unit tests from a specified test assembly, which have references to the Revit API. The test framework used is [NUnit v3](https://github.com/nunit).
 
+See [Documentation](/documentation/Documentation.md)
+
 ## How it works
 The Revit.TestRunner is designed to work as an Addin of Autodesk Revit. Test runs can be started by using the standalone desktop application or the console application.
 

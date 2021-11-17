@@ -340,6 +340,7 @@ namespace Revit.TestRunner.App.View
 
                 NodeViewModel root = ToNodeTree( rootModel );
                 Tree.AddRootObject( root, true );
+                Tree.SelectedNode = null;
 
                 AssemblyPath = root.FullName;
 
