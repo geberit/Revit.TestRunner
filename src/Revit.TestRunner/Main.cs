@@ -44,7 +44,6 @@ namespace Revit.TestRunner
 
         public Result OnShutdown( UIControlledApplication application )
         {
-            //mService.Stop();
             mController.Stop();
             return Result.Succeeded;
         }

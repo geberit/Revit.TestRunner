@@ -223,12 +223,6 @@
     <Resource Include="Commands\Pic\Testing.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="GlobalResources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj">
       <Project>{2545888f-1273-45c6-81fa-aa06da6f8d11}</Project>
       <Name>Revit.TestRunner.Shared</Name>

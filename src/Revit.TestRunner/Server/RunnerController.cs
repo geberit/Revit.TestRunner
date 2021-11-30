@@ -76,6 +76,8 @@ namespace Revit.TestRunner.Server
         {
             mUiApplication = sender as UIApplication;
             mServer.ProceedNextNotConcurrent();
+
+            e.SetRaiseWithoutDelay();
         }
         #endregion
 
