@@ -1,4 +1,7 @@
 # Release Notes
+* v1.3.5 [November 2021]
+    * SetRaiseWithoutDelay on OnIdle event
+
 * v1.3.4 [November 2021]
     * NUnit attribute 'OneTimeSetUp' and 'OneTimeTearDown' are supported.
     * NUnit attribute 'TestCase' is not supported anymore!
