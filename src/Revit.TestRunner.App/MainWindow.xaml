@@ -6,7 +6,7 @@
         xmlns:view="clr-namespace:Revit.TestRunner.App.View"
         xmlns:app="clr-namespace:Revit.TestRunner.App"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
+        Title="Revit.TestRunner" Height="600" Width="1000"
         d:DataContext="{d:DesignInstance app:MainWindowViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <ResourceDictionary>

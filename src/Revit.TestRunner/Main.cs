@@ -14,18 +14,18 @@ namespace Revit.TestRunner
     /// </summary>
     public class Main : IExternalApplication
     {
-        private Service mService;
+        private RunnerController mController;
 
         public Result OnStartup( UIControlledApplication application )
         {
-            Log.Info( $"Revit.TestRunner started '{DateTime.Now}'" );
+            Log.Info( $"Revit.TestRunner started v{Assembly.GetExecutingAssembly().GetName().Version} '{DateTime.Now}'" );
             Log.Info( $"{Environment.OSVersion}, NetFX {Environment.Version}" );
             Log.Debug( $"Log Directory '{Log.LogDirectory}'" );
             Log.Debug( $"CurrentAppDomain.ApplicationBase '{AppDomain.CurrentDomain.SetupInformation.ApplicationBase}'" );
 
             RibbonPanel ribbonPanel = application.CreateRibbonPanel( "Testing" );
 
-            string command = typeof( TestRunnerCommand ).FullName;
+            string command = typeof( RunnerCommand ).FullName;
 
             PushButtonData buttonData = new PushButtonData( command, "Open Runner", Assembly.GetExecutingAssembly().Location, command ) {
                 ToolTip = "Open the Test Runner Dialog\nStart Tests using the Revit API.",
@@ -36,15 +36,15 @@ namespace Revit.TestRunner
 
             ribbonPanel.AddItem( buttonData );
 
-            mService = new Service();
-            mService.Start( application );
+            mController = new RunnerController();
+            mController.Start( application );
 
             return Result.Succeeded;
         }
 
         public Result OnShutdown( UIControlledApplication application )
         {
-            mService.Stop();
+            mController.Stop();
             return Result.Succeeded;
         }
 

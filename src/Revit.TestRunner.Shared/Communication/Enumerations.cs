@@ -6,5 +6,7 @@
         Running,
         Passed,
         Failed,
+        Explicit,
+        Ignore
     }
 }

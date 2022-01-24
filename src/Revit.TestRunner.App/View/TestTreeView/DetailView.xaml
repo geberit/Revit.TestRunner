@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="Revit.TestRunner.App.View.TestTreeView.DetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Revit.TestRunner.App.View.TestTreeView"
+             xmlns:dto="clr-namespace:Revit.TestRunner.Shared.Communication;assembly=Revit.TestRunner.Shared"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance local:NodeViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Revit.TestRunner.App;component/GlobalResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        
+            <Style x:Key="TextStateStyle" TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Running}">
+                        <Setter Property="Background" Value="{StaticResource StateRunning}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Passed}">
+                        <Setter Property="Background" Value="{StaticResource StatePassed}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Failed}">
+                        <Setter Property="Background" Value="{StaticResource StateFailed}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Explicit}">
+                        <Setter Property="Background" Value="{StaticResource StateExplicit}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Ignore}">
+                        <Setter Property="Background" Value="{StaticResource StateIgnore}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Border Height="30" DockPanel.Dock="Top" Style="{StaticResource TextStateStyle}" >
+            <DockPanel Margin="4">
+                <TextBlock Text="{Binding Text}" FontSize="16" FontWeight="Bold" />
+                <TextBlock Text="{Binding State}"  FontSize="16" FontWeight="Bold" Margin="20,0,0,0"/>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer Margin="4">
+            <Grid  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Classname:" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ClassName, Mode=OneWay}"
+                         BorderThickness="0"
+                         IsReadOnly="True"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Runtime:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Duration,StringFormat=mm\\:ss\\.ffff, Mode=OneWay}"
+                         BorderThickness="0"
+                         IsReadOnly="True"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Message:" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Message}" FontFamily="Consolas"
+                         BorderThickness="0"
+                         IsReadOnly="True"
+                         HorizontalScrollBarVisibility="Auto"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,4" Text="StackTrace:" Visibility="{Binding HasStackTrace, Converter={StaticResource BoolToVisConverter}}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,4" Text="{Binding StackTrace}" FontFamily="Consolas"
+                         BorderThickness="0"
+                         IsReadOnly="True"
+                         HorizontalScrollBarVisibility="Auto"/>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

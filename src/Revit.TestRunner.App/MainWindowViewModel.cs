@@ -1,11 +1,12 @@
 ﻿using Revit.TestRunner.App.View;
+using Revit.TestRunner.Shared;
 
 namespace Revit.TestRunner.App
 {
     /// <summary>
     /// ViewModel of the App Window.
     /// </summary>
-    public class MainWindowViewModel : AbstractViewModel
+    public class MainWindowViewModel : AbstractNotifyPropertyChanged
     {
         /// <summary>
         /// Constructor

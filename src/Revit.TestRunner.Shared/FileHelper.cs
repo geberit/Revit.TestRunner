@@ -53,6 +53,9 @@ namespace Revit.TestRunner.Shared
                 result = IoRetry( () => {
                     FileInfo file = new FileInfo( aPath );
                     if( file.Exists ) file.Delete();
+
+                    DirectoryInfo directory = new DirectoryInfo( aPath );
+                    if( directory.Exists ) directory.Delete( true );
                 }, aWait, aMaxWait );
             }
             catch( FileNotFoundException ) {

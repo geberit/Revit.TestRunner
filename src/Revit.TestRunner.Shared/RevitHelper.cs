@@ -11,7 +11,9 @@ namespace Revit.TestRunner.Shared
     {
         private const string Revit = "Autodesk Revit";
 
-
+        /// <summary>
+        /// Get a list of installed Revit applications.
+        /// </summary>
         public static IEnumerable<string> GetInstalledRevitApplications()
         {
             var installedPrograms = GetInstalledApplications();
@@ -26,6 +28,9 @@ namespace Revit.TestRunner.Shared
             return revitInstalled.OrderBy( s => s );
         }
 
+        /// <summary>
+        /// Get a list of installed applications.
+        /// </summary>
         private static IEnumerable<string> GetInstalledApplications()
         {
             var result = new List<string>();
@@ -51,6 +56,11 @@ namespace Revit.TestRunner.Shared
             return result;
         }
 
+        /// <summary>
+        /// Start of Revit in <paramref name="version"/>.
+        /// If any Revit already run, no more Revit will be started.
+        /// Returns the process id and if it was new started.
+        /// </summary>
         public static (int ProcessId, bool IsNew) StartRevit( string version, string language = "" )
         {
             Process process = null;
@@ -67,6 +77,8 @@ namespace Revit.TestRunner.Shared
                     : string.Empty;
 
                 if( File.Exists( executablePath ) ) {
+                    Console.WriteLine( $"Starting Revit {version}" );
+
                     process = Process.Start( executablePath, argument );
                     isNew = true;
                 }
