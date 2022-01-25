@@ -235,8 +235,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>goto exit
-"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -file $(ProjectDir)InstallAddinForDebugging.ps1 $(ConfigurationName) $(ProjectName) $(ProjectDir) $(TargetPath)
+    <PostBuildEvent>"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -file $(ProjectDir)InstallAddinForDebugging.ps1 $(ConfigurationName) $(ProjectName) $(ProjectDir) $(TargetPath)
 :exit</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
