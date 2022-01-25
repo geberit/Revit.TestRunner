@@ -94,7 +94,7 @@ namespace Revit.TestRunner.Shared
             else if (processes.Length == 1)
             {
                 process = processes.Single();
-                Console.WriteLine($"Using Revit [{process.Id}]");
+                //Console.WriteLine($"Using Revit ProcessId[{process.Id}]");
             }
             else
             {
@@ -106,7 +106,7 @@ namespace Revit.TestRunner.Shared
 
         public static void KillRevit(int processId)
         {
-            Console.WriteLine($"Killing Revit");
+            //Console.WriteLine($"Killing Revit");
             var process = Process.GetProcessById(processId);
             process?.Kill();
         }

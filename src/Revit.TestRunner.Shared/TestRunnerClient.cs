@@ -99,8 +99,6 @@ namespace Revit.TestRunner.Shared
             var revit = RevitHelper.StartRevit(revitVersion);
             NewRevit |= revit.IsNew;
 
-            Console.WriteLine($"Revit {revit.ProcessId} {NewRevit}");
-
             await Home(cancellationToken);
 
             if (mHome != null)
@@ -115,7 +113,7 @@ namespace Revit.TestRunner.Shared
                     for (int i = 0; i < 10; i++)
                         if (!File.Exists(resultFile))
                         {
-                            Console.WriteLine($"Wait resultFile");
+                            Console.WriteLine($"."); // Wait resultFile
                             await Task.Delay(200, cancellationToken);
                         }
 
