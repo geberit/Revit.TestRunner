@@ -166,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Revit.TestRunner.SampleTestProject2.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Revit.TestRunner.SampleTestProject2.2019.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
