@@ -66,7 +66,8 @@ namespace Revit.TestRunner.Runner
             var method = Type.GetMethod( methodName );
             if( method == null ) throw new ArgumentException( $"Method not found! {methodName}" );
 
-            var isExplicitMarked = MarkedByAttribute( method, typeof( ExplicitAttribute ) );
+            var isExplicitMarked = MarkedByAttribute( method, typeof( ExplicitAttribute ) ) ||
+                                   IsExplicitMarked && !isSingle;
             var isIgnoreMarked = MarkedByAttribute( method, typeof( IgnoreAttribute ) );
             var hasTestCaseAttribute = MarkedByAttribute( method, typeof( TestCaseAttribute ) );
 

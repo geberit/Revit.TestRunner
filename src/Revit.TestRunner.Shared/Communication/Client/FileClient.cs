@@ -77,10 +77,10 @@ namespace Revit.TestRunner.Shared.Communication.Client
             await Task.Delay( 20, cancellationToken );
 
             Task responseTask = new Task( () => {
-                while( responseString == null && !cancellationToken.IsCancellationRequested ) {
-                    responseString = FileHelper.ReadStringWithLock( responseFilePath );
+                while( string.IsNullOrEmpty( responseString ) && !cancellationToken.IsCancellationRequested ) {
+                    responseString = FileHelper.ReadStringWithLock( responseFilePath, 200, 2000 );
 
-                    if( responseString != null ) {
+                    if( !string.IsNullOrEmpty( responseString ) ) {
                         FileHelper.DeleteWithLock( responseFilePath );
                     }
                     else {

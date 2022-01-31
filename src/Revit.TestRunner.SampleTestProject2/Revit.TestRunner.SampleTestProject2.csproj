@@ -158,6 +158,7 @@
     <Compile Include="..\AssemblyInfo\AssemblyInfo.Version.cs">
       <Link>Properties\AssemblyInfo.Version.cs</Link>
     </Compile>
+    <Compile Include="ExplicitTest.cs" />
     <Compile Include="MoreTests.cs" />
     <Compile Include="ParameterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
