@@ -11,13 +11,13 @@ namespace Revit.TestRunner.Console.Commands
     /// <summary>
     /// Execute Test Command
     /// </summary>
-    [Verb("assembly", HelpText = "Execute all UnitTests from a specified assembly")]
+    [Verb( "assembly", HelpText = "Execute all UnitTests from a specified assembly" )]
     public class AssemblyCommand : AbstractTestCommand
     {
         /// <summary>
         /// Request File Path
         /// </summary>
-        [Value(0, HelpText = "Assembly path containing Tests to execute")]
+        [Value( 0, HelpText = "Assembly path containing Tests to execute" )]
         public string AssemblyPath { get; set; }
 
         /// <summary>
@@ -27,30 +27,28 @@ namespace Revit.TestRunner.Console.Commands
         {
             base.Execute();
 
-            if (FileExist(AssemblyPath))
-            {
-                RunAll(AssemblyPath).GetAwaiter().GetResult();
+            if( FileExist( AssemblyPath ) ) {
+                RunAll( AssemblyPath ).GetAwaiter().GetResult();
             }
         }
 
         /// <summary>
         /// Run all tests in assembly.
         /// </summary>
-        private async Task RunAll(string assemblyPath)
+        private async Task RunAll( string assemblyPath )
         {
-            System.Console.WriteLine("Run all tests in assembly");
-            System.Console.WriteLine($"Explore assembly '{AssemblyPath}'");
+            System.Console.WriteLine( "Run all tests in assembly" );
+            System.Console.WriteLine( $"Explore assembly '{AssemblyPath}'" );
 
-            TestRunnerClient client = new TestRunnerClient(ConsoleConstants.ProgramName, ConsoleConstants.ProgramVersion);
-            var explore = await client.ExploreAssemblyAsync(assemblyPath, RevitVersion.ToString(), CancellationToken.None);
+            TestRunnerClient client = new TestRunnerClient( ConsoleConstants.ProgramName, ConsoleConstants.ProgramVersion );
+            var explore = await client.ExploreAssemblyAsync( assemblyPath, RevitVersion.ToString(), CancellationToken.None );
 
-            if (explore != null)
-            {
-                System.Console.WriteLine("Get tests from assembly");
-                var root = ModelHelper.ToNodeTree(explore.ExploreFile);
-                var cases = root.DescendantsAndMe.Where(n => n.Type == TestType.Case).ToArray();
+            if( explore != null ) {
+                System.Console.WriteLine( "Get tests from assembly" );
+                var root = ModelHelper.ToNodeTree( explore.ExploreFile );
+                var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
 
-                await RunTests(cases.Select(ModelHelper.ToTestCase), client);
+                await RunTests( cases.Select( ModelHelper.ToTestCase ), client );
             }
         }
     }
