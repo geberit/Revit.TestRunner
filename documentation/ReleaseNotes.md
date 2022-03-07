@@ -1,4 +1,9 @@
 # Release Notes
+* v1.3.6 [March 2022]
+    * Support of NUnit attribute 'Explicit' on class level
+    * Fix 'service may not be running' issue
+    * Bin clean up
+
 * v1.3.5 [November 2021]
     * SetRaiseWithoutDelay on OnIdle event
 
