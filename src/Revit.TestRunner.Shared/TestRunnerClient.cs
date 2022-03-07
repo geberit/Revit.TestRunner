@@ -17,13 +17,14 @@ namespace Revit.TestRunner.Shared
 
         private readonly FileClient mFileClient;
         private HomeDto mHome;
+        private bool NewRevit = false;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public TestRunnerClient( string aClientName = "", string aClientVersion = "" )
+        public TestRunnerClient(string aClientName = "", string aClientVersion = "")
         {
-            mFileClient = new FileClient( FileNames.WatchDirectory, aClientName, aClientVersion );
+            mFileClient = new FileClient(FileNames.WatchDirectory, aClientName, aClientVersion);
         }
 
         #endregion
@@ -33,47 +34,53 @@ namespace Revit.TestRunner.Shared
         /// <summary>
         /// Start loop of calling home. 
         /// </summary>
-        public void StartRunnerStatusWatcher( Action<HomeDto> aCallback, CancellationToken cancellationToken )
+        public void StartRunnerStatusWatcher(Action<HomeDto> aCallback, CancellationToken cancellationToken)
         {
-            Task.Run( async () => {
-                while( !cancellationToken.IsCancellationRequested && mHome == null ) {
-                    mHome = await Home( cancellationToken );
-                    aCallback( mHome );
+            Task.Run(async () =>
+            {
+                while (!cancellationToken.IsCancellationRequested && mHome == null)
+                {
+                    mHome = await Home(cancellationToken);
+                    aCallback(mHome);
 
-                    Thread.Sleep( 1000 );
+                    Thread.Sleep(1000);
                 }
-            }, cancellationToken );
+            }, cancellationToken);
         }
 
         /// <summary>
         /// Call Home
         /// </summary>
-        private async Task<HomeDto> Home( CancellationToken cancellationToken )
+        private async Task<HomeDto> Home(CancellationToken cancellationToken)
         {
-            mHome = await mFileClient.GetJson<HomeDto>( "", cancellationToken, 30, 2000 );
+            mHome = await mFileClient.GetJson<HomeDto>("", cancellationToken, 30, 2000);
             return mHome;
         }
 
         /// <summary>
         /// Start a expolre request.
         /// </summary>
-        public async Task<ExploreResponseDto> ExploreAssemblyAsync( string assemblyPath, string revitVersion, CancellationToken cancellationToken )
+        public async Task<ExploreResponseDto> ExploreAssemblyAsync(string assemblyPath, string revitVersion, CancellationToken cancellationToken)
         {
             ExploreResponseDto result = null;
 
-            var request = new ExploreRequestDto {
+            var request = new ExploreRequestDto
+            {
                 AssemblyPath = assemblyPath
             };
 
-            RevitHelper.StartRevit( revitVersion );
+            var revit = RevitHelper.StartRevit(revitVersion);
+            NewRevit |= revit.IsNew;
 
-            await Home( cancellationToken );
+            await Home(cancellationToken);
 
-            if( mHome != null ) {
-                result = await mFileClient.GetJson<ExploreRequestDto, ExploreResponseDto>( mHome.ExplorePath, request, cancellationToken );
+            if (mHome != null)
+            {
+                result = await mFileClient.GetJson<ExploreRequestDto, ExploreResponseDto>(mHome.ExplorePath, request, cancellationToken);
             }
-            else {
-                Console.WriteLine( "TestRunner service not available!" );
+            else
+            {
+                Console.WriteLine("TestRunner service not available!");
             }
 
             return result;
@@ -82,50 +89,67 @@ namespace Revit.TestRunner.Shared
         /// <summary>
         /// Start a test run request.
         /// </summary>
-        public async Task StartTestRunAsync( IEnumerable<TestCaseDto> testCases, string revitVersion, Action<TestRunState> callback, CancellationToken cancellationToken )
+        public async Task StartTestRunAsync(IEnumerable<TestCaseDto> testCases, string revitVersion, Action<TestRunState> callback, CancellationToken cancellationToken)
         {
-            var request = new TestRequestDto {
+            var request = new TestRequestDto
+            {
                 Cases = testCases.ToArray()
             };
 
-            var revit = RevitHelper.StartRevit( revitVersion );
+            var revit = RevitHelper.StartRevit(revitVersion);
+            NewRevit |= revit.IsNew;
 
-            await Home( cancellationToken );
+            await Home(cancellationToken);
 
-            if( mHome != null ) {
-                TestResponseDto response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>( mHome.TestPath, request, cancellationToken );
+            if (mHome != null)
+            {
+                TestResponseDto response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>(mHome.TestPath, request, cancellationToken);
 
-                if( response != null ) {
+                if (response != null)
+                {
                     var resultFile = response.ResultFile;
 
-                    if( File.Exists( resultFile ) ) {
+                    // Wait resultFile 
+                    for (int i = 0; i < 10; i++)
+                        if (!File.Exists(resultFile))
+                        {
+                            Console.WriteLine($"."); // Wait resultFile
+                            await Task.Delay(200, cancellationToken);
+                        }
+
+                    if (File.Exists(resultFile))
+                    {
                         bool run = true;
 
-                        while( run && !cancellationToken.IsCancellationRequested ) {
-                            var runResult = JsonHelper.FromFile<TestRunStateDto>( resultFile );
+                        while (run && !cancellationToken.IsCancellationRequested)
+                        {
+                            var runResult = JsonHelper.FromFile<TestRunStateDto>(resultFile);
 
-                            if( runResult != null ) {
+                            if (runResult != null)
+                            {
                                 bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
-                                TestRunState result = new TestRunState( runResult, isCompleted ) { Message = runResult.Output };
+                                TestRunState result = new TestRunState(runResult, isCompleted) { Message = runResult.Output };
 
-                                callback( result );
+                                callback(result);
 
                                 run = !isCompleted;
 
-                                if( run ) await Task.Delay( 500, cancellationToken );
+                                if (run) await Task.Delay(500, cancellationToken);
                             }
                         }
                     }
-                    else {
-                        callback( new TestRunState( null, true ) { Message = "Tests not executed! Service may not be running." } );
+                    else
+                    {
+                        callback(new TestRunState(null, true) { Message = "Tests not executed! Service may not be running." });
                     }
 
-                    if( revit.IsNew ) RevitHelper.KillRevit( revit.ProcessId );
+                    if (NewRevit) RevitHelper.KillRevit(revit.ProcessId);
 
                 }
             }
-            else {
-                callback( new TestRunState( null, true ) { Message = "TimeOut. Runner not available!" } );
+            else
+            {
+                callback(new TestRunState(null, true) { Message = "TimeOut. Runner not available!" });
             }
 
         }
