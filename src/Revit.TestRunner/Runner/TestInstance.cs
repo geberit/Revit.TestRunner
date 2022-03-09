@@ -89,6 +89,15 @@ namespace Revit.TestRunner.Runner
                 await InvokeMethod( Instance, mSetUp, mPossibleParams );
                 await InvokeMethod( Instance, method, mPossibleParams );
             }
+            catch(TargetInvocationException e ) {
+                if( e.InnerException is SuccessException se ) {
+                    // ignore, test pass legally by Assert.Pass()
+                    Console.WriteLine( $"Pass: {se.Message}" );
+                }
+                else {
+                    throw;
+                }
+            }
             finally {
                 await InvokeMethod( Instance, mTearDown, mPossibleParams );
             }

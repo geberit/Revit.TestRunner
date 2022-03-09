@@ -30,9 +30,16 @@ namespace Revit.TestRunner.SampleTestProject
         }
 
         [Test]
+        public void AssertTrueTest()
+        {
+            Assert.True( true, "Test pass" );
+        }
+
+        [Test]
         public void PassTest()
         {
-            Assert.True( true );
+            Assert.Pass( "All is OK, cut short." );
+            Assert.Fail( "This should not reached!" );
         }
 
         [Test]
