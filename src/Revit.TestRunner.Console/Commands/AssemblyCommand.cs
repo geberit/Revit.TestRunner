@@ -27,15 +27,21 @@ namespace Revit.TestRunner.Console.Commands
         {
             base.Execute();
 
+            var allPassed = false;
             if( FileExist( AssemblyPath ) ) {
-                RunAll( AssemblyPath ).GetAwaiter().GetResult();
+                allPassed = RunAll( AssemblyPath ).GetAwaiter().GetResult();
+            }
+
+            if (!allPassed)
+            {
+                System.Environment.Exit(-1);
             }
         }
 
         /// <summary>
-        /// Run all tests in assembly.
+        /// Run all tests in assembly. Returns true if tests could be loaded and all passed.
         /// </summary>
-        private async Task RunAll( string assemblyPath )
+        private async Task<bool> RunAll( string assemblyPath )
         {
             System.Console.WriteLine( "Run all tests in assembly" );
             System.Console.WriteLine( $"Explore assembly '{AssemblyPath}'" );
@@ -48,8 +54,10 @@ namespace Revit.TestRunner.Console.Commands
                 var root = ModelHelper.ToNodeTree( explore.ExploreFile );
                 var cases = root.DescendantsAndMe.Where( n => n.Type == TestType.Case ).ToArray();
 
-                await RunTests( cases.Select( ModelHelper.ToTestCase ), client );
+                return await RunTests( cases.Select( ModelHelper.ToTestCase ), client );
             }
+
+            return false;
         }
     }
 }
