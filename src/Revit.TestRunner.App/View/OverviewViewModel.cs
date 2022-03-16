@@ -307,7 +307,7 @@ namespace Revit.TestRunner.App.View
                     mIsLoading = true;
                     Tree.Clear();
 
-                    ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", CancellationToken.None );
+                    ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", "", CancellationToken.None );
 
                     if( response != null ) {
                         LoadExploreFile( response.ExploreFile );

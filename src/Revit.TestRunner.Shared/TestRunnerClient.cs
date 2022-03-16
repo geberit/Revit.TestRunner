@@ -58,7 +58,7 @@ namespace Revit.TestRunner.Shared
         /// <summary>
         /// Start a expolre request.
         /// </summary>
-        public async Task<ExploreResponseDto> ExploreAssemblyAsync( string assemblyPath, string revitVersion, CancellationToken cancellationToken )
+        public async Task<ExploreResponseDto> ExploreAssemblyAsync( string assemblyPath, string revitVersion, string revitLanguage, CancellationToken cancellationToken )
         {
             ExploreResponseDto result = null;
 
@@ -66,7 +66,7 @@ namespace Revit.TestRunner.Shared
                 AssemblyPath = assemblyPath
             };
 
-            var revit = RevitHelper.StartRevit( revitVersion );
+            var revit = RevitHelper.StartRevit( revitVersion, revitLanguage );
             mNewRevit |= revit.IsNew;
 
             await Home( cancellationToken );
