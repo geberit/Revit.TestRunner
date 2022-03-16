@@ -23,6 +23,12 @@ namespace Revit.TestRunner.Console.Commands
         public int RevitVersion { get; set; }
 
         /// <summary>
+        /// Preferred Revit Language.
+        /// </summary>
+        [Option( 'l', "language", Default = "", HelpText = "Start Revit with language" )]
+        public string RevitLanguage { get; set; }
+
+        /// <summary>
         /// Execute Command.
         /// </summary>
         public virtual void Execute()
@@ -59,7 +65,7 @@ namespace Revit.TestRunner.Console.Commands
             if( client == null )
                 client = new TestRunnerClient( ConsoleConstants.ProgramName, ConsoleConstants.ProgramVersion );
 
-            await client.StartTestRunAsync( cases, RevitVersion.ToString(), result => {
+            await client.StartTestRunAsync( cases, RevitVersion.ToString(), RevitLanguage, result => {
                 try {
                     if( result.StateDto != null ) {
                         foreach( var test in result.StateDto.Cases.Where( c => c.State != TestState.Unknown ) ) {

@@ -84,13 +84,13 @@ namespace Revit.TestRunner.Shared
         /// <summary>
         /// Start a test run request.
         /// </summary>
-        public async Task StartTestRunAsync( IEnumerable<TestCaseDto> testCases, string revitVersion, Action<TestRunState> callback, CancellationToken cancellationToken )
+        public async Task StartTestRunAsync( IEnumerable<TestCaseDto> testCases, string revitVersion, string revitLanguage, Action<TestRunState> callback, CancellationToken cancellationToken )
         {
             var request = new TestRequestDto {
                 Cases = testCases.ToArray()
             };
 
-            var revit = RevitHelper.StartRevit( revitVersion );
+            var revit = RevitHelper.StartRevit( revitVersion, revitLanguage );
             mNewRevit |= revit.IsNew;
 
             await Home( cancellationToken );

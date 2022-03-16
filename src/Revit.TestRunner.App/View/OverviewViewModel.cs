@@ -172,7 +172,7 @@ namespace Revit.TestRunner.App.View
             int callbackCount = 0;
             TimeSpan duration = TimeSpan.Zero;
 
-            await mClient.StartTestRunAsync( testCases, "2020", result => {
+            await mClient.StartTestRunAsync( testCases, "2020", "", result => {
                 callbackCount++;
                 string points = string.Concat( Enumerable.Repeat( ".", callbackCount % 5 ) );
                 ProgramState = "Test Run in progress" + points;
