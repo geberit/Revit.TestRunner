@@ -47,9 +47,9 @@ namespace Revit.TestRunner.Console.Commands
         }
 
         /// <summary>
-        /// Run specified Tests.
+        /// Run specified Tests. Returns true if all tests passed.
         /// </summary>
-        protected async Task RunTests( IEnumerable<TestCaseDto> cases, TestRunnerClient client = null )
+        protected async Task<bool> RunTests( IEnumerable<TestCaseDto> cases, TestRunnerClient client = null )
         {
             System.Console.WriteLine( $"Start test run {DateTime.Now}; preferred on Revit {RevitVersion}" );
             System.Console.WriteLine();
@@ -93,6 +93,7 @@ namespace Revit.TestRunner.Console.Commands
 
             System.Console.WriteLine();
             System.Console.WriteLine( $"Run finished - duration {duration:g} - {passedCount} of {completeCount} Tests passed ({Math.Round( 100 * (double)passedCount / completeCount )}%)" );
+            return passedCount == completeCount;
         }
     }
 }
