@@ -32,9 +32,8 @@ namespace Revit.TestRunner.Console.Commands
                 allPassed = RunAll( AssemblyPath ).GetAwaiter().GetResult();
             }
 
-            if (!allPassed)
-            {
-                System.Environment.Exit(-1);
+            if( !allPassed ) {
+                System.Environment.Exit( -1 );
             }
         }
 

@@ -1,4 +1,10 @@
 # Release Notes
+* v1.3.7 [...]
+    * Console runner Revit language support
+    * Console runner exit code -1 on some failed tests
+    * Fix bug where longer running tests are not accounted
+
+
 * v1.3.6 [March 2022]
     * Support of NUnit attribute 'Explicit' on class level
     * Fix 'service may not be running' issue
