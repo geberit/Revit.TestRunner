@@ -62,7 +62,7 @@ namespace Revit.TestRunner.Console.Commands
             await client.StartTestRunAsync( cases, RevitVersion.ToString(), result => {
                 try {
                     if( result.StateDto != null ) {
-                        foreach( var test in result.StateDto.Cases.Where( c => c.State != TestState.Unknown ) ) {
+                        foreach( var test in result.StateDto.Cases.Where( c => c.State != TestState.Unknown && c.State != TestState.Running ) ) {
                             if( complete.All( t => t.Id != test.Id ) ) {
                                 complete.Add( test );
 
