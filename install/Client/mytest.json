@@ -1,0 +1,53 @@
+{
+  "DtoType": "TestRequestDto",
+  "RequestId": null,
+  "Timestamp": "2022-03-17T13:38:33.4568935Z",
+  "ClientName": null,
+  "ClientVersion": null,
+  "Cases": [
+    {
+      "Id": "1-1025",
+      "AssemblyPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "AssertTrueTest",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "0001-01-01T00:00:00Z",
+      "EndTime": "0001-01-01T00:00:00Z"
+    },
+    {
+      "Id": "1-1027",
+      "AssemblyPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "FailTest",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "0001-01-01T00:00:00Z",
+      "EndTime": "0001-01-01T00:00:00Z"
+    },
+    {
+      "Id": "1-1028",
+      "AssemblyPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "LongRunningTest",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "0001-01-01T00:00:00Z",
+      "EndTime": "0001-01-01T00:00:00Z"
+    },
+    {
+      "Id": "1-1026",
+      "AssemblyPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\bin\\Revit.TestRunner.SampleTestProject2.dll",
+      "TestClass": "Revit.TestRunner.SampleTestProject.SampleTest",
+      "MethodName": "PassTest",
+      "State": "Unknown",
+      "Message": null,
+      "StackTrace": null,
+      "StartTime": "0001-01-01T00:00:00Z",
+      "EndTime": "0001-01-01T00:00:00Z"
+    }
+  ]
+}

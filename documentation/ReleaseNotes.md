@@ -1,5 +1,6 @@
 # Release Notes
-* v1.3.7 [...]
+* v1.3.7 [April 2022]
+    * Support of Revit 2023
     * Console runner Revit language support
     * Console runner exit code -1 on some failed tests
     * Fix bug where longer running tests are not accounted

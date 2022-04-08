@@ -92,5 +92,5 @@ See [ReleaseNotes](/documentation/ReleaseNotes.md)
 [MIT](http://opensource.org/licenses/MIT)
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
--	Author Copyright (C) 2017-2021 Tobias Flöscher
--	Company Copyright (C) 2017-2021 Geberit Verwaltungs AG 
+-	Author Copyright (C) 2017-2022 Tobias Flöscher
+-	Company Copyright (C) 2017-2022 Geberit Verwaltungs AG 
