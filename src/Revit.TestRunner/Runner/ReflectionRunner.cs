@@ -35,6 +35,7 @@ namespace Revit.TestRunner.Runner
             var instance = new TestInstance( testClassGroup.First().AssemblyPath, testClassGroup.Key );
 
             try {
+                updateAction( testClassGroup.First(), false );
                 await instance.CreateTestInstance( mUiApplication );
             }
             catch( Exception e ) {

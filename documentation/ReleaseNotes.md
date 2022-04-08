@@ -3,6 +3,7 @@
     * Console runner Revit language support
     * Console runner exit code -1 on some failed tests
     * Fix bug where longer running tests are not accounted
+    * Update notification on start of test group
 
 
 * v1.3.6 [March 2022]
