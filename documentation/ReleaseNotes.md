@@ -1,4 +1,8 @@
 # Release Notes
+* v1.3.8 [...]
+    * tbd
+
+
 * v1.3.7 [April 2022]
     * Support of Revit 2023
     * Console runner Revit language support
