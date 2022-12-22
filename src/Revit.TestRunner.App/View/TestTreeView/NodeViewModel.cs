@@ -49,6 +49,23 @@ namespace Revit.TestRunner.App.View.TestTreeView
         /// </summary>
         public string Text => Model.Text;
 
+        public string TextAddition
+        {
+            get {
+                var result = string.Empty;
+                var testCount = Descendents.Count( n => n.Type == TestType.Case );
+
+                if( testCount == 1 ) {
+                    result = $"({testCount} test)";
+                }
+                else if( testCount > 1 ) {
+                    result = $"({testCount} tests)";
+                }
+
+                return result;
+            }
+        }
+
         /// <summary>
         /// Get the tooltip.
         /// </summary>

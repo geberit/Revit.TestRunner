@@ -1,16 +1,15 @@
 ﻿<UserControl x:Class="Revit.TestRunner.App.View.TestTreeView.TreeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dto="clr-namespace:Revit.TestRunner.Shared.Communication;assembly=Revit.TestRunner.Shared"
              xmlns:nUnit="clr-namespace:Revit.TestRunner.Shared.NUnit;assembly=Revit.TestRunner.Shared"
              xmlns:propertyTreeView="clr-namespace:Revit.TestRunner.App.View.TestTreeView"
-             mc:Ignorable="d" 
+             xmlns:converter="clr-namespace:Revit.TestRunner.App.View.Converter"
+             mc:Ignorable="d"
              d:DesignHeight="250" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance propertyTreeView:TreeViewModel, IsDesignTimeCreatable=True}"
-             
-             >
+             d:DataContext="{d:DesignInstance propertyTreeView:TreeViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -18,34 +17,41 @@
                 <ResourceDictionary Source="pack://application:,,,/Revit.TestRunner.App;component/GlobalResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}" >
+            <converter:DateTimeConverter x:Key="DateTimeConverter" />
+            <converter:TimeSpanConverter x:Key="TimeSpanConverter" />
+
+            <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}">
                 <Setter Property="FontFamily" Value="Segoe UI" />
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="Height" Value="15" />
                 <Setter Property="VerticalAlignment" Value="Top" />
                 <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                <Setter Property="HorizontalAlignment" Value="Right"></Setter>
             </Style>
 
-            <Style x:Key="TextStateStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextStyle}">
+            <Style x:Key="BaseTextStateStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextStyle}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Running}">
-                        <Setter Property="Foreground" Value="{StaticResource StateRunning}"/>
+                        <Setter Property="Foreground" Value="{StaticResource StateRunning}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Passed}">
-                        <Setter Property="Foreground" Value="{StaticResource StatePassed}"/>
+                        <Setter Property="Foreground" Value="{StaticResource StatePassed}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Failed}">
-                        <Setter Property="Foreground" Value="{StaticResource StateFailed}"/>
+                        <Setter Property="Foreground" Value="{StaticResource StateFailed}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Explicit}">
-                        <Setter Property="Foreground" Value="{StaticResource StateExplicit}"/>
+                        <Setter Property="Foreground" Value="{StaticResource StateExplicit}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding State}" Value="{x:Static dto:TestState.Ignore}">
-                        <Setter Property="Foreground" Value="{StaticResource StateIgnore}"/>
+                        <Setter Property="Foreground" Value="{StaticResource StateIgnore}" />
                     </DataTrigger>
+
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="TextStateStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextStateStyle}">
+                <Style.Triggers>
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static nUnit:TestType.Case}">
-                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontWeight" Value="Bold" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -55,12 +61,13 @@
     <ListView ItemsSource="{Binding ObjectTree}" SelectedItem="{Binding SelectedNode}">
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListViewItem">
                             <Border SnapsToDevicePixels="True"
-                                        BorderBrush="{TemplateBinding BorderBrush}" 
-                                        Background="{TemplateBinding Background}">
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    Background="{TemplateBinding Background}">
                                 <Border Name="InnerBorder">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -68,18 +75,18 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Rectangle Name="UpperHighlight" Visibility="Collapsed" Fill="#75FFFFFF" />
-                                        <GridViewRowPresenter Grid.RowSpan="2" 
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
-                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        <GridViewRowPresenter Grid.RowSpan="2"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                     </Grid>
                                 </Border>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="LightBlue"/>
+                                    <Setter Property="Background" Value="LightBlue" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#D7EEF6"/>
+                                    <Setter Property="Background" Value="#D7EEF6" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -92,24 +99,26 @@
                 <GridViewColumn Header="Name" Width="450">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <DockPanel Margin="{Binding Margin}" >
-                                <ToggleButton x:Name="mToggleButton" 
+                            <DockPanel Margin="{Binding Margin}">
+                                <ToggleButton x:Name="mToggleButton"
                                               IsChecked="{Binding IsExpanded}"
                                               Width="20" HorizontalAlignment="Left" VerticalAlignment="Center"
                                               Visibility="{Binding ShowExpandButton, Converter={StaticResource BoolToVisConverter}}">
                                     <ToggleButton.Template>
                                         <ControlTemplate>
-                                            <Polygon Name="mPolygon"  Stroke="DarkGray" 
-                                                     VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                            <Polygon Name="mPolygon" Stroke="DarkGray"
+                                                     VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <Polygon.Style>
                                                     <Style TargetType="Polygon">
-                                                        <Setter Property="Points" Value="0,0 4,4 0,8"  />
+                                                        <Setter Property="Points" Value="0,0 4,4 0,8" />
                                                         <Setter Property="Fill" Value="White" />
 
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=mToggleButton,Path=IsChecked}" Value="true">
+                                                            <DataTrigger
+                                                                Binding="{Binding ElementName=mToggleButton,Path=IsChecked}"
+                                                                Value="true">
                                                                 <Setter Property="Points" Value="6,0 6,6 0,6" />
-                                                                <Setter Property="Fill" Value="DarkGray"/>
+                                                                <Setter Property="Fill" Value="DarkGray" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -120,40 +129,52 @@
                                 </ToggleButton>
 
                                 <CheckBox IsChecked="{Binding IsChecked}"
-                                          VerticalAlignment="Center"/>
+                                          VerticalAlignment="Center" />
 
-                                <TextBlock Text="{Binding Text}" ToolTip="{Binding ToolTip}"
-                                           Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource TextStateStyle}" >
-                                </TextBlock>
+                                <StackPanel Margin="5,0,0,0"  Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Text}" ToolTip="{Binding ToolTip}"
+                                               HorizontalAlignment="Left"
+                                               Style="{StaticResource TextStateStyle}"/>
+
+                                    <TextBlock Text="{Binding TextAddition}" FontStyle="Italic"
+                                               Margin="5,0,0,0" HorizontalAlignment="Left"
+                                               Style="{StaticResource TextStateStyle}"/>
+                                </StackPanel>
+                                
                             </DockPanel>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Header="Message" Width="350" >
+                <GridViewColumn Header="Message" Width="340">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
                             <TextBlock Style="{StaticResource TextStateStyle}"
-                                   Text="{Binding MessageForTree}"
-                                   VerticalAlignment="Center"/>
+                                       Text="{Binding MessageForTree}"
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"/>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Header="Duration" Width="80" >
+                <GridViewColumn Header="Duration" Width="80">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <TextBlock Style="{StaticResource TextStateStyle}"
-                                       Text="{Binding Duration,StringFormat=mm\\:ss\\.ffff}" ToolTip="{Binding Duration}"/>
+                            <TextBlock Style="{StaticResource BaseTextStateStyle}"
+                                       Text="{Binding Duration,StringFormat=mm\\:ss\\.fff, Converter={StaticResource TimeSpanConverter}}"
+                                       ToolTip="{Binding Duration}" 
+                                       HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Header="Type" Width="40" >
+                <GridViewColumn Header="EndTime" Width="80">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <TextBlock Style="{StaticResource TextStateStyle}"
-                                       Text="{Binding Type}" ToolTip="{Binding Type}"/>
+                            <TextBlock Style="{StaticResource BaseTextStateStyle}"
+                                       Text="{Binding EndTime,StringFormat=HH:mm:ss, Converter={StaticResource DateTimeConverter}}"
+                                       ToolTip="{Binding EndTime}" 
+                                       HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>

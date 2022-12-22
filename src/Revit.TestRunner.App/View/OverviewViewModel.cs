@@ -50,6 +50,7 @@ namespace Revit.TestRunner.App.View
             Recent = Properties.Settings.Default.AssemblyPath?.Trim( ';' ).Split( ';' ) ?? Enumerable.Empty<string>();
             AssemblyPath = Recent.FirstOrDefault();
         }
+
         #endregion
 
         #region Properties
@@ -70,7 +71,8 @@ namespace Revit.TestRunner.App.View
         public string AssemblyPath
         {
             get => mAssemblyPath;
-            set {
+            set
+            {
                 if( mAssemblyPath != value ) {
                     mAssemblyPath = value;
                     OnPropertyChanged();
@@ -88,7 +90,8 @@ namespace Revit.TestRunner.App.View
         public IEnumerable<string> Recent
         {
             get => Properties.Settings.Default.AssemblyPath.Split( ';' );
-            private set {
+            private set
+            {
                 var list = value != null ? value.Take( 10 ) : Enumerable.Empty<string>();
                 Properties.Settings.Default.AssemblyPath = string.Join( ";", list );
                 Properties.Settings.Default.Save();
@@ -112,7 +115,8 @@ namespace Revit.TestRunner.App.View
         public string ProgramState
         {
             get => mProgramState;
-            set {
+            set
+            {
                 if( mProgramState != value ) {
                     mProgramState = value;
                     OnPropertyChanged();
@@ -134,6 +138,7 @@ namespace Revit.TestRunner.App.View
         /// Get true, if a Revit.TestRunner service is running.
         /// </summary>
         public bool IsServerRunning => mHomeDto != null;
+
         #endregion
 
         #region Commands
@@ -159,6 +164,7 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand RunCommand => new AsyncCommand( ExecuteRunCommand, () => Tree.HasObjects );
+
         /// <summary>
         /// Execute selected tests on Revit.TestRunner.
         /// </summary>
@@ -199,10 +205,13 @@ namespace Revit.TestRunner.App.View
 
             int total = caseViewModels.Count( c => c.State == TestState.Passed || c.State == TestState.Failed );
             int passed = caseViewModels.Count( c => c.State == TestState.Passed );
-            string message = $"Run finished - duration {duration:g} - {passed} of {total} Tests passed ({Math.Round( 100 * (double)passed / total )}%)";
+            bool success = total == passed;
+            string successText = success ? "Run finished successfully" : "Run ended with errors";
 
-            ProgramState = message;
-            MessageBox.Show( message, "Test run", MessageBoxButton.OK, total == passed ? MessageBoxImage.Information : MessageBoxImage.Error );
+            string message = $"{successText}\n\nDuration: {duration:hh\\:mm\\:ss\\.fff}\nTests passed: {passed} of {total} ({Math.Round( 100 * (double)passed / total )}%)";
+
+            ProgramState = message.Replace( "\n\n", "\n" ).Replace( "\n", " - " );
+            MessageBox.Show( message, "Test run", MessageBoxButton.OK, success ? MessageBoxImage.Information : MessageBoxImage.Error );
 
             foreach( NodeViewModel node in Tree.ObjectTree ) {
                 node.IsChecked = false;
@@ -210,6 +219,7 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand CreateRequestCommand => new DelegateWpfCommand( ExecuteCreateRequestCommand, () => Tree.HasObjects );
+
         /// <summary>
         /// Create a request file for selected tests.
         /// </summary>
@@ -232,6 +242,7 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand RefreshCommand => new DelegateWpfCommand( RefreshExecute );
+
         private void RefreshExecute()
         {
             if( !string.IsNullOrEmpty( AssemblyPath ) ) {
@@ -242,6 +253,7 @@ namespace Revit.TestRunner.App.View
         }
 
         public ICommand OpenWorkDirCommand => new DelegateWpfCommand( ExecuteOpenWorkDirCommand );
+
         private void ExecuteOpenWorkDirCommand()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo {
@@ -250,10 +262,10 @@ namespace Revit.TestRunner.App.View
             };
 
             Process.Start( startInfo );
-
         }
 
         public ICommand OpenLogCommand => new DelegateWpfCommand( ExecuteOpenLogCommand );
+
         private void ExecuteOpenLogCommand()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo( LogFilePath ) {
@@ -345,8 +357,6 @@ namespace Revit.TestRunner.App.View
                 AssemblyPath = root.FullName;
 
                 ProgramState = $"Test Assembly definition loaded '{AssemblyPath}'";
-
-
             }
             else {
                 ProgramState = $"Explore file not found '{exploreFile}'";
@@ -373,8 +383,8 @@ namespace Revit.TestRunner.App.View
             foreach( var child in testSuite.Children ) {
                 ToNode( node, child );
             }
-
         }
+
         #endregion
     }
 }
