@@ -1,6 +1,7 @@
 # Release Notes
-* v1.3.8 [...]
-    * tbd
+* v1.3.8 [December 2022]
+    * Library update
+    * Small UI improvements
 
 
 * v1.3.7 [April 2022]
