@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using Revit.TestRunner.Shared;
 
 namespace Revit.TestRunner.App.View.TestTreeView
@@ -14,6 +15,7 @@ namespace Revit.TestRunner.App.View.TestTreeView
         #region Members, Constructor
 
         private NodeViewModel mSelectedNode;
+        private string mFilter;
 
         /// <summary>
         /// Constructor
@@ -22,7 +24,9 @@ namespace Revit.TestRunner.App.View.TestTreeView
         {
             RootObjects = new List<NodeViewModel>();
             ObjectTree = new ObservableCollection<NodeViewModel>();
+            mFilter = string.Empty;
         }
+
         #endregion
 
         #region Properties
@@ -52,6 +56,23 @@ namespace Revit.TestRunner.App.View.TestTreeView
         }
 
         internal bool HasObjects => ObjectTree.Count > 0;
+
+        /// <summary>
+        /// Filter String
+        /// </summary>
+        public string Filter
+        {
+            get => mFilter;
+            set
+            {
+                if( value == mFilter ) return;
+                mFilter = value;
+                OnPropertyChanged( () => Filter );
+
+                TreeAsFlatList();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -74,6 +95,13 @@ namespace Revit.TestRunner.App.View.TestTreeView
         {
             RootObjects.Clear();
         }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand ClearFilterCommand => new DelegateWpfCommand( () => Filter = string.Empty );
+
         #endregion
 
         #region Methods
@@ -83,15 +111,32 @@ namespace Revit.TestRunner.App.View.TestTreeView
         /// </summary>
         private void TreeAsFlatList()
         {
+            var list = new List<NodeViewModel>();
             var selected = SelectedNode;
             ObjectTree.Clear();
 
+            // Get all
+            foreach( NodeViewModel rootObject in RootObjects ) {
+                list.Add( rootObject );
+                list.AddRange( rootObject.Descendents.Where( n => n.IsShow ) );
+            }
+
+            // Filter
+            var filtered = list.Where( n => n.FullName.ToLower().Contains( Filter.ToLower() ) ).ToList();
+
+            // Get filtered
             foreach( NodeViewModel rootObject in RootObjects ) {
                 ObjectTree.Add( rootObject );
 
                 foreach( NodeViewModel node in rootObject.Descendents.Where( n => n.IsShow ) ) {
-                    ObjectTree.Add( node );
+                    if( node.DescendantsAndMe.Any( n => filtered.Contains( n ) ) ) {
+                        ObjectTree.Add( node );
+                    }
                 }
+            }
+
+            foreach( var node in ObjectTree ) {
+                node.Highlight = Filter;
             }
 
             SelectedNode = selected;
@@ -104,6 +149,7 @@ namespace Revit.TestRunner.App.View.TestTreeView
         {
             TreeAsFlatList();
         }
+
         #endregion
     }
 }

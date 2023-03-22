@@ -49,6 +49,11 @@ namespace Revit.TestRunner.App.View.TestTreeView
         /// </summary>
         public string Text => Model.Text;
 
+        /// <summary>
+        /// Get the highlight text.
+        /// </summary>
+        public string Highlight { get; set; }
+
         public string TextAddition
         {
             get {

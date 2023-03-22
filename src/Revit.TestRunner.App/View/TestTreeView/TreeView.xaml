@@ -19,6 +19,7 @@
 
             <converter:DateTimeConverter x:Key="DateTimeConverter" />
             <converter:TimeSpanConverter x:Key="TimeSpanConverter" />
+            <converter:HighlightConverter x:Key="HighlightConverter" />
 
             <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}">
                 <Setter Property="FontFamily" Value="Segoe UI" />
@@ -58,127 +59,147 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ListView ItemsSource="{Binding ObjectTree}" SelectedItem="{Binding SelectedNode}">
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListViewItem">
-                            <Border SnapsToDevicePixels="True"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    Background="{TemplateBinding Background}">
-                                <Border Name="InnerBorder">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <Rectangle Name="UpperHighlight" Visibility="Collapsed" Fill="#75FFFFFF" />
-                                        <GridViewRowPresenter Grid.RowSpan="2"
-                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </Grid>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Height="22"
+                     VerticalContentAlignment="Center" />
+            <TextBlock DockPanel.Dock="Right" FontSize="12" FontWeight="Bold" Margin="0,0,5,0"
+                       HorizontalAlignment="Right" VerticalAlignment="Center"
+                       TextDecorations="">
+                <Hyperlink Command="{Binding ClearFilterCommand}"  >
+                    <TextBlock Text="X" Foreground="Gray" />
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
+
+        <ListView ItemsSource="{Binding ObjectTree}" SelectedItem="{Binding SelectedNode}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border SnapsToDevicePixels="True"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Background="{TemplateBinding Background}">
+                                    <Border Name="InnerBorder">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Rectangle Name="UpperHighlight" Visibility="Collapsed" Fill="#75FFFFFF" />
+                                            <GridViewRowPresenter Grid.RowSpan="2"
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </Grid>
+                                    </Border>
                                 </Border>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="LightBlue" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#D7EEF6" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.View>
-            <GridView>
-                <GridViewColumn Header="Name" Width="450">
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <DockPanel Margin="{Binding Margin}">
-                                <ToggleButton x:Name="mToggleButton"
-                                              IsChecked="{Binding IsExpanded}"
-                                              Width="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                              Visibility="{Binding ShowExpandButton, Converter={StaticResource BoolToVisConverter}}">
-                                    <ToggleButton.Template>
-                                        <ControlTemplate>
-                                            <Polygon Name="mPolygon" Stroke="DarkGray"
-                                                     VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <Polygon.Style>
-                                                    <Style TargetType="Polygon">
-                                                        <Setter Property="Points" Value="0,0 4,4 0,8" />
-                                                        <Setter Property="Fill" Value="White" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="LightBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#D7EEF6" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="450">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                                <DockPanel Margin="{Binding Margin}">
+                                    <ToggleButton x:Name="mToggleButton"
+                                                  IsChecked="{Binding IsExpanded}"
+                                                  Width="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                  Visibility="{Binding ShowExpandButton, Converter={StaticResource BoolToVisConverter}}">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate>
+                                                <Polygon Name="mPolygon" Stroke="DarkGray"
+                                                         VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    <Polygon.Style>
+                                                        <Style TargetType="Polygon">
+                                                            <Setter Property="Points" Value="0,0 4,4 0,8" />
+                                                            <Setter Property="Fill" Value="White" />
 
-                                                        <Style.Triggers>
-                                                            <DataTrigger
-                                                                Binding="{Binding ElementName=mToggleButton,Path=IsChecked}"
-                                                                Value="true">
-                                                                <Setter Property="Points" Value="6,0 6,6 0,6" />
-                                                                <Setter Property="Fill" Value="DarkGray" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Polygon.Style>
-                                            </Polygon>
-                                        </ControlTemplate>
-                                    </ToggleButton.Template>
-                                </ToggleButton>
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding ElementName=mToggleButton,Path=IsChecked}"
+                                                                    Value="true">
+                                                                    <Setter Property="Points" Value="6,0 6,6 0,6" />
+                                                                    <Setter Property="Fill" Value="DarkGray" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Polygon.Style>
+                                                </Polygon>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
 
-                                <CheckBox IsChecked="{Binding IsChecked}"
-                                          VerticalAlignment="Center" />
+                                    <CheckBox IsChecked="{Binding IsChecked}"
+                                              VerticalAlignment="Center" />
 
-                                <StackPanel Margin="5,0,0,0"  Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Text}" ToolTip="{Binding ToolTip}"
-                                               HorizontalAlignment="Left"
-                                               Style="{StaticResource TextStateStyle}"/>
+                                    <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                                        <ContentControl HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip="{Binding ToolTip}">
+                                            <MultiBinding Converter="{StaticResource HighlightConverter}">
+                                                <Binding Path="Text" />
+                                                <Binding Path="Highlight" />
+                                                <Binding Source="{StaticResource TextStateStyle}" />
+                                            </MultiBinding>
+                                        </ContentControl>
 
-                                    <TextBlock Text="{Binding TextAddition}" FontStyle="Italic"
-                                               Margin="5,0,0,0" HorizontalAlignment="Left"
-                                               Style="{StaticResource TextStateStyle}"/>
-                                </StackPanel>
-                                
-                            </DockPanel>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+                                        <TextBlock Text="{Binding TextAddition}" FontStyle="Italic"
+                                                   Margin="5,0,0,0" HorizontalAlignment="Left"
+                                                   Style="{StaticResource TextStateStyle}" />
+                                    </StackPanel>
 
-                <GridViewColumn Header="Message" Width="340">
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <TextBlock Style="{StaticResource TextStateStyle}"
-                                       Text="{Binding MessageForTree}"
-                                       VerticalAlignment="Center" 
-                                       HorizontalAlignment="Left"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+                                </DockPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-                <GridViewColumn Header="Duration" Width="80">
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <TextBlock Style="{StaticResource BaseTextStateStyle}"
-                                       Text="{Binding Duration,StringFormat=mm\\:ss\\.fff, Converter={StaticResource TimeSpanConverter}}"
-                                       ToolTip="{Binding Duration}" 
-                                       HorizontalAlignment="Center"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+                    <GridViewColumn Header="Message" Width="340">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                                <TextBlock Style="{StaticResource TextStateStyle}"
+                                           Text="{Binding MessageForTree}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-                <GridViewColumn Header="EndTime" Width="80">
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
-                            <TextBlock Style="{StaticResource BaseTextStateStyle}"
-                                       Text="{Binding EndTime,StringFormat=HH:mm:ss, Converter={StaticResource DateTimeConverter}}"
-                                       ToolTip="{Binding EndTime}" 
-                                       HorizontalAlignment="Center"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
-            </GridView>
-        </ListView.View>
-    </ListView>
+                    <GridViewColumn Header="Duration" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                                <TextBlock Style="{StaticResource BaseTextStateStyle}"
+                                           Text="{Binding Duration,StringFormat=mm\\:ss\\.fff, Converter={StaticResource TimeSpanConverter}}"
+                                           ToolTip="{Binding Duration}"
+                                           HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="EndTime" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type propertyTreeView:NodeViewModel}">
+                                <TextBlock Style="{StaticResource BaseTextStateStyle}"
+                                           Text="{Binding EndTime,StringFormat=HH:mm:ss, Converter={StaticResource DateTimeConverter}}"
+                                           ToolTip="{Binding EndTime}"
+                                           HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
 </UserControl>
