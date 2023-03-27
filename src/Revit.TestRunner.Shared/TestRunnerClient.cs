@@ -32,31 +32,7 @@ namespace Revit.TestRunner.Shared
         #region Methods
 
         /// <summary>
-        /// Start loop of calling home. 
-        /// </summary>
-        public void StartRunnerStatusWatcher( Action<HomeDto> aCallback, CancellationToken cancellationToken )
-        {
-            Task.Run( async () => {
-                while( !cancellationToken.IsCancellationRequested && mHome == null ) {
-                    mHome = await Home( cancellationToken );
-                    aCallback( mHome );
-
-                    Thread.Sleep( 1000 );
-                }
-            }, cancellationToken );
-        }
-
-        /// <summary>
-        /// Call Home
-        /// </summary>
-        private async Task<HomeDto> Home( CancellationToken cancellationToken )
-        {
-            mHome = await mFileClient.GetJson<HomeDto>( "", cancellationToken, 30, 2000 );
-            return mHome;
-        }
-
-        /// <summary>
-        /// Start a expolre request.
+        /// Start a explore request.
         /// </summary>
         public async Task<ExploreResponseDto> ExploreAssemblyAsync( string assemblyPath, string revitVersion, string revitLanguage, CancellationToken cancellationToken )
         {
@@ -69,7 +45,7 @@ namespace Revit.TestRunner.Shared
             var revit = RevitHelper.StartRevit( revitVersion, revitLanguage );
             mNewRevit |= revit.IsNew;
 
-            await Home( cancellationToken );
+            await GetHome( cancellationToken );
 
             if( mHome != null ) {
                 result = await mFileClient.GetJson<ExploreRequestDto, ExploreResponseDto>( mHome.ExplorePath, request, cancellationToken );
@@ -82,6 +58,54 @@ namespace Revit.TestRunner.Shared
         }
 
         /// <summary>
+        /// Call GetHome
+        /// </summary>
+        private async Task<HomeDto> GetHome( CancellationToken cancellationToken )
+        {
+            mHome = await mFileClient.GetJson<HomeDto>( "", cancellationToken, 30, 2000 );
+            return mHome;
+        }
+
+        /// <summary>
+        /// Try to get latest test result of <paramref name="aAssemblyName"/>.
+        /// </summary>
+        public TestRunStateDto GetNewestTestResult( string aAssemblyName )
+        {
+            if( string.IsNullOrEmpty( aAssemblyName ) ) return null;
+            if( string.IsNullOrEmpty( mHome?.TestPath ) ) return null;
+            if( !Directory.Exists( mHome.TestPath ) ) return null;
+
+            var resultFiles = Directory.GetFiles( mHome.TestPath, "result.json", SearchOption.AllDirectories )
+                .OrderByDescending( path => path );
+
+            foreach( var resultFile in resultFiles ) {
+                var loadedResult = JsonHelper.FromFile<TestRunStateDto>( resultFile );
+                if( loadedResult?.Cases == null ) continue;
+
+                if( loadedResult.Cases.Any( c => c.AssemblyPath.Contains( aAssemblyName ) ) ) {
+                    return loadedResult;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Start loop of calling home. 
+        /// </summary>
+        public void StartRunnerStatusWatcher( Action<HomeDto> aCallback, CancellationToken cancellationToken )
+        {
+            Task.Run( async () => {
+                while( !cancellationToken.IsCancellationRequested && mHome == null ) {
+                    mHome = await GetHome( cancellationToken );
+                    aCallback( mHome );
+
+                    Thread.Sleep( 1000 );
+                }
+            }, cancellationToken );
+        }
+
+        /// <summary>
         /// Start a test run request.
         /// </summary>
         public async Task StartTestRunAsync( IEnumerable<TestCaseDto> testCases, string revitVersion, string revitLanguage, Action<TestRunState> callback, CancellationToken cancellationToken )
@@ -90,13 +114,13 @@ namespace Revit.TestRunner.Shared
                 Cases = testCases.ToArray()
             };
 
-            var revit = RevitHelper.StartRevit( revitVersion, revitLanguage );
-            mNewRevit |= revit.IsNew;
+            var (processId, isNew) = RevitHelper.StartRevit( revitVersion, revitLanguage );
+            mNewRevit |= isNew;
 
-            await Home( cancellationToken );
+            await GetHome( cancellationToken );
 
             if( mHome != null ) {
-                TestResponseDto response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>( mHome.TestPath, request, cancellationToken );
+                var response = await mFileClient.GetJson<TestRequestDto, TestResponseDto>( mHome.TestPath, request, cancellationToken );
 
                 if( response != null ) {
                     var resultFile = response.ResultFile;
@@ -104,7 +128,7 @@ namespace Revit.TestRunner.Shared
                     // Wait resultFile 
                     for( int i = 0; i < 10; i++ )
                         if( !File.Exists( resultFile ) ) {
-                            Console.WriteLine( $"." ); // Wait resultFile
+                            Console.WriteLine( "." ); // Wait resultFile
                             await Task.Delay( 200, cancellationToken );
                         }
 
@@ -116,7 +140,7 @@ namespace Revit.TestRunner.Shared
 
                             if( runResult != null ) {
                                 bool isCompleted = runResult.State == TestState.Passed || runResult.State == TestState.Failed;
-                                TestRunState result = new TestRunState( runResult, isCompleted ) { Message = runResult.Output };
+                                var result = new TestRunState( runResult, isCompleted ) { Message = runResult.Output };
 
                                 callback( result );
 
@@ -130,7 +154,7 @@ namespace Revit.TestRunner.Shared
                         callback( new TestRunState( null, true ) { Message = "Tests not executed! Service may not be running." } );
                     }
 
-                    if( mNewRevit ) RevitHelper.KillRevit( revit.ProcessId );
+                    if( mNewRevit ) RevitHelper.KillRevit( processId );
                 }
             }
             else {

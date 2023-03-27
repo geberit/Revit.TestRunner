@@ -63,7 +63,7 @@ namespace Revit.TestRunner.App.View
         /// <summary>
         /// Get the program version of Revit.TestRunner.
         /// </summary>
-        public string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         /// <summary>
         /// Get the test assembly path.
@@ -110,7 +110,7 @@ namespace Revit.TestRunner.App.View
         public bool IsNodeSelected => Tree.SelectedNode != null;
 
         /// <summary>
-        /// Get the program state of the apüplication.
+        /// Get the program state of the application.
         /// </summary>
         public string ProgramState
         {
@@ -143,60 +143,81 @@ namespace Revit.TestRunner.App.View
 
         #region Commands
 
-        public ICommand OpenAssemblyCommand => new DelegateWpfCommand( ExecuteOpenAssemblyCommand );
-
         /// <summary>
-        /// Open assembly for exploring.
+        /// Create a request file from the selected cases.
         /// </summary>
-        private void ExecuteOpenAssemblyCommand()
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "dll files (*.dll)|*.dll|explore files (*.xml)|*.xml";
+        public ICommand CreateRequestCommand => new DelegateWpfCommand( () => {
+            var caseViewModels = GetSelectedCases().ToList();
+            var testCases = caseViewModels.Select( vm => ModelHelper.ToTestCase( vm.Model ) );
+
+            var request = new TestRequestDto {
+                Timestamp = DateTime.Now,
+                Cases = testCases.ToArray()
+            };
+
+            var dialog = new SaveFileDialog {
+                Filter = "json files (*.json)|*.json"
+            };
 
             if( dialog.ShowDialog() == true ) {
-                if( dialog.FileName.EndsWith( ".xml" ) ) {
-                    LoadExploreFile( dialog.FileName );
-                }
-                else if( dialog.FileName.EndsWith( ".dll" ) ) {
-                    AssemblyPath = dialog.FileName;
-                }
+                JsonHelper.ToFile( dialog.FileName, request );
             }
-        }
-
-        public ICommand RunCommand => new AsyncCommand( ExecuteRunCommand, () => Tree.HasObjects );
+        }, () => Tree.HasObjects );
 
         /// <summary>
-        /// Execute selected tests on Revit.TestRunner.
+        /// Load an existing test result
         /// </summary>
-        private async Task ExecuteRunCommand()
-        {
+        public ICommand LoadResultCommand => new DelegateWpfCommand( () => {
+            var dialog = new OpenFileDialog {
+                Filter = "result files (*.json)|*.json"
+            };
+
+            if( dialog.ShowDialog() != true ) return;
+
+            var loadedResult = JsonHelper.FromFile<TestRunStateDto>( dialog.FileName );
+            var completedCases = loadedResult.Cases.Where( c => c.State != TestState.Unknown ).ToList();
+            var caseViewModels = Tree.ObjectTree.Where( n => n.Type == TestType.Case ).ToList();
+
+            foreach( var resultCase in completedCases ) {
+                var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.FullName == $"{resultCase.TestClass}.{resultCase.MethodName}" );
+                UpdateViewModelFromDto( caseViewModel, resultCase );
+            }
+        } );
+
+        /// <summary>
+        /// Reload the current assembly.
+        /// </summary>
+        public ICommand RefreshCommand => new DelegateWpfCommand( () => {
+            if( !string.IsNullOrEmpty( AssemblyPath ) ) {
+                var path = AssemblyPath;
+                AssemblyPath = string.Empty;
+                AssemblyPath = path;
+            }
+        } );
+
+        /// <summary>
+        /// Run the selected tests.
+        /// </summary>
+        public ICommand RunCommand => new AsyncCommand( async () => {
             ProgramState = "Test Run in started";
 
             var caseViewModels = GetSelectedCases().ToList();
             var testCases = caseViewModels.Select( vm => ModelHelper.ToTestCase( vm.Model ) );
 
             int callbackCount = 0;
-            TimeSpan duration = TimeSpan.Zero;
+            var duration = TimeSpan.Zero;
 
-            await mClient.StartTestRunAsync( testCases, "2020", "", result => {
+            await mClient.StartTestRunAsync( testCases, "2021", "", result => {
                 callbackCount++;
-                string points = string.Concat( Enumerable.Repeat( ".", callbackCount % 5 ) );
-                ProgramState = "Test Run in progress" + points;
                 duration = result.Duration;
+                ProgramState = "Test Run in progress" + string.Concat( Enumerable.Repeat( ".", callbackCount % 5 ) );
 
-                if( result?.StateDto != null ) {
+                if( result.StateDto != null ) {
                     var completed = result.StateDto.Cases.Where( c => c.State != TestState.Unknown );
 
-                    foreach( TestCaseDto resultCase in completed.ToList() ) {
+                    foreach( var resultCase in completed.ToList() ) {
                         var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.Id == resultCase.Id );
-
-                        if( caseViewModel != null ) {
-                            caseViewModel.State = resultCase.State;
-                            caseViewModel.Message = resultCase.Message;
-                            caseViewModel.StackTrace = resultCase.StackTrace;
-                            caseViewModel.StartTime = resultCase.StartTime;
-                            caseViewModel.EndTime = resultCase.EndTime;
-                        }
+                        UpdateViewModelFromDto( caseViewModel, resultCase );
                     }
                 }
 
@@ -207,73 +228,54 @@ namespace Revit.TestRunner.App.View
             int passed = caseViewModels.Count( c => c.State == TestState.Passed );
             bool success = total == passed;
             string successText = success ? "Run finished successfully" : "Run ended with errors";
-
             string message = $"{successText}\n\nDuration: {duration:hh\\:mm\\:ss\\.fff}\nTests passed: {passed} of {total} ({Math.Round( 100 * (double)passed / total )}%)";
 
             ProgramState = message.Replace( "\n\n", "\n" ).Replace( "\n", " - " );
             MessageBox.Show( message, "Test run", MessageBoxButton.OK, success ? MessageBoxImage.Information : MessageBoxImage.Error );
 
-            foreach( NodeViewModel node in Tree.ObjectTree ) {
-                node.IsChecked = false;
-            }
-        }
-
-        public ICommand CreateRequestCommand => new DelegateWpfCommand( ExecuteCreateRequestCommand, () => Tree.HasObjects );
+            Tree.ObjectTree.ToList().ForEach( n => n.IsChecked = false );
+        }, () => Tree.HasObjects );
 
         /// <summary>
-        /// Create a request file for selected tests.
+        /// Open a test assembly.
         /// </summary>
-        private void ExecuteCreateRequestCommand()
-        {
-            var caseViewModels = GetSelectedCases().ToList();
-            var testCases = caseViewModels.Select( vm => ModelHelper.ToTestCase( vm.Model ) );
-
-            TestRequestDto request = new TestRequestDto {
-                Timestamp = DateTime.Now,
-                Cases = testCases.ToArray()
+        public ICommand OpenAssemblyCommand => new DelegateWpfCommand( () => {
+            var dialog = new OpenFileDialog {
+                Filter = "dll files (*.dll)|*.dll|explore files (*.xml)|*.xml"
             };
 
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "json files (*.json)|*.json";
-
             if( dialog.ShowDialog() == true ) {
-                JsonHelper.ToFile( dialog.FileName, request );
+                if( dialog.FileName.EndsWith( ".xml" ) ) {
+                    LoadExploreFile( dialog.FileName );
+                }
+                else if( dialog.FileName.EndsWith( ".dll" ) ) {
+                    AssemblyPath = dialog.FileName;
+                }
             }
-        }
+        } );
 
-        public ICommand RefreshCommand => new DelegateWpfCommand( RefreshExecute );
+        /// <summary>
+        /// Open the logfile.
+        /// </summary>
+        public ICommand OpenLogCommand => new DelegateWpfCommand( () => {
+            var startInfo = new ProcessStartInfo( LogFilePath ) {
+                UseShellExecute = true
+            };
 
-        private void RefreshExecute()
-        {
-            if( !string.IsNullOrEmpty( AssemblyPath ) ) {
-                var path = AssemblyPath;
-                AssemblyPath = string.Empty;
-                AssemblyPath = path;
-            }
-        }
+            Process.Start( startInfo );
+        } );
 
-        public ICommand OpenWorkDirCommand => new DelegateWpfCommand( ExecuteOpenWorkDirCommand );
-
-        private void ExecuteOpenWorkDirCommand()
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo {
+        /// <summary>
+        /// Open work directory in explorer.
+        /// </summary>
+        public ICommand OpenWorkDirCommand => new DelegateWpfCommand( () => {
+            var startInfo = new ProcessStartInfo {
                 Arguments = FileNames.WatchDirectory,
                 FileName = "explorer.exe"
             };
 
             Process.Start( startInfo );
-        }
-
-        public ICommand OpenLogCommand => new DelegateWpfCommand( ExecuteOpenLogCommand );
-
-        private void ExecuteOpenLogCommand()
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo( LogFilePath ) {
-                UseShellExecute = true
-            };
-
-            Process.Start( startInfo );
-        }
+        } );
 
         #endregion
 
@@ -319,7 +321,7 @@ namespace Revit.TestRunner.App.View
                     mIsLoading = true;
                     Tree.Clear();
 
-                    ExploreResponseDto response = await mClient.ExploreAssemblyAsync( path, "2020", "", CancellationToken.None );
+                    var response = await mClient.ExploreAssemblyAsync( path, "2021", "", CancellationToken.None );
 
                     if( response != null ) {
                         LoadExploreFile( response.ExploreFile );
@@ -350,12 +352,12 @@ namespace Revit.TestRunner.App.View
             if( File.Exists( exploreFile ) ) {
                 var rootModel = ModelHelper.ToNodeTree( exploreFile );
 
-                NodeViewModel root = ToNodeTree( rootModel );
+                var root = ToNodeTree( rootModel );
                 Tree.AddRootObject( root, true );
                 Tree.SelectedNode = null;
 
                 AssemblyPath = root.FullName;
-
+                LoadLastTestResult( root.FullName );
                 ProgramState = $"Test Assembly definition loaded '{AssemblyPath}'";
             }
             else {
@@ -363,11 +365,29 @@ namespace Revit.TestRunner.App.View
             }
         }
 
+        private void LoadLastTestResult( string aAssembly )
+        {
+            if( string.IsNullOrEmpty( aAssembly ) ) return;
+
+            var fileInfo = new FileInfo( aAssembly );
+
+            var loadedResult = mClient.GetNewestTestResult( fileInfo.Name );
+            if( loadedResult == null ) return;
+
+            var completedCases = loadedResult.Cases.Where( c => c.State != TestState.Unknown ).ToList();
+            var caseViewModels = Tree.ObjectTree.Where( n => n.Type == TestType.Case ).ToList();
+
+            foreach( var resultCase in completedCases ) {
+                var caseViewModel = caseViewModels.SingleOrDefault( vm => vm.FullName == $"{resultCase.TestClass}.{resultCase.MethodName}" );
+                UpdateViewModelFromDto( caseViewModel, resultCase );
+            }
+        }
+
         private NodeViewModel ToNodeTree( NodeModel run )
         {
-            NodeViewModel root = new NodeViewModel( run );
+            var root = new NodeViewModel( run );
 
-            foreach( NodeModel testSuite in run.Children ) {
+            foreach( var testSuite in run.Children ) {
                 ToNode( root, testSuite );
             }
 
@@ -376,13 +396,24 @@ namespace Revit.TestRunner.App.View
 
         private void ToNode( NodeViewModel parent, NodeModel testSuite )
         {
-            NodeViewModel node = new NodeViewModel( testSuite );
+            var node = new NodeViewModel( testSuite );
             parent.Add( node );
             node.Parent = parent;
 
             foreach( var child in testSuite.Children ) {
                 ToNode( node, child );
             }
+        }
+
+        private void UpdateViewModelFromDto( NodeViewModel aNodeViewModel, TestCaseDto aDto )
+        {
+            if( aNodeViewModel == null ) return;
+
+            aNodeViewModel.State = aDto.State;
+            aNodeViewModel.Message = aDto.Message;
+            aNodeViewModel.StackTrace = aDto.StackTrace;
+            aNodeViewModel.StartTime = aDto.StartTime;
+            aNodeViewModel.EndTime = aDto.EndTime;
         }
 
         #endregion

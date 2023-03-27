@@ -57,7 +57,11 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <!--<ComboBox Width="80" />-->
+                <TextBlock FontSize="12"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0,10,0">
+                    <Hyperlink Command="{Binding LoadResultCommand}">
+                        <TextBlock Text="Load result" />
+                    </Hyperlink>
+                </TextBlock>
                 <Button  Content="Run" Width="100" Command="{Binding RunCommand}" ToolTip="Run Selected"/>
                 <Button  Content="Create request" Width="100" Command="{Binding CreateRequestCommand}" ToolTip="Run Selected" Margin="20,0,0,0"/>
             </StackPanel>
