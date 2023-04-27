@@ -1,10 +1,15 @@
 # Release Notes
-* v1.3.8 [December 2022]
+### v1.4 [April 2023]
+    * Support of Revit 2024
+    * Filter function in UI
+    * Load last test result on load assembly in UI
+
+### v1.3.8 [December 2022]
     * Library update
     * Small UI improvements
 
 
-* v1.3.7 [April 2022]
+###  v1.3.7 [April 2022]
     * Support of Revit 2023
     * Console runner Revit language support
     * Console runner exit code -1 on some failed tests
@@ -12,46 +17,46 @@
     * Update notification on start of test group
 
 
-* v1.3.6 [March 2022]
+###  v1.3.6 [March 2022]
     * Support of NUnit attribute 'Explicit' on class level
     * Fix 'service may not be running' issue
     * Bin clean up
 
-* v1.3.5 [November 2021]
+###  v1.3.5 [November 2021]
     * SetRaiseWithoutDelay on OnIdle event
 
-* v1.3.4 [November 2021]
+###  v1.3.4 [November 2021]
     * NUnit attribute 'OneTimeSetUp' and 'OneTimeTearDown' are supported.
     * NUnit attribute 'TestCase' is not supported anymore!
     * Console output in message
     * Test duration
     * Small UI improvements
 
-* v1.3.3 [September 2021]
+###  v1.3.3 [September 2021]
     * NUnit result files
     * Clients using .net core 3.1
     * Shared using .net standard 2.0
 
-* v1.3 [21Q02]
+###  v1.3 [21Q02]
     * 'Run all tests from an assembly' command in console application
     * Change of parameters in console application
     * Rough implementation of nUnit Explicit- and Ignore- Attributes
     * Change of communication between client and service (Please recreate request files!)
     * Recent files in desktop app
 
-* v1.2 [20Q03]
+###  v1.2 [20Q03]
     * Service based execution
     * Standalone desktop application
     * Console application
     * Multi test execution
     * Async execution
 
-* v0.10 [20Q02]
+###  v0.10 [20Q02]
     * Revit 2021 Support
     * .NET 4.8
     * Support of NUnit Attributes 'TestCase'
 
-* v0.9 [19Q04]
+###  v0.9 [19Q04]
     * Using NUnit3
     * No reference to Revit.TestRunner needed in test assembly
     * Support of NUnit attributes SetUp and TearDown
