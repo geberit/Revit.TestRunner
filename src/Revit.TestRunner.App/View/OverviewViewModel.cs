@@ -41,7 +41,7 @@ namespace Revit.TestRunner.App.View
             mClient = new TestRunnerClient( ProgramName, ProgramVersion );
 
             Tree = new TreeViewModel();
-            Tree.PropertyChanged += ( o, args ) => OnPropertyChangedAll();
+            Tree.PropertyChanged += ( _, _ ) => OnPropertyChangedAll();
 
             InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
 
@@ -228,10 +228,13 @@ namespace Revit.TestRunner.App.View
             int passed = caseViewModels.Count( c => c.State == TestState.Passed );
             bool success = total == passed;
             string successText = success ? "Run finished successfully" : "Run ended with errors";
-            string message = $"{successText}\n\nDuration: {duration:hh\\:mm\\:ss\\.fff}\nTests passed: {passed} of {total} ({Math.Round( 100 * (double)passed / total )}%)";
+            string message = $"{successText}\n\n" +
+                             $"Duration: {duration:hh\\:mm\\:ss\\.fff}\n" +
+                             $"Tests passed: {passed} of {total} ({Math.Round( 100 * (double)passed / total )}%)\n" +
+                             $"Tests failed: {total - passed}";
 
             ProgramState = message.Replace( "\n\n", "\n" ).Replace( "\n", " - " );
-            MessageBox.Show( message, "Test run", MessageBoxButton.OK, success ? MessageBoxImage.Information : MessageBoxImage.Error );
+            MessageBox.Show( message, "Test run complete", MessageBoxButton.OK, success ? MessageBoxImage.Information : MessageBoxImage.Error );
 
             Tree.ObjectTree.ToList().ForEach( n => n.IsChecked = false );
         }, () => Tree.HasObjects );
