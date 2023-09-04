@@ -23,12 +23,11 @@ namespace Revit.TestRunner.Shared.Model
             Children = new List<NodeModel>();
 
             // Test Stuff
-            mNUnitResult = nUnitResult ?? throw new System.ArgumentNullException( nameof( nUnitResult ) );
+            mNUnitResult = nUnitResult ?? throw new System.ArgumentNullException( nameof(nUnitResult) );
 
             State = mNUnitResult.Result;
             Message = mNUnitResult.Message;
             StackTrace = mNUnitResult.FailureStackTrace;
-
         }
 
         #endregion
@@ -37,7 +36,8 @@ namespace Revit.TestRunner.Shared.Model
 
         public string Text
         {
-            get {
+            get
+            {
                 string result = string.Empty;
 
                 if( Type == TestType.Run ) result = "Test Run";
@@ -55,7 +55,8 @@ namespace Revit.TestRunner.Shared.Model
 
         public TestState State
         {
-            get {
+            get
+            {
                 TestState result = TestState.Unknown;
 
                 if( Children.Count == 0 ) result = mState;
@@ -72,7 +73,8 @@ namespace Revit.TestRunner.Shared.Model
 
                 return result;
             }
-            set {
+            set
+            {
                 if( Children.Count == 0 ) {
                     if( value == mState ) return;
                     mState = value;
@@ -93,9 +95,10 @@ namespace Revit.TestRunner.Shared.Model
                 Children.Count == 0
                     ? mMessage
                     : State == TestState.Failed
-                        ? "One or more child tests had errors."
+                        ? $"Failed: {Descendents.Where( n => n.Type == TestType.Case ).Count( n => n.State == TestState.Failed )} tests failed"
                         : string.Empty;
-            set {
+            set
+            {
                 if( Children.Count == 0 ) {
                     if( value == mMessage ) return;
                     mMessage = value;
@@ -107,7 +110,8 @@ namespace Revit.TestRunner.Shared.Model
         public string StackTrace
         {
             get => mStackTrace;
-            set {
+            set
+            {
                 if( value == mStackTrace ) return;
                 mStackTrace = value;
                 OnPropertyChanged();
@@ -118,6 +122,7 @@ namespace Revit.TestRunner.Shared.Model
 
 
         #region Tree Stuff - do not change
+
         #region Tree Properties
 
         public NodeModel Root => Parent != null ? Parent.Root : this;
@@ -128,7 +133,8 @@ namespace Revit.TestRunner.Shared.Model
 
         private IEnumerable<NodeModel> Ancestors
         {
-            get {
+            get
+            {
                 var result = new List<NodeModel>();
 
                 if( Parent != null ) {
@@ -144,7 +150,8 @@ namespace Revit.TestRunner.Shared.Model
 
         private IEnumerable<NodeModel> Descendents
         {
-            get {
+            get
+            {
                 var result = new List<NodeModel>();
 
                 foreach( NodeModel child in Children ) {
@@ -168,7 +175,7 @@ namespace Revit.TestRunner.Shared.Model
 
         private static int GetDeep( NodeModel viewModel, int deep = 0 )
         {
-            int result = deep;  // root level -> 0
+            int result = deep; // root level -> 0
 
             if( viewModel.Parent != null ) {
                 result = GetDeep( viewModel.Parent, deep + 1 );
@@ -196,7 +203,8 @@ namespace Revit.TestRunner.Shared.Model
             return result;
         }
 
-        #endregion 
+        #endregion
+
         #endregion
     }
 }
