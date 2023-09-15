@@ -236,7 +236,7 @@ namespace Revit.TestRunner.App.View
             ProgramState = message.Replace( "\n\n", "\n" ).Replace( "\n", " - " );
             MessageBox.Show( message, "Test run complete", MessageBoxButton.OK, success ? MessageBoxImage.Information : MessageBoxImage.Error );
 
-            Tree.ObjectTree.ToList().ForEach( n => n.IsChecked = false );
+            Tree.ObjectTree.Where( n => n.Type == TestType.Case ).ToList().ForEach( n => n.IsChecked = false );
         }, () => Tree.HasObjects );
 
         /// <summary>
