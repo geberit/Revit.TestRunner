@@ -1,0 +1,6 @@
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.csproj.AssemblyReference.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.AssemblyInfoInputs.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.AssemblyInfo.cs
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.csproj.CoreCompileInputs.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\obj\x64\Debug2025\net6.0\Revit.TestRunner.SampleTestProject3.sourcelink.json

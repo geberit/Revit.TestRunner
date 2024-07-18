@@ -1,0 +1,183 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Addin\\Revit.TestRunner.Addin.csproj": {}
+  },
+  "projects": {
+    "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Addin\\Revit.TestRunner.Addin.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Addin\\Revit.TestRunner.Addin.csproj",
+        "projectName": "Revit.TestRunner.Addin",
+        "projectPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Addin\\Revit.TestRunner.Addin.csproj",
+        "packagesPath": "C:\\Users\\floto\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Addin\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\floto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://geberit.pkgs.visualstudio.com/SE/_packaging/NugetCustomerApplicationsV1/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\Revit.TestRunner.Shared.csproj": {
+                "projectPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\Revit.TestRunner.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "NUnit": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
+            "NUnit.Engine": {
+              "target": "Package",
+              "version": "[3.17.0, )"
+            },
+            "System.Reflection.MetadataLoadContext": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\Revit.TestRunner.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\Revit.TestRunner.Shared.csproj",
+        "projectName": "Revit.TestRunner.Shared",
+        "projectPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\Revit.TestRunner.Shared.csproj",
+        "packagesPath": "C:\\Users\\floto\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\GitHub\\geberit\\Revit.TestRunner\\src\\Revit.TestRunner.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\floto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://geberit.pkgs.visualstudio.com/SE/_packaging/NugetCustomerApplicationsV1/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.Win32.Registry": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Data.DataSetExtensions": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "log4net": {
+              "target": "Package",
+              "version": "[2.0.15, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

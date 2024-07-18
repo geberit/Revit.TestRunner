@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>warnings</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;Debug2025;Release2025</Configurations>
+    <Platforms>x64</Platforms>
+    <OutputPath>..\bin\Addin</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputType>Library</OutputType>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|x64'">
+    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|x64'">
+    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="NUnit.Engine" Version="3.17.0" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>..\Libs\Revit2025\lib\net8\RevitAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>..\Libs\Revit2025\lib\net8\RevitAPIUI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Local.log4net">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo $(ConfigurationName)&#xD;&#xA;echo $(ProjectName)&#xD;&#xA;echo $(ProjectDir)&#xD;&#xA;echo $(TargetPath)&#xD;&#xA;&#xD;&#xA;&quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -file $(ProjectDir)InstallAddinForDebugging.ps1 $(ConfigurationName) $(ProjectName) $(ProjectDir) $(TargetPath)&#xD;&#xA;:exit" />
+  </Target>
+
+</Project>

@@ -38,14 +38,14 @@ namespace Revit.TestRunner.Test.NUnit
         public void Test1()
         {
             Console.WriteLine( "Test1" );
-            Assert.True( true, "This test assert true" );
+            Assert.That( true, "This test assert true" );
         }
 
         [Test]
         public void Test2()
         {
             Console.WriteLine( "Test2" );
-            Assert.True( false, "This test assert false" );
+            Assert.That( false, "This test assert false" );
         }
 
         [Test]

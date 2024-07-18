@@ -18,14 +18,14 @@ namespace Revit.TestRunner.Test.NUnit
 
             var outputFile = new FileInfo( @"C:\temp\test.runner\result.xml" );
             FileHelper.DeleteWithLock( outputFile.FullName );
-            Assert.IsFalse( File.Exists( outputFile.FullName ) );
+            Assert.That( !File.Exists( outputFile.FullName ) );
 
             ResultXmlWriter writer = new ResultXmlWriter( outputFile.FullName );
             writer.Write( exampleRunTestStateDto );
 
-            Assert.IsTrue( File.Exists( outputFile.FullName ) );
-            Assert.Greater( outputFile.Length, 1000 );
-            Assert.Greater( DateTime.Now, outputFile.LastWriteTime );
+            Assert.That( File.Exists( outputFile.FullName ) );
+            Assert.That( outputFile.Length > 1000 );
+            Assert.That( DateTime.Now > outputFile.LastWriteTime );
         }
     }
 }

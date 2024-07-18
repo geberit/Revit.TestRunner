@@ -1,0 +1,16 @@
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Addin\Local.log4net
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Addin\Revit.TestRunner.Addin.dll.config
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Addin\Revit.TestRunner.Addin.deps.json
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Addin\Revit.TestRunner.Addin.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\bin\Addin\Revit.TestRunner.Addin.pdb
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.csproj.AssemblyReference.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.AssemblyInfoInputs.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.AssemblyInfo.cs
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.csproj.CoreCompileInputs.cache
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.sourcelink.json
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.Te.621AE298.Up2Date
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\refint\Revit.TestRunner.Addin.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\Revit.TestRunner.Addin.pdb
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.Addin\obj\x64\Debug2025\ref\Revit.TestRunner.Addin.dll

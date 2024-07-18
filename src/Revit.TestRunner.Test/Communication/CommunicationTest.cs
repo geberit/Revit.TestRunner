@@ -36,13 +36,13 @@ namespace Revit.TestRunner.Test.Communication
             server.ProceedNextNotConcurrent();
             server.ProceedNextNotConcurrent();
 
-            Assert.IsTrue( File.Exists( Path.Combine( basePath, "001.response" ) ) );
-            Assert.IsTrue( File.Exists( Path.Combine( basePath, "test", "002.response" ) ) );
+            Assert.That( File.Exists( Path.Combine( basePath, "001.response" ) ) );
+            Assert.That( File.Exists( Path.Combine( basePath, "test", "002.response" ) ) );
 
             var homeResponse = JsonHelper.FromFile<HomeResponse>( Path.Combine( basePath, "001.response" ) );
             var testResponse = JsonHelper.FromFile<HomeResponse>( Path.Combine( basePath, "test", "002.response" ) );
-            Assert.AreEqual( homeResponse.AssertString, "HomeString" );
-            Assert.AreEqual( testResponse.AssertString, "TestString" );
+            Assert.That( homeResponse.AssertString == "HomeString" );
+            Assert.That( testResponse.AssertString == "TestString" );
         }
 
 
@@ -74,7 +74,7 @@ namespace Revit.TestRunner.Test.Communication
                 var response = Task.Run( () => client.GetJson<TestRequest, TestResponse>( "test", new TestRequest { RequestString = "TEST" }, CancellationToken.None ) ).Result;
                 gotResponse = true;
 
-                Assert.AreEqual( response.AssertString, "TESTTEST" );
+                Assert.That( response.AssertString == "TESTTEST" );
 
                 Console.WriteLine( "End Client Task" );
             } );
@@ -84,7 +84,7 @@ namespace Revit.TestRunner.Test.Communication
 
             Task.WaitAny( serverTask, clientTask );
 
-            Assert.IsTrue( gotResponse );
+            Assert.That( gotResponse );
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Revit.TestRunner.Test.Communication
             var client = new FileClient( basePath );
             var response = client.GetJson<TestRequest, TestResponse>( "", new TestRequest { RequestString = "TIMEOUT" }, CancellationToken.None ).Result;
 
-            Assert.IsNull( response );
+            Assert.That( response == null );
 
         }
     }
