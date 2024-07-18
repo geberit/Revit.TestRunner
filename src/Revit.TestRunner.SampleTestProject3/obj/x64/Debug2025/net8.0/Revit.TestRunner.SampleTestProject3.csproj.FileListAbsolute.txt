@@ -21,6 +21,7 @@ C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\Newtonsoft.Json.dll
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\NuGet.Frameworks.dll
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\nunit.framework.dll
+C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\nunit.framework.legacy.dll
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\cs\Microsoft.TestPlatform.CoreUtilities.resources.dll
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\cs\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
 C:\Code\GitHub\geberit\Revit.TestRunner\src\Revit.TestRunner.SampleTestProject3\bin\x64\Debug2025\net8.0\de\Microsoft.TestPlatform.CoreUtilities.resources.dll

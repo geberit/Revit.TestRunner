@@ -10,9 +10,9 @@ namespace Revit.TestRunner.SampleTestProject
         {
             XYZ xyz = new XYZ( 1, 2, 3 );
             XYZ test = xyz.Add( new XYZ( 5, 6, 7 ) );
-            Assert.AreEqual( test.X, 6 );
-            Assert.AreEqual( test.Y, 8 );
-            Assert.AreEqual( test.Z, 10 );
+            Assert.That( test.X == 6 );
+            Assert.That( test.Y == 8 );
+            Assert.That( test.Z == 10 );
         }
 
         [Test]
@@ -20,9 +20,9 @@ namespace Revit.TestRunner.SampleTestProject
         {
             XYZ xyz = new XYZ( 1, 2, 3 );
             XYZ test = xyz.Multiply( 10 );
-            Assert.AreEqual( test.X, 10 );
-            Assert.AreEqual( test.Y, 20 );
-            Assert.AreEqual( test.Z, 30 );
+            Assert.That( test.X == 10 );
+            Assert.That( test.Y == 20 );
+            Assert.That( test.Z == 30 );
         }
     }
 }

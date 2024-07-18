@@ -18,12 +18,13 @@
 ############################################################################################################
 
 param (
-    [string]$revitVersion = "2020"
+    [string]$revitVersion = "2025"
 )
 
 $binPath = $PSScriptRoot
 $addinFile = "Revit.TestRunner.addin"
-$assemblyFile = "Addin\Revit.TestRunner.dll"
+$assemblyFile = "Addin\framework48\Revit.TestRunner.dll"
+if($revitVersion>=2025){$assemblyFile = "Addin\net8.0-windows\Revit.TestRunner.dll"}
 
 $assemblyFileName = Join-Path -Path $binPath -ChildPath $assemblyFile
 $addinFileName = Join-Path -Path $binPath -ChildPath $addinFile

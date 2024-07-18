@@ -32,7 +32,7 @@ namespace Revit.TestRunner.SampleTestProject
         [Test]
         public void AssertTrueTest()
         {
-            Assert.True( true, "Test pass" );
+            Assert.That( true, "Test pass" );
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Revit.TestRunner.SampleTestProject
         [Test]
         public void FailTest()
         {
-            Assert.True( false, "This Test should fail!" );
+            Assert.That( false, "This Test should fail!" );
         }
     }
 }

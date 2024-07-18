@@ -11,8 +11,8 @@ namespace Revit.TestRunner.SampleTestProject
         [SetUp]
         public void SetUp( Application application, UIApplication uiApplication )
         {
-            Assert.NotNull( uiApplication );
-            Assert.NotNull( application );
+            Assert.That( uiApplication != null );
+            Assert.That( application != null );
 
             mApplication = application;
             mUiApplication = uiApplication;
@@ -21,15 +21,15 @@ namespace Revit.TestRunner.SampleTestProject
         [TearDown]
         public void TearDown( Application application, UIApplication uiApplication )
         {
-            Assert.NotNull( uiApplication );
-            Assert.NotNull( application );
+            Assert.That( uiApplication != null );
+            Assert.That( application != null );
         }
 
         [Test]
         public void SomeTestWithApplication()
         {
-            Assert.NotNull( mUiApplication );
-            Assert.NotNull( mApplication );
+            Assert.That( mUiApplication != null );
+            Assert.That( mApplication != null );
         }
 
         [TestCase( 12, 3, ExpectedResult = 15 )]

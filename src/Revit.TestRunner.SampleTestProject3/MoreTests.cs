@@ -10,13 +10,13 @@ namespace Revit.TestRunner.SampleTestProject
         [SetUp]
         public void SetUp( UIApplication uiApplication )
         {
-            Assert.NotNull( uiApplication );
+            Assert.That( uiApplication != null );
         }
 
         [TearDown]
         public void TearDown( UIApplication application )
         {
-            Assert.NotNull( application );
+            Assert.That( application != null );
         }
 
         [Test]

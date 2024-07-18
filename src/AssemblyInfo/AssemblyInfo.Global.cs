@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Resources;
 
-[assembly: AssemblyCompany( "Geberit Verwaltungs AG" )]
+[assembly: AssemblyCompany( "Geberit International AG" )]
 [assembly: AssemblyProduct( "Revit TestRunner" )]
-[assembly: AssemblyCopyright( "Copyright © 2002-2019, Geberit Verwaltungs AG." )]
+[assembly: AssemblyCopyright( "Copyright © 2002-2024, Geberit International AG." )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

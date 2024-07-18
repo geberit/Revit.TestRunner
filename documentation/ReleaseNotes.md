@@ -1,4 +1,8 @@
 # Release Notes
+### v1.5 [July 2024]
+    * Support of Revit 2025
+    * Remove Support of Revit 2020 and Revit 2021
+
 ### v1.4 [April 2023]
     * Support of Revit 2024
     * Filter function in UI

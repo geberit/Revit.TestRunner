@@ -6,6 +6,9 @@
 /src/Revit.TestRunner/obj
 /src/Revit.TestRunner/src
 /src/Revit.TestRunner/bin
+/src/Revit.TestRunner.Addin/obj
+/src/Revit.TestRunner.Addin/src
+/src/Revit.TestRunner.Addin/bin
 /src/Revit.TestRunner.App/obj
 /src/Revit.TestRunner.App/bin
 /src/Revit.TestRunner.Console/obj
@@ -14,8 +17,8 @@
 /src/Revit.TestRunner.Shared/bin
 /src/Revit.TestRunner.Test/bin
 /src/Revit.TestRunner.Test/obj
-/src/Revit.TestRunner.SampleTestProject2/bin
-/src/Revit.TestRunner.SampleTestProject2/obj
+/src/Revit.TestRunner.SampleTestProject3/bin
+/src/Revit.TestRunner.SampleTestProject3/obj
 /.vs
 /src/.vs
 /src/Revit.TestRunner/Revit.TestRunner.csproj.user
