@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Revit.TestRunner.SampleTestProject3")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug2025")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b3948079f09b4e5991671ec5fea40f6246674de")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77c019488c433f610fafeecf2e6c7290e3db4bf5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Revit.TestRunner.SampleTestProject3")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Revit.TestRunner.SampleTestProject3")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

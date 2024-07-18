@@ -66,6 +66,10 @@
             "System.Reflection.MetadataLoadContext": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "log4net": {
+              "target": "Package",
+              "version": "[2.0.15, )"
             }
           },
           "imports": [
@@ -153,10 +157,6 @@
             "System.Data.DataSetExtensions": {
               "target": "Package",
               "version": "[4.5.0, )"
-            },
-            "log4net": {
-              "target": "Package",
-              "version": "[2.0.15, )"
             }
           },
           "imports": [

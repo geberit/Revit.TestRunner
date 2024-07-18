@@ -5,7 +5,7 @@
     <Nullable>warnings</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Configurations>Debug;Release;Debug2025;Release2025</Configurations>
+    <Configurations>Debug2025;Release2025</Configurations>
     <Platforms>x64</Platforms>
     <OutputPath>..\bin\Addin</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="NUnit.Engine" Version="3.17.0" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />

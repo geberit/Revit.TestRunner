@@ -290,8 +290,7 @@
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.Win32.Registry": "5.0.0",
           "Newtonsoft.Json": "13.0.3",
-          "System.Data.DataSetExtensions": "4.5.0",
-          "log4net": "2.0.15"
+          "System.Data.DataSetExtensions": "4.5.0"
         },
         "compile": {
           "bin/placeholder/Revit.TestRunner.Shared.dll": {}
@@ -999,7 +998,8 @@
       "NUnit >= 4.1.0",
       "NUnit.Engine >= 3.17.0",
       "Revit.TestRunner.Shared >= 1.0.0",
-      "System.Reflection.MetadataLoadContext >= 8.0.0"
+      "System.Reflection.MetadataLoadContext >= 8.0.0",
+      "log4net >= 2.0.15"
     ]
   },
   "packageFolders": {
@@ -1068,6 +1068,10 @@
           "System.Reflection.MetadataLoadContext": {
             "target": "Package",
             "version": "[8.0.0, )"
+          },
+          "log4net": {
+            "target": "Package",
+            "version": "[2.0.15, )"
           }
         },
         "imports": [
