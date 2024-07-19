@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Xml;
 using NUnit;
 using NUnit.Engine;
@@ -85,6 +86,8 @@ namespace Revit.TestRunner.Runner
             ITestRunner result = null;
             ITestEngine engine = CreateTestEngine();
 
+            // Load test assembly to make shure it is part of the AppDomain and can be found bei Assembly.Load-command in NUnitNetStandardDriver later.
+            //Assembly.LoadFrom( TestAssembly );
             TestPackage testPackage = new TestPackage( TestAssembly );
 
             //https://github.com/nunit/nunit-console/blob/master/src/NUnitEngine/nunit.engine/EnginePackageSettings.cs
@@ -93,7 +96,7 @@ namespace Revit.TestRunner.Runner
             testPackage.AddSetting( EnginePackageSettings.ProcessModel, processModel );
             testPackage.AddSetting( EnginePackageSettings.DomainUsage, domainUsage );
             result = engine.GetRunner( testPackage );
-
+            
             //var agency = engine.Services.GetService<TestAgency>();
             //agency?.StopService();
 
@@ -129,8 +132,7 @@ namespace Revit.TestRunner.Runner
             var mlc = new MetadataLoadContext( resolver );
             var engineAssembly = mlc.LoadFromAssemblyPath( defaultAssemblyPath );
             var engine = (ITestEngine)AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap( engineAssembly.Location, defaultTypeName );
-            // Load test assembly to make shure it is part of the AppDomain and can be found bei Assembly.Load-command in NUnitNetStandardDriver later.
-            Assembly.LoadFrom( TestAssembly );
+            
 
             return engine;
         }
