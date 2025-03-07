@@ -4,6 +4,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <Configurations>Debug2022;Debug2023;Debug2024;Debug2025;Release2022;Release2023;Release2024;Release2025</Configurations>
     <OutputType>Library</OutputType>
+    <OutputPath>..\bin\Addin\</OutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
@@ -88,8 +89,9 @@
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.15" />
-    <PackageReference Include="NUnit" Version="4.1.0" />
-    <PackageReference Include="NUnit.Engine" Version="3.17.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit.Engine" Version="3.19.2" />
+    <PackageReference Include="NUnit.Engine.Api" Version="3.19.2" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
   </ItemGroup>
 

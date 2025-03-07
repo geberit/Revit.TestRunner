@@ -85,7 +85,8 @@ namespace Revit.TestRunner.Runner
         private ITestRunner CreateTestRunner()
         {
             ITestRunner result = null;
-            ITestEngine engine = CreateTestEngine();
+            //ITestEngine engine = CreateTestEngine();
+            ITestEngine engine = new TestEngine();
 
             // Load test assembly to make shure it is part of the AppDomain and can be found bei Assembly.Load-command in NUnitNetStandardDriver later.
             //Assembly.LoadFrom( TestAssembly );
