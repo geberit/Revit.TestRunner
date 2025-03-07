@@ -1,10 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>x64</Platforms>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug2022;Debug2023;Debug2024;Debug2025;Release2022;Release2023;Release2024;Release2025</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2025' Or '$(Configuration)'=='Release2025'">
+    <TargetFramework>net8.0-windows8.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2024' Or '$(Configuration)'=='Release2024'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2024</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2023' Or '$(Configuration)'=='Release2023'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2023</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2022' Or '$(Configuration)'=='Release2022'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2022</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>..\bin\Client\</OutputPath>

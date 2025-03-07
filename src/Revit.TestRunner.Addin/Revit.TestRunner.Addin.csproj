@@ -1,31 +1,90 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>warnings</Nullable>
-    <UseWPF>true</UseWPF>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Configurations>Debug2025;Release2025</Configurations>
-    <Platforms>x64</Platforms>
-    <OutputPath>..\bin\Addin</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <Configurations>Debug2022;Debug2023;Debug2024;Debug2025;Release2022;Release2023;Release2024;Release2025</Configurations>
     <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Platforms>x64</Platforms>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|x64'">
-    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|x64'">
-    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyInfo.Global.cs" Link="Properties\AssemblyInfo.Global.cs" />
     <Compile Include="..\AssemblyInfo\AssemblyInfo.Version.cs" Link="Properties\AssemblyInfo.Version.cs" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2025' Or '$(Configuration)'=='Release2025'">
+    <TargetFramework>net8.0-windows8.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2025</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2024' Or '$(Configuration)'=='Release2024'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2024</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2023' Or '$(Configuration)'=='Release2023'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2023</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug2022' Or '$(Configuration)'=='Release2022'">
+    <TargetFramework>net48</TargetFramework>
+    <DefineConstants>$(DefineConstants);Revit2022</DefineConstants>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug2025' Or '$(Configuration)'=='Release2025'">
+      <ItemGroup>
+        <Reference Include="RevitAPI">
+          <HintPath>..\Libs\Revit2025\lib\net8\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI">
+          <HintPath>..\Libs\Revit2025\lib\net8\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)'=='Debug2024' Or '$(Configuration)'=='Release2024'">
+      <ItemGroup>
+        <Reference Include="RevitAPI">
+          <HintPath>..\Libs\Revit2024\lib\net48\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI">
+          <HintPath>..\Libs\Revit2024\lib\net48\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)'=='Debug2023' Or '$(Configuration)'=='Release2023'">
+      <ItemGroup>
+        <Reference Include="RevitAPI">
+          <HintPath>..\Libs\Revit2023\lib\net48\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI">
+          <HintPath>..\Libs\Revit2023\lib\net48\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)'=='Debug2022' Or '$(Configuration)'=='Release2022'">
+      <ItemGroup>
+        <Reference Include="RevitAPI">
+          <HintPath>..\Libs\Revit2022\lib\net48\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI">
+          <HintPath>..\Libs\Revit2022\lib\net48\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.15" />
@@ -36,15 +95,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Revit.TestRunner.Shared\Revit.TestRunner.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="RevitAPI">
-      <HintPath>..\Libs\Revit2025\lib\net8\RevitAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>..\Libs\Revit2025\lib\net8\RevitAPIUI.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

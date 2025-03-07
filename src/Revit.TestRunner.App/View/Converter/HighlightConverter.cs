@@ -25,9 +25,10 @@ namespace Revit.TestRunner.App.View.Converter
                 int endIndex = startIndex + highlightLower.Length - 1;
 
                 if( startIndex >= 0 ) {
-                    result.Inlines.Add( input[..startIndex] );
+                    //result.Inlines.Add( input[..startIndex] );
+                    result.Inlines.Add( input.Substring( 0, startIndex ) );
                     result.Inlines.Add( new Run( input.Substring( startIndex, highlightLower.Length ) ) { Background = (SolidColorBrush)new BrushConverter().ConvertFrom( "#B5BECD" ) } );
-                    result.Inlines.Add( input[(endIndex + 1)..] );
+                    result.Inlines.Add( input.Substring( endIndex + 1 ) );
                 }
             }
 

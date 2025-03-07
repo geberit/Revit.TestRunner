@@ -41,7 +41,7 @@ namespace Revit.TestRunner.App.View
             mClient = new TestRunnerClient( ProgramName, ProgramVersion );
 
             Tree = new TreeViewModel();
-            Tree.PropertyChanged += ( _, _ ) => OnPropertyChangedAll();
+            Tree.PropertyChanged += ( _, __ ) => OnPropertyChangedAll();
 
             InstalledRevitVersions = RevitHelper.GetInstalledRevitApplications();
 
