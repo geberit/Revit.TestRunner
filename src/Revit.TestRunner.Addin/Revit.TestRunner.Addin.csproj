@@ -88,7 +88,8 @@
   </Choose>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="ClosedXML" Version="0.93.0" />
+    <PackageReference Include="log4net" Version="2.0.10" />
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit.Engine" Version="3.19.2" />
     <PackageReference Include="NUnit.Engine.Api" Version="3.19.2" />

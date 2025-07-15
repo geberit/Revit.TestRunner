@@ -1,9 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using ClosedXML.Excel;
+using log4net;
 using Revit.TestRunner.Commands;
 using Revit.TestRunner.Server;
 
@@ -18,26 +22,41 @@ namespace Revit.TestRunner.Addin
 
         public Result OnStartup( UIControlledApplication application )
         {
-            Log.Info( $"Revit.TestRunner started v{Assembly.GetExecutingAssembly().GetName().Version} '{DateTime.Now}'" );
-            Log.Info( $"{Environment.OSVersion}, NetFX {Environment.Version}" );
-            Log.Debug( $"Log Directory '{Log.LogDirectory}'" );
-            Log.Debug( $"CurrentAppDomain.ApplicationBase '{AppDomain.CurrentDomain.SetupInformation.ApplicationBase}'" );
+            try {
+                var dir = @"C:\temp\PluginShizzle";
 
-            RibbonPanel ribbonPanel = application.CreateRibbonPanel( "Testing" );
+                if( !Directory.Exists( dir ) ) Directory.CreateDirectory( dir );
+                GlobalContext.Properties["TestRunnerPluginLogName"] = Path.Combine( dir, "LogTestRunner.txt" );
 
-            string command = typeof( RunnerCommand ).FullName;
+                Log.Info( $"Revit.TestRunner started v{Assembly.GetExecutingAssembly().GetName().Version} '{DateTime.Now}'" );
+                Log.Info( $"{Environment.OSVersion}, NetFX {Environment.Version}" );
+                Log.Debug( $"Log Directory '{Log.LogDirectory}'" );
+                Log.Debug( $"CurrentAppDomain.ApplicationBase '{AppDomain.CurrentDomain.SetupInformation.ApplicationBase}'" );
 
-            PushButtonData buttonData = new PushButtonData( command, "Open Runner", Assembly.GetExecutingAssembly().Location, command ) {
-                ToolTip = "Open the Test Runner Dialog\nStart Tests using the Revit API.",
-                Image = GetImage( "Testing.png", 16 ),
-                LargeImage = GetImage( "Testing.png", 32 ),
-                AvailabilityClassName = typeof( AvailableInStartScreen ).FullName
-            };
+                RibbonPanel ribbonPanel = application.CreateRibbonPanel( "Testing" );
 
-            ribbonPanel.AddItem( buttonData );
+                string command = typeof( RunnerCommand ).FullName;
 
-            mController = new RunnerController();
-            mController.Start( application );
+                XLWorkbook workbook = new XLWorkbook();
+                workbook.Worksheets.Add( "Test" );
+                workbook.SaveAs( Path.Combine( dir, "test.xlsx" ) );
+
+                PushButtonData buttonData = new PushButtonData( command, "Open Runner", Assembly.GetExecutingAssembly().Location, command ) {
+                    ToolTip = "Open the Test Runner Dialog\nStart Tests using the Revit API.",
+                    Image = GetImage( "Testing.png", 16 ),
+                    LargeImage = GetImage( "Testing.png", 32 ),
+                    AvailabilityClassName = typeof( AvailableInStartScreen ).FullName
+                };
+
+                ribbonPanel.AddItem( buttonData );
+
+                mController = new RunnerController();
+                mController.Start( application );
+            }
+            catch( Exception ex ) {
+                TaskDialog.Show( "Revit.TestRunner", $"Error during startup: {ex}" );
+                return Result.Failed;
+            }
 
             return Result.Succeeded;
         }
